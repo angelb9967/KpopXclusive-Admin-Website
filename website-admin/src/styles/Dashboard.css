@@ -1,0 +1,107 @@
+* {
+    font-family: 'Saira Condensed', sans-serif; 
+    font-weight: 700;
+}
+
+.dashboard-navbar {
+    display: flex;
+    align-items: center;
+    background-color: black;
+    padding: 20px 40px; 
+    height: 90px; 
+    color: white; /* Ensure text color is white for visibility */
+}
+
+.dashboard-navbar h2 {
+    margin-left: 20px; /* Add space between the logo and the text */
+    font-size: 4rem; /* Adjust font size as needed */
+    color: white; /* Ensure text color is white */
+}
+
+.vertical-divider {
+    width: 2px; 
+    height: 100px;
+    background-color: white; 
+    margin: 0 15px; 
+}
+
+.dashboard-sidebar {
+    position: fixed;
+    top: 0; 
+    right: 0;
+    height: 100%;
+    width: 300px;
+    background: black;
+    color: white;
+    box-shadow: -1px 0px 1px 0px rgba(255,255,255,1);
+}
+
+.sidebar-content {
+    padding: 20px;
+}
+
+.sidebar-greet {
+    text-align: center; /* Align text to the left */
+    line-height: 1; /* Optional: Adjust line height for readability */
+    font-size: 2rem;
+}
+
+.lists {
+    list-style: none;
+    padding: 0;
+    margin: 0; 
+}
+
+.list .nav-link {
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    padding: 20px 12px;
+    text-decoration: none;
+    color: white; 
+}
+
+.nav-link:hover {
+    background: rgb(255,95,95);
+    color: black;
+}
+
+.list .nav-link i {
+    margin-right: 15px; 
+    font-size: 20px;
+    color: white; 
+}
+
+.list .nav-link:hover i {
+    color: black; 
+}
+
+.bx-menu {
+    font-size: 24px;
+    color: white;
+    cursor: pointer; 
+}
+
+.divider {
+    height: 2px; 
+    width: 100%;
+    background-color: white; 
+    margin: 0px 0;
+}
+
+.list .nav-link.logout {
+    color: #CF5D5D; /* Set the color for the logout text */
+}
+
+.list .nav-link.logout i {
+    color: #CF5D5D; /* Set the color for the logout icon */
+}
+
+.list .nav-link.logout:hover {
+    color: black; /* Change text color on hover */
+}
+
+.list .nav-link.logout:hover i {
+    color: black; /* Change icon color on hover */
+}
+
