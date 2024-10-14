@@ -1,0 +1,116 @@
+* {
+    font-family: 'Saira Condensed', sans-serif; 
+    font-weight: 700;
+}
+
+.main-navbar {
+    display: flex;
+    align-items: center;
+    background-color: black;
+    padding: 20px 40px; 
+    height: 90px; 
+    color: white; 
+}
+
+.main-navbar h2 {
+    margin-left: 20px; 
+    font-size: 4rem; 
+    color: white;
+}
+
+.vertical-divider {
+    width: 2px; 
+    height: 100px;
+    background-color: white; 
+    margin: 0 15px; 
+}
+
+.main-sidebar {
+    position: fixed;
+    top: 0; 
+    right: 0;
+    height: 100%;
+    width: 300px;
+    background: black;
+    color: white;
+    box-shadow: -1px 0px 1px 0px rgba(255,255,255,1);
+}
+
+.sidebar-content {
+    padding: 20px;
+}
+
+.sidebar-greet {
+    text-align: center;
+    line-height: 1; 
+    font-size: 2rem;
+}
+
+.lists {
+    list-style: none;
+    padding: 0;
+    margin: 0; 
+}
+
+.list .nav-link {
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    padding: 20px 12px;
+    text-decoration: none;
+    color: white; 
+}
+
+.nav-link:hover {
+    background: rgb(255,95,95);
+    color: black;
+}
+
+.list .nav-link i {
+    margin-right: 15px; 
+    font-size: 20px;
+    color: white; 
+}
+
+.list .nav-link:hover i {
+    color: black; 
+}
+
+.bx-menu {
+    font-size: 24px;
+    color: white;
+    cursor: pointer; 
+}
+
+.horizontal-divider {
+    height: 2px; 
+    width: 100%;
+    background-color: white; 
+    margin: 0px 0;
+}
+
+.list .nav-link.logout {
+    color: #CF5D5D; 
+}
+
+.list .nav-link.logout i {
+    color: #CF5D5D; 
+}
+
+.list .nav-link.logout:hover {
+    color: black; 
+}
+
+.list .nav-link.logout:hover i {
+    color: black;
+}
+
+.section-content {
+    padding: 20px;
+    background-color: #E8E8E8; 
+    color: black;
+    font-size: 1.5rem; 
+    height: calc(100vh - 90px); 
+    overflow: auto; 
+}
+

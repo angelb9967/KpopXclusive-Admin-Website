@@ -1,0 +1,22 @@
+.usermanage-container {
+    width: calc(95% - 300px); 
+    display: flex; 
+    justify-content: flex-end; 
+    padding: 20px; 
+}
+
+.dashboardSearch {
+    width: 300px; 
+}
+
+.dashboardSearch .ant-input {
+    font-family: 'Saira Condensed', sans-serif; 
+    border-radius: 25px; 
+    -webkit-box-shadow: inset 0px 1px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: inset 0px 1px 5px 0px rgba(0,0,0,0.75);
+    box-shadow: inset 0px 1px 5px 0px rgba(0,0,0,0.75);
+}
+
+.dashboardSearch .ant-input-search-button {
+    border-radius: 25px; /* Set the desired border radius for the button */
+}
