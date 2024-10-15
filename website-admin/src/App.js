@@ -11,14 +11,14 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Login />} /> {/* Login page */}
+        <Route path="/" element={<Login/>} /> {/* Login page */}
         <Route path="/Main" element={<Main />}> {/* Main layout */}
-          <Route index element={<Dashboard />} /> {/* Default route for Main */}
-          <Route path="Dashboard" element={<Dashboard />} />
-          <Route path="User-Management" element={<UserManagement />} />
-          <Route path="Admin-Approval" element={<AdminApproval />} />
-          <Route path="Information-Handler" element={<InformationHandler />} />
-          <Route path="Access-Website" element={<AccessWebsite />} />
+        <Route index element={<Dashboard />} /> {/* Default route for Main */}
+        <Route path="Dashboard" element={<Dashboard />} />
+        <Route path="User-Management" element={<UserManagement />} />
+        <Route path="Admin-Approval" element={<AdminApproval />} />
+        <Route path="Information-Handler" element={<InformationHandler />} />
+        <Route path="Access-Website" element={<AccessWebsite />} />
         </Route>
       </Routes>
     </Router>

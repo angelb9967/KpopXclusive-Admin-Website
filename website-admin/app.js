@@ -41,3 +41,65 @@ app.post("/", async (req, res) => {
 app.listen(8000, () => {
     console.log("Server running on port 8000");
 });
+
+const userSchema = new mongoose.Schema({
+    username : String,
+    password : String,
+    status:String, 
+    createdAt: Date, 
+    updatedAt: Date,
+});
+
+const User = mongoose.model('users', userSchema);
+	
+app.post('/users', async (request, response) => {
+    const user = new User({
+        username : request.body.username,
+        password : request.body.password,
+        status : request.body.status, 
+        createdAt: request.body.createdAt,
+        updatedAt: request.body.updatedAt
+    });
+    const newItem = await user.save();
+    response.status(201).json({scuccess:true});
+});
+
+app.get('/users', async (request, response) => {
+    const users = await User.find();
+    response.status(200).json(users);
+});
+
+app.get('/users/:id', async (request, response) => {
+    const user = await User.findById(request.params.id);
+    response.status(200).json(user);
+});
+
+app.put('/users/:id', async (request, response) => {
+    const userId = request.params.id;
+    
+    // Fetch the user from the database
+    const user = await User.findById(userId);
+    
+    if (!user) {
+        return response.status(404).json({ message: "User not found" });
+    }
+    
+    // Update only the fields that are being changed
+    user.username = request.body.username;
+    user.password = request.body.password;
+    user.status = request.body.status;
+    user.updatedAt = request.body.updatedAt; // Update only this field
+
+    const updatedItem = await user.save();
+    response.status(200).json(updatedItem);
+});
+	
+app.delete('/users/:id', async (request, response) => {
+    const userId = request.params.id;
+    // Fetch the user from the database
+    const user = await User.findById(userId);
+    await user.deleteOne();
+    response.status(200).json({ message : 'Deleted item' });
+});
+
+
