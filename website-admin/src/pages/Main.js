@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import '../styles/Main.css';
 import logo1 from '../assets/Logo 1.png';
 import 'boxicons/css/boxicons.min.css';
+import { Modal } from 'antd'; // Import Modal from Ant Design
 
 const Main = () => {
   const location = useLocation(); 
+  const navigate = useNavigate(); 
   const [title, setTitle] = useState('Dashboard'); 
 
   const updateTitle = () => {
@@ -33,6 +35,20 @@ const Main = () => {
   useEffect(() => {
     updateTitle();
   }, [location]);
+
+  const confirmLogout = () => {
+    Modal.confirm({
+      title: 'Confirm Logout',
+      content: 'Are you sure you want to log out?',
+      onOk() {
+        navigate("/"); 
+        console.log('User logged out');
+      },
+      onCancel() {
+        console.log('Logout canceled');
+      },
+    });
+  };
 
   return (
     <div className='main-container'>
@@ -77,10 +93,10 @@ const Main = () => {
               </Link>
             </li>
             <li className="list">
-              <Link to="/" className="nav-link logout">
+              <span onClick={confirmLogout} className="nav-link logout" style={{ cursor: 'pointer' }}>
                 <i className='bx bx-log-out'></i> 
                 <span className="link">LOGOUT</span>
-              </Link>
+              </span>
             </li>
           </ul>
         </div>
