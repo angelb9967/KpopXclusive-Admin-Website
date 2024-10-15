@@ -45,7 +45,7 @@ app.listen(8000, () => {
 const userSchema = new mongoose.Schema({
     username : String,
     password : String,
-    status:String, 
+    status: Boolean, 
     createdAt: Date, 
     updatedAt: Date,
 });
