@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Input, Button, Table, Modal } from 'antd';
+import { Input, Button, Table, Modal, message } from 'antd';
 import '../styles/UserManagement.css';
 
 const { Search } = Input;
@@ -55,7 +55,36 @@ const UserManagement = () => {
     setIsModalVisible(true);
   };
 
+  const [statusError, setStatusError] = useState(false); // State to track status error
+
   const handleOk = async () => {
+    let hasError = false; // Track if there's any error
+
+    // Check if username and password are not blank
+    if (!formData.username.trim()) {
+      message.error('Username cannot be blank!');
+      setStatusError(true); // Set status error state
+      hasError = true; // Set error flag
+    } else {
+      setStatusError(false); // Clear status error state if no error
+    }
+    if (!formData.password.trim()) {
+      message.error('Password cannot be blank!');
+      setStatusError(true); // Set status error state
+      hasError = true; // Set error flag
+    } else {
+      setStatusError(false); // Clear status error state if no error
+    }
+    if (!formData.status.trim()) {
+      message.error('Status cannot be blank!');
+      setStatusError(true); // Set status error state
+      hasError = true; // Set error flag
+    } else {
+      setStatusError(false); // Clear status error state if no error
+    }
+
+    if (hasError) return; // Prevent submission if validation fails
+
     const { username, password, status, user_id } = formData;
 
     // Get the current date and time in UTC and convert to PHT
@@ -190,14 +219,16 @@ const UserManagement = () => {
           <Input
             value={formData.username}
             onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+            style={{ borderColor: statusError ? 'red' : undefined }}
           />
         </div>
         <div className="mb-3">
           <label>Password</label>
           <Input
-            type="text"
+            type="password"
             value={formData.password}
             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+            style={{ borderColor: statusError ? 'red' : undefined }}
           />
         </div>
         <div className="mb-3">
@@ -206,6 +237,7 @@ const UserManagement = () => {
             type="text"
             value={formData.status}
             onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+            style={{ borderColor: statusError ? 'red' : undefined }}
           />
         </div>
         <div className="mb-3">
@@ -213,7 +245,7 @@ const UserManagement = () => {
           <Input
             type="date"
             value={formData.createdAt}
-            disabled // Disable the input field
+            disabled 
           />
         </div>
         <div className="mb-3">
@@ -221,7 +253,7 @@ const UserManagement = () => {
           <Input
             type="date"
             value={formData.updatedAt}
-            disabled // Disable the input field
+            disabled 
           />
         </div>
       </Modal>
