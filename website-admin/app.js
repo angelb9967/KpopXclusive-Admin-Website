@@ -45,7 +45,7 @@ app.listen(8000, () => {
 const userSchema = new mongoose.Schema({
     username : String,
     password : String,
-    status: Boolean, 
+    status: String, 
     createdAt: Date, 
     updatedAt: Date,
 });
@@ -61,7 +61,7 @@ app.post('/users', async (request, response) => {
         updatedAt: request.body.updatedAt
     });
     const newItem = await user.save();
-    response.status(201).json({scuccess:true});
+    response.status(201).json({success:true});
 });
 
 app.get('/users', async (request, response) => {
