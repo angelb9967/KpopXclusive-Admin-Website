@@ -3,9 +3,10 @@ import '../styles/GroupForm.css';
 import { Button, Select, Input, Space, message, Form, Radio, Table } from 'antd';
 import { DownOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import Title from 'antd/es/skeleton/Title';
-import {FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXTwitter, faSpotify, faYoutube } from '@fortawesome/free-brands-svg-icons';
 import TextArea from 'antd/es/input/TextArea';
+import { useLocation } from 'react-router-dom';
 
 const { Option } = Select;
 
@@ -27,6 +28,10 @@ const GroupForm = () => {
   const [image, setImage] = useState(null);
   const [countryData, setCountryData] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState(null);
+  const location = useLocation(); // Get the current location
+
+  // Determine button text based on the current URL
+  const buttonText = location.pathname === '/EditGroup' ? 'Update Group' : 'Save Group';
 
   const handleEdit = (key) => {
     console.log(`Edit member with key: ${key}`);
@@ -83,7 +88,8 @@ const GroupForm = () => {
   };
 
   useEffect(() => {
-    fetchCountryNames(); // Fetch country names when component mounts
+    // Fetch country names when component mounts
+    fetchCountryNames();
   }, []);
 
   const handleFile = (file) => {
@@ -420,17 +426,17 @@ const GroupForm = () => {
                   </div>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
-                  <span id='name' style={{ marginRight: '8px' , whiteSpace:'nowrap'}}>Add Name:</span>
+                  <span id='name' style={{ marginRight: '8px', whiteSpace: 'nowrap' }}>Add Name:</span>
                   <Input placeholder="Add Name" style={{ flexGrow: 1 }} />
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
-                  <span id='name' style={{ marginRight: '8px' , whiteSpace:'nowrap'}}>Add Link to Image:</span>
+                  <span id='name' style={{ marginRight: '8px', whiteSpace: 'nowrap' }}>Add Link to Image:</span>
                   <Input placeholder="Link to Image" style={{ flexGrow: 1 }} />
-                  <Button style={{ width: '150px' , marginLeft:'8px', backgroundColor:'#45a049', color:'white'}} >Add</Button>
+                  <Button style={{ width: '150px', marginLeft: '8px', backgroundColor: '#45a049', color: 'white' }} >Add</Button>
                 </div>
               </div>
 
-              
+
               <div className='anotherbox-small'>
                 <div>
                   <Title level={4}>Current Members</Title>
@@ -449,55 +455,50 @@ const GroupForm = () => {
             </div>
 
             <div className='anotherbox-container'>
-                <div className='anotherbox-small'>
-                  <label className='headline'>6.) Social Media Platforms</label>
-                  {/* Youtube */}
-                  <div className='social-media-item'>
-                    <span className='social-media-logo'>
-                      <FontAwesomeIcon icon={faYoutube} />
-                    </span>
-                    <span className='social-media-name'>Youtube:</span>
-                    <Input placeholder="Youtube" className='social-media-input' />
-                  </div>
-
-                  {/* Spotify */}
-                  <div className='social-media-item'>
-                    <span className='social-media-logo'>
-                      <FontAwesomeIcon icon={faSpotify} />
-                    </span>
-                    <span className='social-media-name'>Spotify:</span>
-                    <Input placeholder="Spotify" className='social-media-input' />
-                  </div>
-
-                  {/* Tiktok */}
-                  <div className='social-media-item'>
-                    <span className='social-media-logo'>
-                      <i className='bx bxl-tiktok' />
-                    </span>
-                    <span className='social-media-name'>Tiktok:</span>
-                    <Input placeholder="Tiktok" className='social-media-input' />
-                  </div>
-                </div>
-                <div className='anotherbox-small'>
-                  {[
-                    { icon: <i class='bx bxl-instagram-alt'></i>, name: 'Instagram' },
-                    { icon: <FontAwesomeIcon icon={faXTwitter} />, name: 'X' },
-                  ].map((item, index) => (
-                    <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
-                      <span style={{ marginRight: '8px', flexShrink: 0 }}>
-                        {item.icon}
-                      </span>
-                      <span style={{ marginRight: '8px', flexShrink: 0 }}>{item.name}:</span>
-                      <Input placeholder={item.name} style={{ flexGrow: 1 }} />
-                    </div>
-                  ))}
+              <div className='anotherbox-small'>
+                <label className='headline'>6.) Social Media Platforms</label>
+                {/* Youtube */}
+                <div className='social-media-item'>
+                  <span className='social-media-logo'>
+                    <FontAwesomeIcon icon={faYoutube} />
+                  </span>
+                  <span className='social-media-name'>Youtube:</span>
+                  <Input placeholder="Youtube" className='social-media-input' />
                 </div>
 
+                {/* Spotify */}
+                <div className='social-media-item'>
+                  <span className='social-media-logo'>
+                    <FontAwesomeIcon icon={faSpotify} />
+                  </span>
+                  <span className='social-media-name'>Spotify:</span>
+                  <Input placeholder="Spotify" className='social-media-input' />
+                </div>
 
+                {/* Tiktok */}
+                <div className='social-media-item'>
+                  <span className='social-media-logo'>
+                    <i className='bx bxl-tiktok' />
+                  </span>
+                  <span className='social-media-name'>Tiktok:</span>
+                  <Input placeholder="Tiktok" className='social-media-input' />
+                </div>
               </div>
-
-
-
+              <div className='anotherbox-small'>
+                {[
+                  { icon: <i class='bx bxl-instagram-alt'></i>, name: 'Instagram' },
+                  { icon: <FontAwesomeIcon icon={faXTwitter} />, name: 'X' },
+                ].map((item, index) => (
+                  <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
+                    <span style={{ marginRight: '8px', flexShrink: 0 }}>
+                      {item.icon}
+                    </span>
+                    <span style={{ marginRight: '8px', flexShrink: 0 }}>{item.name}:</span>
+                    <Input placeholder={item.name} style={{ flexGrow: 1 }} />
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
         <div className='addFLex'>
@@ -506,7 +507,9 @@ const GroupForm = () => {
             <TextArea
               placeholder="Write a brief introduction about the group, including their achievements, background, and songs."
               autoSize={{ minRows: 5, maxRows: 10 }} />
-            <Button className='submitBtn'>ADD</Button>
+            <Button className='submitBtn'>
+              {buttonText}
+            </Button>
           </div>
         </div>
       </div>

@@ -6,6 +6,7 @@ import { DownOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/ico
 import TextArea from 'antd/es/input/TextArea';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXTwitter, faSpotify, faYoutube } from '@fortawesome/free-brands-svg-icons';
+import { useLocation } from 'react-router-dom';
 
 const { Option } = Select;
 const formItemLayout = {
@@ -43,6 +44,10 @@ const IdolForm = () => {
   const [image, setImage] = useState(null);
   const [countryData, setCountryData] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState(null);
+  const location = useLocation(); // Get the current location
+
+  // Determine button text based on the current URL
+  const buttonText = location.pathname === '/EditIdol' ? 'Update Idol' : 'Save Idol';
 
   // Fetch country names from the API
   const fetchCountryNames = async () => {
@@ -304,7 +309,7 @@ const IdolForm = () => {
                               {form.getFieldValue(['companies', index, 'showSince']) && (
                                 <Form.Item
                                   label={`Company Since for Company ${index + 1}`}
-                                  
+
                                   required={true}
                                 >
                                   <Form.Item
@@ -357,7 +362,7 @@ const IdolForm = () => {
                 </div>
               </div>
 
-              
+
               <div className='idolform-box-container' id="idolform-box4">
                 <div style={{ marginTop: '16px' }}>
                   <span style={{ marginRight: '8px' }}>Status:</span>
@@ -511,8 +516,6 @@ const IdolForm = () => {
 
 
             </div>
-
-
           </div>
         </div>
         <div className='addFLex'>
@@ -521,13 +524,14 @@ const IdolForm = () => {
             <TextArea
               placeholder="Write a brief introduction about the idol, including their achievements, background, and personality."
               autoSize={{ minRows: 5, maxRows: 10 }} />
-            <Button className='submitBtn'>ADD</Button>
+            <Button className='submitBtn'>
+              {buttonText}
+            </Button>
           </div>
         </div>
       </div>
     </div>
   );
-
 };
 
 export default IdolForm;
