@@ -1,0 +1,34 @@
+.infohandler-container {
+    width: calc(95% - 300px);
+    padding: 20px;
+}
+
+.container {
+    padding-bottom: 50px;
+}
+
+.infohandleraction-container {
+    display: flex;
+    justify-content: flex-end; 
+    margin-bottom: 10px;
+}
+
+.infohandlerSearch-container {
+    margin-right: 10px; 
+}
+
+.searchInput {
+    width: 300px;
+}
+
+.searchInput .ant-input,
+.searchInput .ant-input-search-button {
+    font-family: 'Saira Condensed', sans-serif;
+    border-radius: 25px;
+    box-shadow: inset 0px 1px 5px 0px rgba(0, 0, 0, 0.75);
+}
+
+.idolSearch,
+.groupSearch {
+    composes: searchInput;
+}

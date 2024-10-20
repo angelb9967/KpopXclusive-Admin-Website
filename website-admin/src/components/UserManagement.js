@@ -133,6 +133,7 @@ const UserManagement = () => {
           }
         } catch (error) {
           console.error("Error:", error);
+          message.error('An unexpected error occurred.');
         }
       },
       onCancel() {
@@ -151,6 +152,7 @@ const UserManagement = () => {
       onOk: async () => {
         try {
           const response = await fetch(`http://localhost:8000/users/${id}`, { method: 'DELETE' });
+          console.log(`Attempting to delete user with ID: ${id}`);
           
           if (response.ok) {
             console.log('User deleted successfully');

@@ -1,0 +1,98 @@
+/* * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    height: 100%;
+    width: 100%;
+  }
+  
+  body {
+    display: flex;
+    background-color: #f0f0f0;
+  }
+   */
+
+   .groupform-title {
+    text-align: center;
+   }
+
+  .groupform-box-container {
+    display: flex;
+    width: 100vw; /* Full viewport width */
+    height: 100vh; /* Full viewport height */
+  }
+  
+  .groupform-box {
+    flex: 1; /* Make boxes take up equal space */
+    height: 100%; /* Fill height of viewport */
+    transition: background-color 0.3s ease-in-out;
+  }
+  
+  /* Initial colors and borders */
+  #groupform-box1 {
+    border: 2px solid #ff6550;
+    background-color: #fff; /* Background color for box 1 */
+  }
+  
+  #groupform-box2 {
+    border: 2px solid #4682b4;
+    background-color: #fff; /* Background color for box 2 */
+  }
+  
+  #groupform-box3 {
+    border: 2px solid #32cd32;
+    background-color: #fff; /* Background color for box 3 */
+  }
+  
+  .groupform-image-upload-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%; /* Ensures the container takes full height */
+  }
+  
+  .groupform-image-upload-box {
+    border: 2px dashed #0000FF;
+    width: 100%; /* Make the upload box full width of its container */
+    height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    text-align: center;
+    position: relative;
+  }
+  
+  .groupform-image-upload-box p {
+    margin: 0;
+    font-size: 16px;
+    color: #666;
+  }
+  
+  .groupform-image-preview {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  
+  .groupform-file-actions {
+    margin-top: 10px;
+  }
+  
+  .groupform-file-actions button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .groupform-file-actions button:hover {
+    background-color: #45a049;
+  }
+  

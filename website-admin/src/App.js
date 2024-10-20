@@ -6,14 +6,18 @@ import UserManagement from './components/UserManagement';
 import AdminApproval from './components/AdminApproval';
 import InformationHandler from './components/InformationHandler';
 import AccessWebsite from './components/AccessWebsite';
+import IdolForm from './pages/IdolForm';
+import GroupForm from './pages/GroupForm';
 
 const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Login/>} /> {/* Login page */}
-        <Route path="/Main" element={<Main />}> {/* Main layout */}
-        <Route index element={<Dashboard />} /> {/* Default route for Main */}
+        <Route path="/" element={<Login/>} />
+        <Route path="/EditGroup" element={<GroupForm/>} />
+        <Route path="/EditIdol" element={<IdolForm/>} />
+        <Route path="/Main" element={<Main/>}> 
+        <Route index element={<Dashboard />} /> 
         <Route path="Dashboard" element={<Dashboard />} />
         <Route path="User-Management" element={<UserManagement />} />
         <Route path="Admin-Approval" element={<AdminApproval />} />
