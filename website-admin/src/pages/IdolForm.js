@@ -7,67 +7,43 @@ import TextArea from 'antd/es/input/TextArea';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXTwitter, faSpotify, faYoutube } from '@fortawesome/free-brands-svg-icons';
 import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 const { Option } = Select;
-const formItemLayout = {
-  labelCol: {
-    xs: {
-      span: 24,
-    },
-    sm: {
-      span: 4,
-    },
-  },
-  wrapperCol: {
-    xs: {
-      span: 24,
-    },
-    sm: {
-      span: 20,
-    },
-  },
-};
-const formItemLayoutWithOutLabel = {
-  wrapperCol: {
-    xs: {
-      span: 24,
-      offset: 0,
-    },
-    sm: {
-      span: 20,
-      offset: 4,
-    },
-  },
-};
 
 const IdolForm = () => {
-  const [image, setImage] = useState(null);
+  const [form] = Form.useForm();
+  const [idolImage, setIdolImage] = useState(null);
+  const [lightstickImage, setLightstickImage] = useState(null);
   const [countryData, setCountryData] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState(null);
+  const [funFactsList, setFunFactsList] = useState([]); 
+  const [funFactInputValue, setFunFactInputValue] = useState(''); 
+  const [funFactsTextAreaValue, setFunFactsTextAreaValue] = useState(''); 
   const location = useLocation(); // Get the current location
 
   // Determine button text based on the current URL
   const buttonText = location.pathname === '/EditIdol' ? 'Update Idol' : 'Save Idol';
 
   // Fetch country names from the API
-  const fetchCountryNames = async () => {
-    try {
-      const response = await fetch(`https://restcountries.com/v3.1/all`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch countries');
-      }
-      const data = await response.json();
-      setCountryData(data);
-    } catch (error) {
-      message.error(error.message);
-    }
-  };
-
   useEffect(() => {
-    fetchCountryNames(); // Fetch country names when component mounts
+    fetch('https://restcountries.com/v3.1/all')
+      .then((response) => response.json())
+      .then((data) => setCountryData(data))
+      .catch((error) => message.error('Failed to fetch countries'));
   }, []);
 
-  const handleFile = (file) => {
+  const handleCountrySelect = (value) => {
+    setSelectedCountry(value);
+  };
+
+  const handleChange = () => {
+
+  };
+
+  ////////////////  UPLOAD IMAGE - *START 
+
+  const handleFile = (file, setImage) => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -77,36 +53,90 @@ const IdolForm = () => {
     }
   };
 
-  const handleFileSelect = (event) => {
+  const handleFileSelect = (event, setImage) => {
     const file = event.target.files[0];
-    handleFile(file);
+    handleFile(file, setImage);
   };
 
-  const handleDrop = (event) => {
+  const handleDrop = (event, setImage) => {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
-    handleFile(file);
+    handleFile(file, setImage);
   };
 
-  const handlePaste = (event) => {
+  const handlePaste = (event, setImage) => {
     const items = event.clipboardData.items;
     for (let i = 0; i < items.length; i++) {
       if (items[i].type.includes('image')) {
         const file = items[i].getAsFile();
-        handleFile(file);
+        handleFile(file, setImage);
       }
     }
-  };
-
-  const handleCountrySelect = (value) => {
-    setSelectedCountry(value);
   };
 
   const handleDragOver = (event) => {
     event.preventDefault();
   };
 
-  const [form] = Form.useForm();
+   ////////////////  UPLOAD IMAGE - *END
+
+
+   //////////////// ADD FUN FACT AREA - *START
+
+   const addFunFact = () => {
+    if (funFactInputValue.trim() === '') return; // Ignore empty input
+
+    const newFact = funFactInputValue.trim();
+    let formattedFact;
+
+    if (funFactsTextAreaValue.trim() === '') {
+      formattedFact = `1.) ${newFact}`; // First fun fact
+    } else {
+      const existingFacts = funFactsTextAreaValue.split('\n').filter(Boolean); // Split by new line and filter empty lines
+      const nextIndex = existingFacts.length + 1; // Determine the next index for numbering
+      formattedFact = `${nextIndex}.) ${newFact}`; // Format the new fun fact
+    }
+
+    setFunFactsList([...funFactsList, formattedFact]); // Store the formatted fun fact
+    setFunFactsTextAreaValue((prev) => (prev ? `${prev}\n${formattedFact}` : formattedFact)); // Append to textarea
+    setFunFactInputValue(''); // Clear the input field
+  };
+
+  const clearInput = () => {
+    setFunFactInputValue(''); // Clear input field
+    setFunFactsTextAreaValue(''); // Clear textarea
+    setFunFactsList([]); // Clear the fun facts list
+  };
+
+  const eraseLast = () => {
+    const existingFacts = funFactsTextAreaValue.split('\n').filter(Boolean); // Split by new line and filter empty lines
+
+    if (existingFacts.length === 0) return; // If there are no facts, do nothing
+
+    // Remove the last fun fact
+    existingFacts.pop();
+    const updatedTextAreaValue = existingFacts.join('\n'); // Join the remaining facts
+
+    setFunFactsTextAreaValue(updatedTextAreaValue); // Update the textarea
+  };
+
+
+   //////////////// ADD FUN FACT AREA - *END
+
+  const onFinish = async (values) => {
+    const formData = {
+      ...values,
+      idolImage, // Idol image
+      lightstickImage, // Lightstick image
+    };
+
+    try {
+      const response = await axios.post('http://localhost:8000/idols', formData);
+      message.success(response.data.message);
+    } catch (error) {
+      message.error('Failed to save idol');
+    }
+  };
 
   const onCompanyNameChange = (index) => {
     const companies = form.getFieldValue('companies');
@@ -125,43 +155,39 @@ const IdolForm = () => {
     form.setFieldsValue({ companies: updatedCompanies });
   };
 
-  const onFinish = (values) => {
-    console.log('Form Submitted: ', values);
-  };
-
-
   return (
     <div className='idolForm-maincontainer'>
       <div className='idolForm'>
         <h1 className='idolform-title'>KPOP IDOL INFORMATION</h1>
-        <div className='page-box-container'>
-          <div className="idolform-box-container" id="idolform-box1">
-            {/* Content for box 1 */}
-            <label className='headline'>1.) Input the image of the idol here</label>
-            <div className="idolform-image-upload-container">
-              <div
-                className="idolform-image-upload-box"
-                onDrop={handleDrop}
-                onDragOver={handleDragOver}
-                onPaste={handlePaste}
-                onClick={() => document.getElementById('fileInput').click()}
-              >
-                {!image ? (
-                  <p>Paste your image here, drag & drop, or double-click to upload.</p>
-                ) : (
-                  <img src={image} alt="Preview" className="idolform-image-preview" />
-                )}
-              </div>
-              <div className="idolform-file-actions">
-                <button onClick={() => document.getElementById('fileInput').click()}>
-                  Choose File
-                </button>
-                <input
-                  id="fileInput"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileSelect}
-                  style={{ display: 'none' }}
+        <Form form={form} onFinish={onFinish}>
+          <div className='page-box-container'>
+            <div className="idolform-box-container" id="idolform-box1">
+              {/* Content for box 1 */}
+              <label className='headline'>1.) Input the image of the idol here</label>
+              <div className="idolform-image-upload-container">
+                <div
+                  className="idolform-image-upload-box"
+                  onDrop={(event) => handleDrop(event, setIdolImage)}
+                  onDragOver={handleDragOver}
+                  onPaste={(event) => handlePaste(event, setIdolImage)}
+                  onClick={() => document.getElementById('idolFileInput').click()}
+                >
+                  {!idolImage ? (
+                    <p>Paste your image here, drag & drop, or double-click to upload.</p>
+                  ) : (
+                    <img src={idolImage} alt="Idol Preview" className="idolform-image-preview" />
+                  )}
+                </div>
+                <div className="idolform-file-actions">
+                  <button onClick={() => document.getElementById('idolFileInput').click()}>
+                    Choose File
+                  </button>
+                  <input
+                   id="idolFileInput"
+                   type="file"
+                   accept="image/*"
+                   onChange={(event) => handleFileSelect(event, setIdolImage)}
+                   style={{ display: 'none' }}
                 />
               </div>
             </div>
@@ -170,27 +196,27 @@ const IdolForm = () => {
             <div className="idolform-image-upload-container">
               <div
                 className="idolform-image-upload-box"
-                onDrop={handleDrop}
-                onDragOver={handleDragOver}
-                onPaste={handlePaste}
-                onClick={() => document.getElementById('fileInput').click()}
-              >
-                {!image ? (
-                  <p>Paste your image here, drag & drop, or double-click to upload.</p>
-                ) : (
-                  <img src={image} alt="Preview" className="idolform-image-preview" />
-                )}
-              </div>
-              <div className="idolform-file-actions">
-                <button onClick={() => document.getElementById('fileInput').click()}>
-                  Choose File
-                </button>
-                <input
-                  id="fileInput"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileSelect}
-                  style={{ display: 'none' }}
+                onDrop={(event) => handleDrop(event, setLightstickImage)}
+                  onDragOver={handleDragOver}
+                  onPaste={(event) => handlePaste(event, setLightstickImage)}
+                  onClick={() => document.getElementById('lightstickFileInput').click()}
+                >
+                  {!lightstickImage ? (
+                    <p>Paste your image here, drag & drop, or double-click to upload.</p>
+                  ) : (
+                    <img src={lightstickImage} alt="Lightstick Preview" className="idolform-image-preview" />
+                  )}
+                </div>
+                <div className="idolform-file-actions">
+                  <button onClick={() => document.getElementById('lightstickFileInput').click()}>
+                    Choose File
+                  </button>
+                  <input
+                   id="lightstickFileInput"
+                   type="file"
+                   accept="image/*"
+                   onChange={(event) => handleFileSelect(event, setLightstickImage)}
+                   style={{ display: 'none' }}
                 />
               </div>
             </div>
@@ -451,26 +477,33 @@ const IdolForm = () => {
                 </Form>
 
               </div>
-            </div>
-
-            <div className='anotherbox'>
-              <label className='headline'>ENTER FUN FACTS ABOUT THIS IDOL!</label>
-              <div className='field'>
-                <label>Add Fun Facts:</label>
-                <Input placeholder='Enter fun fact here' />
-                <Button>Add</Button>
               </div>
-              <TextArea
-                placeholder="What makes this idol unique? Share a fun tidbit..."
-                disabled
-                autoSize={{ minRows: 5, maxRows: 10 }}
-              />
 
-              <div className='anotherbox-container'>
-                <div className='anotherbox-small'>
-                  <label className='headline'>6.) Social Media Platforms</label>
-                  {/* Youtube */}
-                  <div className='social-media-item'>
+              <div className='anotherbox'>
+                <label className='headline'>ENTER FUN FACTS ABOUT THIS IDOL!</label>
+                <div className='field'>
+                  <label>Add Fun Facts:</label>
+                  <Input
+                    value={funFactInputValue}
+                    onChange={(e) => setFunFactInputValue(e.target.value)} // Update input value state
+                    placeholder='Enter fun fact here'
+                  />
+                  <Button onClick={addFunFact}>Add</Button>
+                  <Button onClick={clearInput} style={{ marginLeft: '8px' }}>Clear</Button>
+                  <Button onClick={eraseLast} style={{ marginLeft: '8px' }}>Undo</Button>
+                </div>
+                <TextArea 
+                  value={funFactsTextAreaValue}
+                  placeholder="What makes this idol unique? Share a fun tidbit..."
+                  autoSize={{ minRows: 5, maxRows: 10 }}
+                  disabled
+                />
+
+                <div className='anotherbox-container'>
+                  <div className='anotherbox-small'>
+                    <label className='headline'>6.) Social Media Platforms</label>
+                    {/* Youtube */}
+                    <div className='social-media-item'>
                     <span className='social-media-logo'>
                       <FontAwesomeIcon icon={faYoutube} />
                     </span>
@@ -495,40 +528,47 @@ const IdolForm = () => {
                     <span className='social-media-name'>Tiktok:</span>
                     <Input placeholder="Tiktok" className='social-media-input' />
                   </div>
+                  </div>
+                  <div className='anotherbox-small'>
+                    {[
+                      { icon: <i className='bx bxl-instagram-alt'></i>, name: 'Instagram', fieldName: 'socialMedia.instagram' },
+                      { icon: <FontAwesomeIcon icon={faXTwitter} />, name: 'X', fieldName: 'socialMedia.twitter' },
+                    ].map((item, index) => (
+                      <Form.Item
+                        key={index}
+                        label={
+                          <span style={{ display: 'flex', alignItems: 'center' }}>
+                            <span style={{ marginRight: '8px' }}>{item.icon}</span>
+                            <span>{item.name}:</span>
+                          </span>
+                        }
+                      >
+                        <Input placeholder={`Enter ${item.name} URL`} name={item.fieldName} />
+                      </Form.Item>
+                    ))}
                 </div>
-                <div className='anotherbox-small'>
-                  {[
-                    { icon: <i class='bx bxl-instagram-alt'></i>, name: 'Instagram' },
-                    { icon: <FontAwesomeIcon icon={faXTwitter} />, name: 'X' },
-                  ].map((item, index) => (
-                    <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
-                      <span style={{ marginRight: '8px', flexShrink: 0 }}>
-                        {item.icon}
-                      </span>
-                      <span style={{ marginRight: '8px', flexShrink: 0 }}>{item.name}:</span>
-                      <Input placeholder={item.name} style={{ flexGrow: 1 }} />
-                    </div>
-                  ))}
-                </div>
-
-
               </div>
-
-
             </div>
           </div>
         </div>
-        <div className='addFLex'>
-          <div className='anotherbox-small'>
-            <label className='headline'>7.) Create Introduction here:</label>
-            <TextArea
-              placeholder="Write a brief introduction about the idol, including their achievements, background, and personality."
-              autoSize={{ minRows: 5, maxRows: 10 }} />
-            <Button className='submitBtn'>
-              {buttonText}
-            </Button>
+          <div className='addFLex'>
+            <div className='anotherbox-small'>
+              <label className='headline'>7.) Create Introduction here:</label>
+              <TextArea
+                name="introduction"
+                placeholder="Write a brief introduction about the idol, including their achievements, background, and personality."
+                autoSize={{ minRows: 5, maxRows: 10 }} 
+                onChange={handleChange}
+                required
+                />
+              <Form.Item>
+                <Button type="primary" htmlType='submit' className='submitBtn'>
+                  {buttonText}
+                </Button>
+              </Form.Item>
+            </div>
           </div>
-        </div>
+        </Form>
       </div>
     </div>
   );
