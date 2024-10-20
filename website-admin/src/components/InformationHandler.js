@@ -165,6 +165,16 @@ const InformationHandler = () => {
     }
   };
 
+  // Navigate to Add Idol page
+  const handleAddIdol = () => {
+    navigate('/AddIdol');
+  };
+
+  // Navigate to Add Group page
+  const handleAddGroup = () => {
+    navigate('/AddGroup');
+  };
+
   return (
     <div className='container'>
       {/* Idols Section */}
@@ -182,7 +192,7 @@ const InformationHandler = () => {
             />
           </div>
           <div className="addButton-container">
-            <Button type="primary">Add New Kpop Idol</Button>
+            <Button type="primary" onClick={handleAddIdol}>Add New Kpop Idol</Button> {/* Navigate on click */}
           </div>
         </div>
         <div className="table-container">
@@ -216,7 +226,7 @@ const InformationHandler = () => {
             />
           </div>
           <div className="addButton-container">
-            <Button type="primary">Add New Kpop Group</Button>
+            <Button type="primary" onClick={handleAddGroup}>Add New Kpop Group</Button> {/* Navigate on click */}
           </div>
         </div>
         <div className="table-container">

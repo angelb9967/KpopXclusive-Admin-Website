@@ -14,7 +14,9 @@ const App = () => {
     <Router>
       <Routes>
         <Route path="/" element={<Login/>} />
+        <Route path="/AddGroup" element={<GroupForm/>} />
         <Route path="/EditGroup" element={<GroupForm/>} />
+        <Route path="/AddIdol" element={<IdolForm/>} />
         <Route path="/EditIdol" element={<IdolForm/>} />
         <Route path="/Main" element={<Main/>}> 
         <Route index element={<Dashboard />} /> 

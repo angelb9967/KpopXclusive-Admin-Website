@@ -307,7 +307,8 @@ const IdolForm = () => {
                               {form.getFieldValue(['companies', index, 'showSince']) && (
                                 <Form.Item
                                   label={`Company Since for Company ${index + 1}`}
-                                  required={false}
+                                  
+                                  required={true}
                                 >
                                   <Form.Item
                                     name={[field.name, 'since']} // Use 'since' as the field name
@@ -366,12 +367,85 @@ const IdolForm = () => {
                     <Radio value="Inactive">Inactive</Radio>
                   </Radio.Group>
                 </div>
-                {['Korean Name', 'Zodiac Sign', 'Language(s)', 'Training Period', 'Debut', 'Stage Name', 'Active Years', 'Education', 'Fandom', 'MBTI'].map((placeholder, index) => (
+                {['Korean Name', 'Zodiac Sign', 'Training Period', 'Debut', 'Stage Name', 'Active Years', 'Education', 'Fandom', 'MBTI'].map((placeholder, index) => (
                   <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
                     <span style={{ marginRight: '8px', flexShrink: 0 }}>{placeholder}:</span>
                     <Input placeholder={placeholder} style={{ flexGrow: 1 }} />
                   </div>
                 ))}
+
+                <Form
+                  name="language_form"
+                  onFinish={onFinish}
+                  style={{
+                    maxWidth: 600,
+                  }}
+                >
+                  <Form.Item label="Language(s):">
+                    <Form.List
+                      name="languages"
+                      initialValue={['']} // Start with one empty input
+                      rules={[
+                        {
+                          validator: async (_, languages) => {
+                            if (!languages || languages.length < 1) {
+                              return Promise.reject(new Error('Please provide at least one language.'));
+                            }
+                          },
+                        },
+                      ]}
+                    >
+                      {(fields, { add, remove }, { errors }) => (
+                        <>
+                          {fields.map(({ key, name, fieldKey, ...restField }) => (
+                            <Form.Item
+                              required={false}
+                              key={key}
+                            >
+                              <Form.Item
+                                {...restField}
+                                name={[name]}
+                                fieldKey={[fieldKey]}
+                                validateTrigger={['onChange', 'onBlur']}
+                                rules={[
+                                  {
+                                    required: true,
+                                    whitespace: true,
+                                    message: "Please input a language.",
+                                  },
+                                ]}
+                                noStyle
+                              >
+                                <Input
+                                  placeholder="Language"
+                                  style={{ width: '60%', marginRight: '8px' }}
+                                />
+                              </Form.Item>
+                              {fields.length > 1 ? (
+                                <MinusCircleOutlined
+                                  className="dynamic-delete-button"
+                                  onClick={() => remove(name)}
+                                />
+                              ) : null}
+                            </Form.Item>
+                          ))}
+                          <Form.Item>
+                            <Button
+                              type="dashed"
+                              onClick={() => add()}
+                              style={{ width: '60%' }}
+                              icon={<PlusOutlined />}
+                            >
+                              Add Language
+                            </Button>
+                            <Form.ErrorList errors={errors} />
+                          </Form.Item>
+                        </>
+                      )}
+                    </Form.List>
+                  </Form.Item>
+                </Form>
+
               </div>
             </div>
 
@@ -383,10 +457,10 @@ const IdolForm = () => {
                 <Button>Add</Button>
               </div>
               <TextArea
-                placeholder="Controlled autosize"
+                placeholder="What makes this idol unique? Share a fun tidbit..."
+                disabled
                 autoSize={{ minRows: 5, maxRows: 10 }}
               />
-
 
               <div className='anotherbox-container'>
                 <div className='anotherbox-small'>
@@ -444,7 +518,6 @@ const IdolForm = () => {
 
 
 
-
         </div>
         <div className='addFLex'>
           <div className='anotherbox-small'>
@@ -456,9 +529,6 @@ const IdolForm = () => {
             <Button className='submitBtn'>ADD</Button>
           </div>
         </div>
-
-
-
       </div>
     </div>
   );
