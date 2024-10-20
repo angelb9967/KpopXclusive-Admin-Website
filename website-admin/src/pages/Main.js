@@ -75,12 +75,6 @@ const Main = () => {
               </Link>
             </li>
             <li className="list">
-              <Link to="/Main/Admin-Approval" className="nav-link">
-                <i className='bx bx-check'></i>
-                <span className="link">ADMIN APPROVAL</span>
-              </Link>
-            </li>
-            <li className="list">
               <Link to="/Main/Information-Handler" className="nav-link">
                 <i className='bx bxs-info-circle'></i> 
                 <span className="link">INFORMATION HANDLER</span>

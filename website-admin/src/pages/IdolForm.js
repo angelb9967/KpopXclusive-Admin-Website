@@ -127,7 +127,6 @@ const IdolForm = () => {
 
   return (
     <div className='idolForm-maincontainer'>
-
       <div className='idolForm'>
         <h1 className='idolform-title'>KPOP IDOL INFORMATION</h1>
         <div className='page-box-container'>
@@ -203,8 +202,6 @@ const IdolForm = () => {
 
 
           <div className='trylang'>
-
-
             <div className="idolform-box-container" id="idolform-box2">
               {/* Content for box 2 */}
               <div className='idolform-box-container1' id="idolform-box3">
@@ -359,6 +356,8 @@ const IdolForm = () => {
                   </Form>
                 </div>
               </div>
+
+              
               <div className='idolform-box-container' id="idolform-box4">
                 <div style={{ marginTop: '16px' }}>
                   <span style={{ marginRight: '8px' }}>Status:</span>
@@ -515,17 +514,13 @@ const IdolForm = () => {
 
 
           </div>
-
-
-
         </div>
         <div className='addFLex'>
           <div className='anotherbox-small'>
             <label className='headline'>7.) Create Introduction here:</label>
             <TextArea
               placeholder="Write a brief introduction about the idol, including their achievements, background, and personality."
-              autoSize={{ minRows: 5, maxRows: 10 }}
-            />
+              autoSize={{ minRows: 5, maxRows: 10 }} />
             <Button className='submitBtn'>ADD</Button>
           </div>
         </div>

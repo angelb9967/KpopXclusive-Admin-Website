@@ -1,98 +1,254 @@
-/* * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  body {
-    height: 100%;
-    width: 100%;
-  }
-  
-  body {
-    display: flex;
-    background-color: #f0f0f0;
-  }
-   */
+.groupForm {
+  border: 2px solid #c850ff;
+}
 
-   .groupform-title {
-    text-align: center;
-   }
+.groupform-title {
+  text-align: center;
+}
 
-  .groupform-box-container {
-    display: flex;
-    width: 100vw; /* Full viewport width */
-    height: 100vh; /* Full viewport height */
-  }
-  
-  .groupform-box {
-    flex: 1; /* Make boxes take up equal space */
-    height: 100%; /* Fill height of viewport */
-    transition: background-color 0.3s ease-in-out;
-  }
-  
-  /* Initial colors and borders */
-  #groupform-box1 {
-    border: 2px solid #ff6550;
-    background-color: #fff; /* Background color for box 1 */
-  }
-  
-  #groupform-box2 {
-    border: 2px solid #4682b4;
-    background-color: #fff; /* Background color for box 2 */
-  }
-  
-  #groupform-box3 {
-    border: 2px solid #32cd32;
-    background-color: #fff; /* Background color for box 3 */
-  }
-  
-  .groupform-image-upload-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100%; /* Ensures the container takes full height */
-  }
-  
-  .groupform-image-upload-box {
-    border: 2px dashed #0000FF;
-    width: 100%; /* Make the upload box full width of its container */
-    height: 250px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    text-align: center;
-    position: relative;
-  }
-  
-  .groupform-image-upload-box p {
-    margin: 0;
-    font-size: 16px;
-    color: #666;
-  }
-  
-  .groupform-image-preview {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-  }
-  
-  .groupform-file-actions {
-    margin-top: 10px;
-  }
-  
-  .groupform-file-actions button {
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-  
-  .groupform-file-actions button:hover {
-    background-color: #45a049;
-  }
-  
+.groupform-box-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.groupform-box1 {
+  height: 100%; /* Fill height of viewport */
+  transition: background-color 0.3s ease-in-out;
+}
+
+.groupform-box-container1 {
+  display: flex;
+  flex: 1;
+  margin: 0; /* Ensure no extra margins */
+  padding: 0; /* Ensure no extra padding */
+}
+
+.groupform-box {
+  flex: 1;
+  /* Make boxes take up equal space */
+  height: 100%;
+  /* Fill height of viewport */
+  transition: background-color 0.3s ease-in-out;
+}
+
+/* Box 1 */
+#groupform-box1 {
+  flex: 1; /* Takes 1 part of the available space */
+  border: 2px solid #ff6550;
+  background-color: #fff; /* Background color for box 1 */
+  display: flex;
+  flex-direction: column; /* Stack content vertically */
+  padding: 16px; /* Optional: add padding if needed */
+}
+
+/* Box 2 */
+#groupform-box2 {
+  border: 2px solid #f8ad00;
+  background-color: #fff; /* Background color for box 2 */
+  display: flex;
+  height: auto;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+/* Box 3 */
+#groupform-box3 {
+  flex: 1; /* Make box 3 take equal space as box 4 */
+  border: 2px solid #46b45a;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+}
+
+/* Box 4 */
+#groupform-box4 {
+  flex: 1; /* Make box 4 take equal space as box 3 */
+  border: 2px solid #4682b4;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  height: auto;
+}
+
+/* Box 5 */
+#groupform-box5 {
+  height: 50px;
+  flex: 1 1 0; /* Flex-grow: 1, Flex-shrink: 1, Flex-basis: 0 */
+  border: 2px solid #32126b;
+  background-color: #fff; /* Background color for box 4 */
+  display: flex;
+  flex-direction: column; /* Stack content vertically */
+  padding: 16px; /* Optional: add padding if needed */
+}
+
+.groupform-image-upload-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.groupform-image-upload-box {
+  border: 2px dashed #0000FF;
+  width: 100%;
+  /* Make the upload box full width of its container */
+  height: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  text-align: center;
+  position: relative;
+}
+
+.groupform-image-upload-box p {
+  margin: 0;
+  font-size: 16px;
+  color: #666;
+}
+
+.groupform-image-preview {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.groupform-file-actions {
+  margin-top: 10px;
+}
+
+.groupform-file-actions button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.groupform-file-actions button:hover {
+  background-color: #45a049;
+}
+
+.trylang {
+  flex: 3; /* Takes 2 parts of the available space */
+  border: 2px solid #4682b4;
+  display: flex;
+  flex-direction: column;
+}
+
+.anotherbox {
+  padding: 0; /* Optional: add padding if needed */
+  /* Optional: add padding if needed */
+  text-align: center;
+  border: 2px solid #b44657;
+  display: flex;
+  flex-direction: column;
+}
+
+.field {
+  display: flex;
+  flex-direction: row;
+}
+
+.field label {
+  white-space: nowrap;
+  margin-right: 8px;
+}
+
+.field Input{
+  height: 30px;
+  margin-right: 8px;
+}
+
+.field Button{
+  width: 150px;
+}
+
+.anotherbox TextArea {
+  margin-top: 10px;
+}
+
+.anotherbox-container {
+  display:flex;
+  flex-direction: row;
+}
+
+.anotherbox-small {
+  text-align: left;
+  border: 2px solid #000000;
+  flex: 1;
+  padding: 16px; /* Optional: add padding if needed */
+  overflow-y: hidden;
+}
+
+.social-media-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.social-media-logo {
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.social-media-name {
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.social-media-input {
+  flex-grow: 1;
+}
+
+.submitBtn {
+  margin-top: 30px;
+  width: 150px;
+  height: 50px;
+  float: right;
+  align-self: flex-end;
+  margin-bottom: 30px;
+}
+
+.addFlex {
+  display: flex;
+}
+
+.dynamic-delete-button {
+  position: relative;
+  top: 4px;
+  margin: 0 8px;
+  color: #999;
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.dynamic-delete-button:hover {
+  color: #777;
+}
+
+.groupform-box1 span {
+  white-space: nowrap;
+}
+
+#changeFlex {
+  display: flex;
+  flex-direction: row;
+}
+
+#changeFlex label {
+  white-space: nowrap;
+  margin-right: 8px;
+}
+
+#changeFlex .groupform-image-upload-box {
+  height: 150px;
+  width: 200px;
+  margin-right: 8px;
+  margin-bottom: 10px;
+}
