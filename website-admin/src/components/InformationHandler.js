@@ -17,6 +17,10 @@ const InformationHandler = () => {
   const [filteredIdols, setFilteredIdols] = useState([]);
   const [filteredGroups, setFilteredGroups] = useState([]);
 
+  // State for pagination
+  const [idolPagination, setIdolPagination] = useState({ current: 1, pageSize: 10 });
+  const [groupPagination, setGroupPagination] = useState({ current: 1, pageSize: 10 });
+
   useEffect(() => {
     getData();
   }, []);
@@ -47,6 +51,8 @@ const InformationHandler = () => {
       idol.idolName.toLowerCase().includes(idolSearchInput.toLowerCase())
     );
     setFilteredIdols(filtered);
+    // Reset idol pagination when search changes
+    setIdolPagination({ current: 1, pageSize: 10 });
   };
 
   // Handle Group Search
@@ -55,6 +61,8 @@ const InformationHandler = () => {
       group.groupName.toLowerCase().includes(groupSearchInput.toLowerCase())
     );
     setFilteredGroups(filtered);
+    // Reset group pagination when search changes
+    setGroupPagination({ current: 1, pageSize: 10 });
   };
 
   const deleteData = async (id, type) => {
@@ -76,7 +84,6 @@ const InformationHandler = () => {
     }
   };
 
-  // Update handleDelete to include type parameter
   const handleDelete = (key, type) => {
     Modal.confirm({
       title: 'Are you sure you want to delete this record?',
@@ -91,7 +98,29 @@ const InformationHandler = () => {
     });
   };
 
-  // Update the action render for the idol and group columns
+  // Function to format date in PHT
+  const formatDate = (dateString) => {
+    const options = {
+      timeZone: 'Asia/Manila', // Philippine Time Zone
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true,
+    };
+    
+    const date = new Date(dateString).toLocaleString('en-PH', options);
+
+    // Replace the standard locale format with the custom format
+    const [datePart, timePart] = date.split(', ');
+    const [year, month, day] = datePart.split('/');
+    const [time, modifier] = timePart.split(' ');
+    
+    return `${year}/${month}/${day}, ${time} ${modifier}`;
+  };
+
   const idolColumns = [
     {
       title: 'Idol Name',
@@ -102,6 +131,7 @@ const InformationHandler = () => {
       title: 'Last Edited',
       dataIndex: 'lastEdited',
       key: 'lastEdited',
+      render: (text) => formatDate(text), // Format the date
     },
     {
       title: 'Action',
@@ -133,6 +163,7 @@ const InformationHandler = () => {
       title: 'Last Edited',
       dataIndex: 'lastEdited',
       key: 'lastEdited',
+      render: (text) => formatDate(text), // Format the date
     },
     {
       title: 'Action',
@@ -192,20 +223,23 @@ const InformationHandler = () => {
             />
           </div>
           <div className="addButton-container">
-            <Button type="primary" onClick={handleAddIdol}>Add New Kpop Idol</Button> {/* Navigate on click */}
+            <Button type="primary" onClick={handleAddIdol}>Add New Kpop Idol</Button>
           </div>
         </div>
         <div className="table-container">
           <Table
             columns={idolColumns}
-            dataSource={filteredIdols}
+            dataSource={filteredIdols.slice((idolPagination.current - 1) * idolPagination.pageSize, idolPagination.current * idolPagination.pageSize)}
             rowKey="_id"
             pagination={{
-              pageSize: 10,
-              showSizeChanger: true,
+              current: idolPagination.current,
+              pageSize: idolPagination.pageSize,
+              total: filteredIdols.length,
               onChange: (page, pageSize) => {
+                setIdolPagination({ current: page, pageSize });
                 console.log('Idols - Page:', page, 'Page Size:', pageSize);
               },
+              showSizeChanger: true,
             }}
           />
         </div>
@@ -226,20 +260,23 @@ const InformationHandler = () => {
             />
           </div>
           <div className="addButton-container">
-            <Button type="primary" onClick={handleAddGroup}>Add New Kpop Group</Button> {/* Navigate on click */}
+            <Button type="primary" onClick={handleAddGroup}>Add New Kpop Group</Button>
           </div>
         </div>
         <div className="table-container">
           <Table
             columns={groupColumns}
-            dataSource={filteredGroups}
+            dataSource={filteredGroups.slice((groupPagination.current - 1) * groupPagination.pageSize, groupPagination.current * groupPagination.pageSize)}
             rowKey="_id"
             pagination={{
-              pageSize: 10,
-              showSizeChanger: true,
+              current: groupPagination.current,
+              pageSize: groupPagination.pageSize,
+              total: filteredGroups.length,
               onChange: (page, pageSize) => {
+                setGroupPagination({ current: page, pageSize });
                 console.log('Groups - Page:', page, 'Page Size:', pageSize);
               },
+              showSizeChanger: true,
             }}
           />
         </div>
