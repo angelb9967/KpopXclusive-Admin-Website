@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { Input, Button, Table, Modal, message, Checkbox, Select } from 'antd';
+import { Input, Button, Table, Modal, message, Select } from 'antd';
+import moment from 'moment'; // Import moment
 import '../styles/UserManagement.css';
 
 const { Search } = Input;
-const { Option } = Select; 
+const { Option } = Select;
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
-  const [searchInput, setSearchInput] = useState(''); // State for search input
-  const [filteredUsers, setFilteredUsers] = useState([]); // State for filtered users
+  const [searchInput, setSearchInput] = useState('');
+  const [filteredUsers, setFilteredUsers] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [formData, setFormData] = useState({
     username: '',
     password: '',
-    status: 'Inactive', 
-    createdAt: '', 
+    status: 'Inactive',
+    createdAt: '',
     updatedAt: '',
     user_id: ''
   });
@@ -28,9 +29,15 @@ const UserManagement = () => {
     try {
       const response = await fetch('http://localhost:8000/users');
       const data = await response.json();
-      console.log(data); // Check data in browser console
-      setUsers(data);
-      setFilteredUsers(data); // Set initial filtered users to all users
+      console.log(data);
+      // Format dates before setting users
+      const formattedData = data.map(user => ({
+        ...user,
+        createdAt: moment(user.createdAt).format('YYYY/MM/DD, hh:mm:ss A'), // Format createdAt
+        updatedAt: moment(user.updatedAt).format('YYYY/MM/DD, hh:mm:ss A')  // Format updatedAt
+      }));
+      setUsers(formattedData);
+      setFilteredUsers(formattedData);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -40,7 +47,7 @@ const UserManagement = () => {
     const filtered = users.filter(user =>
       user.username.toLowerCase().includes(searchInput.toLowerCase())
     );
-    setFilteredUsers(filtered); // Update filtered users based on search input
+    setFilteredUsers(filtered);
   };
 
   const showModal = (title, callback, user = {}) => {
@@ -48,72 +55,49 @@ const UserManagement = () => {
     setFormData({
       username: user.username || '',
       password: user.password || '',
-      status: user.status || 'Inactive', 
-      createdAt: user.createdAt ? new Date(user.createdAt).toISOString().split('T')[0] : '',
-      updatedAt: user.updatedAt ? new Date(user.updatedAt).toISOString().split('T')[0] : '',
+      status: user.status || 'Inactive',
+      createdAt: user.createdAt || '', // Don't format here; it will be formatted on display
+      updatedAt: user.updatedAt || '', // Don't format here; it will be formatted on display
       user_id: user._id || ''
     });
     setIsModalVisible(true);
-    setStatusError(false)
   };
 
-  const [statusError, setStatusError] = useState(false); // State to track status error
-
   const handleOk = () => {
-    // Show confirmation modal
     Modal.confirm({
       title: 'Confirm Save',
       content: 'Are you sure you want to save these changes?',
       okText: 'Yes',
       cancelText: 'No',
       onOk: async () => {
-        let hasError = false; // Track if there's any error
-        
-        // Check if username is not blank
+        let hasError = false;
+
+        // Validation
         if (!formData.username.trim()) {
           message.error('Username cannot be blank!');
-          setStatusError(true); // Set status error state
-          hasError = true; // Set error flag
+          hasError = true;
         }
-  
-        // Check if password is not blank
         if (!formData.password.trim()) {
           message.error('Password cannot be blank!');
-          setStatusError(true); // Set status error state
-          hasError = true; // Set error flag
+          hasError = true;
         }
-  
-        // Determine the status based on checkbox
-        const status = formData.status; // This should already be a boolean
-  
-        // If the checkbox is not checked, mark as inactive
-        if (status === false) {
-          console.log('Status: Inactive');
-        } else {
-          console.log('Status: Active');
-        }
-  
-        if (hasError) return; // Prevent submission if validation fails
-  
+        if (hasError) return;
+
         const { username, password, user_id } = formData;
-  
-        // Get the current date and time in UTC and convert to PHT
-        const nowUtc = new Date();
-        const nowPht = new Date(nowUtc.getTime() + 8 * 60 * 60 * 1000); // Add 8 hours for PHT
-  
+        const nowPht = moment().utcOffset(8).format('YYYY-MM-DD hh:mm:ss A'); // Get current time in PHT
+
         const url = user_id ? `http://localhost:8000/users/${user_id}` : 'http://localhost:8000/users';
         const method = user_id ? 'PUT' : 'POST';
-  
+
         // Prepare data for saving
         const dataToSend = {
           username,
           password,
-          status, // Use the boolean value for status directly
-          // Use the existing createdAt value from formData when updating
-          createdAt: user_id ? formData.createdAt : nowPht.toISOString(),
-          updatedAt: nowPht.toISOString(), // Always set updatedAt to current PHT time
+          status: formData.status,
+          createdAt: user_id ? formData.createdAt : nowPht, // Keep existing createdAt when updating
+          updatedAt: nowPht, // Always set updatedAt to current PHT time
         };
-  
+
         try {
           const response = await fetch(url, {
             method: method,
@@ -122,12 +106,12 @@ const UserManagement = () => {
               'Content-Type': 'application/json'
             }
           });
-  
+
           if (response.ok) {
             const data = await response.json();
             console.log("Success:", data);
             setIsModalVisible(false);
-            getData(); // Refresh the user list after a successful add or update
+            getData(); // Refresh user list
           } else {
             console.error("Failed to save user:", response.statusText);
           }
@@ -140,7 +124,7 @@ const UserManagement = () => {
         console.log('Save action cancelled');
       },
     });
-  };  
+  };
 
   const deleteData = (id) => {
     Modal.confirm({
@@ -153,10 +137,10 @@ const UserManagement = () => {
         try {
           const response = await fetch(`http://localhost:8000/users/${id}`, { method: 'DELETE' });
           console.log(`Attempting to delete user with ID: ${id}`);
-          
+
           if (response.ok) {
             console.log('User deleted successfully');
-            getData();  // Refresh the user list after deletion
+            getData(); // Refresh user list
           } else {
             console.error("Failed to delete user:", response.statusText);
           }
@@ -168,7 +152,7 @@ const UserManagement = () => {
         console.log('Delete action cancelled');
       },
     });
-  };  
+  };
 
   const columns = [
     { title: 'Username', dataIndex: 'username', key: 'username' },
@@ -201,21 +185,18 @@ const UserManagement = () => {
 
   return (
     <div className="usermanage-container">
-      {/* Search Field and Add Button Container */}
       <div className="action-container">
-        {/* Search Field */}
         <div className="dashboardSearch-container">
           <Search
             size="large"
             placeholder="Find User..."
             className="dashboardSearch"
-            onSearch={handleSearch} // Trigger search on button click
-            onChange={(e) => setSearchInput(e.target.value)} // Update search input on change
-            value={searchInput} // Bind the input value
+            onSearch={handleSearch}
+            onChange={(e) => setSearchInput(e.target.value)}
+            value={searchInput}
           />
         </div>
 
-        {/* Add Button */}
         <div className="addButton-container">
           <Button
             type="primary"
@@ -226,15 +207,13 @@ const UserManagement = () => {
         </div>
       </div>
 
-      {/* User Table */}
       <Table
-        dataSource={filteredUsers} // Use filtered users for the table
+        dataSource={filteredUsers}
         columns={columns}
         rowKey="_id"
         className="mt-3"
       />
 
-      {/* Modal for Adding/Editing Users */}
       <Modal
         title={modalTitle}
         visible={isModalVisible}
@@ -246,7 +225,6 @@ const UserManagement = () => {
           <Input
             value={formData.username}
             onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-            style={{ borderColor: statusError ? 'red' : undefined }}
           />
         </div>
         <div className="mb-3">
@@ -255,7 +233,6 @@ const UserManagement = () => {
             type="password"
             value={formData.password}
             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-            style={{ borderColor: statusError ? 'red' : undefined }}
           />
         </div>
         <div className="mb-3">
@@ -263,7 +240,7 @@ const UserManagement = () => {
           <Select
             value={formData.status}
             onChange={(value) => setFormData({ ...formData, status: value })}
-            style={{ width: '100%' }} 
+            style={{ width: '100%' }}
           >
             <Option value="Active">Active</Option>
             <Option value="Inactive">Inactive</Option>
@@ -272,17 +249,17 @@ const UserManagement = () => {
         <div className="mb-3">
           <label>Created At</label>
           <Input
-            type="date"
+            type="text"
             value={formData.createdAt}
-            disabled 
+            disabled
           />
         </div>
         <div className="mb-3">
           <label>Updated At</label>
           <Input
-            type="date"
+            type="text"
             value={formData.updatedAt}
-            disabled 
+            disabled
           />
         </div>
       </Modal>
