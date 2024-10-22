@@ -178,51 +178,93 @@ app.delete('/groups/:id', async (request, response) => {
 
 const idolSchema = new mongoose.Schema({
     idolName: String,
+    country: String,
+    nationality: String,
+    fullname: String,
+    birthday: String,
+    age: Number,
+    bloodtype: String,
+    height: String, 
+    group: String,
+    debut: String,
+    koreanName: String,
+    stageName: String,
+    status: String,
+    trainingPeriod: String, 
+    zodiacSign: String,
+    activeYears: Number,
+    education: String,
+    fandom: String,
+    funFacts: [String], 
+    introduction: String,
+    latestAlbum: String,
+    mbti: String,
+    musicShowWins: Number,
+    socialMediaPlatforms: {
+        youtube: String,
+        spotify: String,
+        tiktok: String,
+        instagram: String,
+        x: String 
+    },
+    totalAlbums: Number,
+    idolImage: String, 
     lastEdited: Date,
+    lightstickImage: String,
+    companyCurrent: [String], 
+    companySince: {
+        type: Map, 
+        of: String, 
+        required: true,
+        default: {}
+    },
+    language: [String] // Array of languages
 });
 
 const Idol = mongoose.model('idols', idolSchema);
 
-app.post('/idols', async (request, response) => {
-    const idol = new Idol({
-        idolName: request.body.idolName,
-        lastEdited: request.body.lastEdited
-    });
-    const newItem = await idol.save();
-    response.status(201).json({ success: true, data: newItem });
+// POST Route to create a new idol
+app.post('/idols', async (req, res) => {
+    const idolData = {
+        ...req.body,
+    };
+
+    try {
+        const newIdol = new Idol(idolData);
+        await newIdol.save();
+        res.status(201).json({ success: true, message: 'Idol saved successfully!' });
+    } catch (error) {
+        console.error('Error saving idol:', error);
+        res.status(500).json({ success: false, message: 'Failed to save idol' });
+    }
 });
 
+// GET Route to retrieve all idols
 app.get('/idols', async (request, response) => {
-    const idols = await Idol.find();
-    response.status(200).json(idols);
+    try {
+        const idols = await Idol.find();
+        response.status(200).json(idols);
+    } catch (error) {
+        response.status(500).json({ message: 'Error retrieving idols', error });
+    }
 });
 
+// GET Route to retrieve a single idol by ID
 app.get('/idols/:id', async (request, response) => {
-    const idol = await Idol.findById(request.params.id);
-    response.status(200).json(idol);
+    try {
+        const idol = await Idol.findById(request.params.id);
+        if (!idol) {
+            return response.status(404).json({ message: 'Idol not found' });
+        }
+        response.status(200).json(idol);
+    } catch (error) {
+        response.status(500).json({ message: 'Error retrieving idol', error });
+    }
 });
 
+// PUT Route to update a single idol by ID
 app.put('/idols/:id', async (request, response) => {
     const idolId = request.params.id;
-
-    // Fetch the user from the database
-    const idol = await Idol.findById(idolId);
-
-    if (!idol) {
-        return response.status(404).json({ message: "Idol not found" });
-    }
-
-    // Update only the fields that are being changed
-    idol.idolName = request.body.idolName;
-    idol.lastEdited = request.body.lastEdited;
-
-    const updatedItem = await idol.save();
-    response.status(200).json(updatedItem);
-});
-
-app.delete('/idols/:id', async (request, response) => {
-    const idolId = request.params.id;
-    console.log(`Attempting to delete idol with ID: ${idolId}`);
 
     // Validate ObjectId format
     if (!ObjectId.isValid(idolId)) {
@@ -230,14 +272,39 @@ app.delete('/idols/:id', async (request, response) => {
     }
 
     try {
-        // Convert the ID to ObjectId
-        const result = await Idol.findByIdAndDelete(ObjectId(idolId));
-        if (!result) {
+        const updatedIdol = await Idol.findByIdAndUpdate(
+            idolId, 
+            request.body, // This will update all fields from request.body
+            { new: true, runValidators: true } // new: true returns the updated document, runValidators ensures schema validation
+        );
+        
+        if (!updatedIdol) {
+            return response.status(404).json({ message: 'Idol not found' });
+        }
+        response.status(200).json(updatedIdol);
+    } catch (error) {
+        response.status(500).json({ message: 'Error updating idol', error });
+    }
+});
+
+// DELETE Route to delete a single idol by ID
+app.delete('/idols/:id', async (request, response) => {
+    const idolId = request.params.id;
+
+    // Validate ObjectId format
+    if (!ObjectId.isValid(idolId)) {
+        return response.status(400).json({ message: "Invalid ID format" });
+    }
+
+    try {
+        const deletedIdol = await Idol.findByIdAndDelete(idolId);
+        if (!deletedIdol) {
             return response.status(404).json({ message: "Idol not found" });
         }
-        response.status(200).json({ message: 'Idol deleted' });
+        response.status(200).json({ message: 'Idol deleted successfully' });
     } catch (error) {
         console.error("Error deleting idol:", error);
         response.status(500).json({ message: 'Error deleting idol', error });
     }
 });
+
