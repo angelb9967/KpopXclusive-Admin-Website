@@ -34,6 +34,27 @@ const IdolForm = () => {
       return;
     }
 
+    // Helper function to validate URLs
+    const isValidUrl = (urlString) => {
+      try {
+        new URL(urlString);
+        return true;
+      } catch (error) {
+        return false;
+      }
+    };
+
+    // Validate idolImage and lightstickImage URLs
+    if (!isValidUrl(idolImage)) {
+      message.error('Idol image URL is not valid');
+      return;
+    }
+
+    if (!isValidUrl(lightstickImage)) {
+      message.error('Lightstick image URL is not valid');
+      return;
+    }
+
     const languagesArray = values.languages.filter(language => language && language.trim() !== '');
     const lastEdited = moment().tz('Asia/Manila').format('YYYY-MM-DD HH:mm:ss');
     const formattedBirthday = moment(values.birthday).format('YYYY-MM-DD');
@@ -80,6 +101,7 @@ const IdolForm = () => {
       const response = await axios.post('http://localhost:8000/idols', dataToSubmit);
       message.success(response.data.message);
       form.resetFields();
+      clearInput(); 
       setSelectedCountry(undefined);
       setFunFactsList([]);
       setUrlInput('');
@@ -138,13 +160,13 @@ const IdolForm = () => {
 
   const handleDrop = (event, setImageCallback, imageFieldName) => {
     event.preventDefault(); // Prevent default behavior
-  
+
     const items = event.dataTransfer.items;
     let validImageCount = 0; // Counter to track valid images
-  
+
     for (let i = 0; i < items.length; i++) {
       const item = items[i];
-  
+
       // Check if the item is a URL
       if (item.kind === 'string') {
         item.getAsString((url) => {
@@ -153,7 +175,7 @@ const IdolForm = () => {
             const imgUrl = imgTagMatch[1];
             const img = new Image();
             img.src = imgUrl;
-  
+
             img.onload = () => {
               setImageCallback(imgUrl); // Set the image URL
               setUrlInput(imgUrl); // Update the state for the input
@@ -161,7 +183,7 @@ const IdolForm = () => {
               validImageCount++;
               checkForWarnings(); // Check for warnings after successful load
             };
-  
+
             img.onerror = () => {
               setImageCallback(''); // Clear image URL on error
               setUrlInput(''); // Clear the input on error
@@ -174,7 +196,7 @@ const IdolForm = () => {
       else if (item.kind === 'file') {
         const file = item.getAsFile();
         const fileType = file.type;
-  
+
         if (fileType.startsWith('image/')) {
           const reader = new FileReader();
           reader.onloadend = () => {
@@ -191,15 +213,15 @@ const IdolForm = () => {
         }
       }
     }
-  
+
     // After processing all items, check if we had valid images
     const checkForWarnings = () => {
       if (validImageCount === 0) {
         message.warning('No valid image URL found in the dropped content.');
       }
     };
-  };  
-  
+  };
+
   const handleDragOver = (event) => {
     event.preventDefault();
   };
@@ -210,29 +232,29 @@ const IdolForm = () => {
   };
 
   // Handle modal submit
-const handleModalOk = () => {
-  if (urlInput.trim() !== '') {
-    const img = new Image();
-    img.src = urlInput;
+  const handleModalOk = () => {
+    if (urlInput.trim() !== '') {
+      const img = new Image();
+      img.src = urlInput;
 
-    img.onload = () => {
-      if (imageType === 'idol') {
-        form.setFieldsValue({ idolImage: urlInput }); // Use string literal for the field name
-        setIdolImage(urlInput);
-      } else if (imageType === 'lightstick') {
-        form.setFieldsValue({ lightstickImage: urlInput }); // Use string literal for the field name
-        setLightstickImage(urlInput);
-      }
-      setIsModalVisible(false); // Close modal
-    };
+      img.onload = () => {
+        if (imageType === 'idol') {
+          form.setFieldsValue({ idolImage: urlInput }); // Use string literal for the field name
+          setIdolImage(urlInput);
+        } else if (imageType === 'lightstick') {
+          form.setFieldsValue({ lightstickImage: urlInput }); // Use string literal for the field name
+          setLightstickImage(urlInput);
+        }
+        setIsModalVisible(false); // Close modal
+      };
 
-    img.onerror = () => {
-      message.warning('Image not found');
-    };
-  } else {
-    message.error('Please enter a valid URL.');
-  }
-};
+      img.onerror = () => {
+        message.warning('Image not found');
+      };
+    } else {
+      message.error('Please enter a valid URL.');
+    }
+  };
 
 
   // Handle modal cancel
@@ -290,81 +312,81 @@ const handleModalOk = () => {
               <label className='headline'>1.) Input the image of the idol here</label>
               <div className="idolform-image-upload-container">
                 <div>
-  {/* Idol Image Upload Section */}
-  <div
-    className="idolform-image-upload-box"
-    onDrop={(event) => handleDrop(event, setIdolImage, 'idolImage')}
-    onDragOver={handleDragOver}
-    onClick={() => showModal('idol')} // Open modal for idol image
-  >
-    {!idolImage ? (
-      <p>Drag & drop your idol image here or click to upload.</p>
-    ) : (
-      <img src={idolImage} alt="Idol Preview" className="idolform-image-preview" />
-    )}
-  </div>
+                  {/* Idol Image Upload Section */}
+                  <div
+                    className="idolform-image-upload-box"
+                    onDrop={(event) => handleDrop(event, setIdolImage, 'idolImage')}
+                    onDragOver={handleDragOver}
+                    onClick={() => showModal('idol')} // Open modal for idol image
+                  >
+                    {!idolImage ? (
+                      <p>Drag & drop your idol image here or click to upload.</p>
+                    ) : (
+                      <img src={idolImage} alt="Idol Preview" className="idolform-image-preview" />
+                    )}
+                  </div>
 
-  <Form.Item
-    id="idolImageInput"
-    label="Idol Image URL"
-    name="idolImage"
-    rules={[{ required: true, message: 'Please input Idol Image URL!' }]}
-    style={{ width: '100%', marginBottom: '0', marginTop: '10px' }}
-  >
-    <Input
-      style={{ marginBottom: '12px' }}
-      placeholder="Enter Idol Image URL"
-      value={urlInput}
-      onChange={(e) => handleUrlChange(e.target.value, setIdolImage)}
-    />
-  </Form.Item>
+                  <Form.Item
+                    id="idolImageInput"
+                    label="Idol Image URL"
+                    name="idolImage"
+                    rules={[{ required: true, message: 'Please input Idol Image URL!' }]}
+                    style={{ width: '100%', marginBottom: '0', marginTop: '10px' }}
+                  >
+                    <Input
+                      style={{ marginBottom: '12px' }}
+                      placeholder="Enter Idol Image URL"
+                      value={urlInput}
+                      onChange={(e) => handleUrlChange(e.target.value, setIdolImage)}
+                    />
+                  </Form.Item>
 
-  {/* Lightstick Image Upload Section */}
-  <label className='headline'>3.) Input the image of the lightstick here</label>
-  <div className="idolform-image-upload-container">
-    <div
-      className="idolform-image-upload-box"
-      onDrop={(event) => handleDrop(event, setLightstickImage, 'lightstickImage')}
-      onDragOver={handleDragOver}
-      onClick={() => showModal('lightstick')} // Open modal for lightstick image
-    >
-      {!lightstickImage ? (
-        <p>Drag & drop your lightstick image here or click to upload.</p>
-      ) : (
-        <img src={lightstickImage} alt="Lightstick Preview" className="idolform-image-preview" />
-      )}
-    </div>
+                  {/* Lightstick Image Upload Section */}
+                  <label className='headline'>3.) Input the image of the lightstick here</label>
+                  <div className="idolform-image-upload-container">
+                    <div
+                      className="idolform-image-upload-box"
+                      onDrop={(event) => handleDrop(event, setLightstickImage, 'lightstickImage')}
+                      onDragOver={handleDragOver}
+                      onClick={() => showModal('lightstick')} // Open modal for lightstick image
+                    >
+                      {!lightstickImage ? (
+                        <p>Drag & drop your lightstick image here or click to upload.</p>
+                      ) : (
+                        <img src={lightstickImage} alt="Lightstick Preview" className="idolform-image-preview" />
+                      )}
+                    </div>
 
-    <Form.Item
-      id="lightstickImageInput"
-      label="Lightstick Image URL"
-      name="lightstickImage"
-      rules={[{ required: true, message: 'Please input Lightstick Image URL!' }]}
-      style={{ width: '100%', marginBottom: '0', marginTop: '10px' }}
-    >
-      <Input
-        style={{ marginBottom: '12px' }}
-        placeholder="Enter Lightstick Image URL"
-        value={urlInput}
-        onChange={(e) => handleUrlChange(e.target.value, setLightstickImage)}
-      />
-    </Form.Item>
-  </div>
+                    <Form.Item
+                      id="lightstickImageInput"
+                      label="Lightstick Image URL"
+                      name="lightstickImage"
+                      rules={[{ required: true, message: 'Please input Lightstick Image URL!' }]}
+                      style={{ width: '100%', marginBottom: '0', marginTop: '10px' }}
+                    >
+                      <Input
+                        style={{ marginBottom: '12px' }}
+                        placeholder="Enter Lightstick Image URL"
+                        value={urlInput}
+                        onChange={(e) => handleUrlChange(e.target.value, setLightstickImage)}
+                      />
+                    </Form.Item>
+                  </div>
 
-  {/* Modal for URL input */}
-  <Modal
-    title="Enter Image URL"
-    visible={isModalVisible}
-    onOk={handleModalOk}
-    onCancel={handleModalCancel}
-  >
-    <Input
-      placeholder="Paste your image URL here"
-      value={urlInput}
-      onChange={(e) => setUrlInput(e.target.value)}
-    />
-  </Modal>
-</div>
+                  {/* Modal for URL input */}
+                  <Modal
+                    title="Enter Image URL"
+                    visible={isModalVisible}
+                    onOk={handleModalOk}
+                    onCancel={handleModalCancel}
+                  >
+                    <Input
+                      placeholder="Paste your image URL here"
+                      value={urlInput}
+                      onChange={(e) => setUrlInput(e.target.value)}
+                    />
+                  </Modal>
+                </div>
               </div>
 
               <label className='headline'>5.) Input the awards and albums here</label>
@@ -651,6 +673,8 @@ const handleModalOk = () => {
               </div>
 
               <div className='anotherbox'>
+                <div className='anotherbox-small'>
+
                 <label className='headline'>ENTER FUN FACTS ABOUT THIS IDOL!</label>
                 <div className='field'>
                   <label>Add Fun Facts:</label>
@@ -684,7 +708,7 @@ const handleModalOk = () => {
                     <Form.Item
                       label={
                         <span style={{ display: 'flex', alignItems: 'center' }}>
-                          <span style={{ marginRight: '8px' }}><FontAwesomeIcon icon={faYoutube} /></span>
+                          <span style={{ marginRight: '8px'}}><FontAwesomeIcon icon={faYoutube} /></span>
                           <span>YouTube</span>
                         </span>
                       }
@@ -744,6 +768,7 @@ const handleModalOk = () => {
                     </Form.Item>
                   </div>
                 </div>
+              </div>
               </div>
             </div>
           </div>
