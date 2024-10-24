@@ -110,19 +110,55 @@ app.delete('/users/:id', async (request, response) => {
 
 const groupSchema = new mongoose.Schema({
     groupName: String,
-    lastEdited: Date,
+    koreanGroupName: String,
+    debut: String,
+    debutToFirstWin: String, 
+    country: String, 
+    fandom: String,
+    companyCurrent: String,
+    companySince: String,
+    activeYears: Number, 
+    status: String,
+    musicShowWins: Number,
+    totalAlbums: Number,
+    latestAlbum: String,
+    upcomingAlbum: String,
+    groupIntro: String,
+    groupImage: String,
+    lightstickImage: String,
+    socialMediaPlatforms: {
+        youtube: String,
+        spotify: String,
+        tiktok: String,
+        instagram: String,
+        x: String 
+    },
+    groupMembers: [{ 
+        name: String,
+        image: String,
+        memberLink: String, 
+    }],
+    lastEdited: Date
 });
 
 const Group = mongoose.model('groups', groupSchema);
 
-app.post('/groups', async (request, response) => {
-    const group = new Group({
-        groupName: request.body.groupName,
-        lastEdited: request.body.lastEdited
-    });
-    const newItem = await group.save();
-    response.status(201).json({ success: true, data: newItem });
+// POST Route to create a new group
+app.post('/groups', async (req, res) => {
+    const groupData = {
+        ...req.body,
+    };
+
+    try {
+        const newGroup = new Group(groupData);
+        await newGroup.save();
+        res.status(201).json({ success: true, message: 'Group saved successfully!' });
+    } catch (error) {
+        console.error('Error saving group:', error);
+        res.status(500).json({ success: false, message: 'Failed to save group' });
+    }
 });
+
 
 app.get('/groups', async (request, response) => {
     const groups = await Group.find();
@@ -163,7 +199,7 @@ app.delete('/groups/:id', async (request, response) => {
 
     try {
         // Convert the ID to ObjectId
-        const result = await Group.findByIdAndDelete(ObjectId(groupId));
+        const result = await Group.findByIdAndDelete(groupId);
         if (!result) {
             return response.status(404).json({ message: "Group not found" });
         }
