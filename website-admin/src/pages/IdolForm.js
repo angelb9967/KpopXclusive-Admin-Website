@@ -14,8 +14,12 @@ const { Option } = Select;
 
 const IdolForm = () => {
   const [form] = Form.useForm();
-  const location = useLocation(); // Get the current location
+  const location = useLocation();
+  const { state } = location;
+  const idolData = state?.record;
   const buttonText = location.pathname === '/EditIdol' ? 'Update Idol' : 'Save Idol';
+
+  console.log('Idol Data:', idolData);
 
   const [idolImage, setIdolImage] = useState(null);
   const [lightstickImage, setLightstickImage] = useState(null);
@@ -28,90 +32,128 @@ const IdolForm = () => {
   const [funFactInputValue, setFunFactInputValue] = useState('');
   const [funFactsTextAreaValue, setFunFactsTextAreaValue] = useState('');
 
-  const handleSubmit = async (values) => {
-    if (funFactsList.length === 0) {
-      message.error('Please provide at least one fun fact about the idol');
-      return;
-    }
+  const isValidDateFormat = (dateString) => {
+    // Regular expression to check for YYYY-MM-DD format
+    const regex = /^\d{4}-\d{2}-\d{2}$/;
+    return regex.test(dateString);
+};
 
-    // Helper function to validate URLs
-    const isValidUrl = (urlString) => {
-      try {
-        new URL(urlString);
-        return true;
-      } catch (error) {
-        return false;
-      }
-    };
+const handleSubmit = async (values) => {
+  let formattedBirthday = '';
+  let formattedDebut = '';
 
-    // Validate idolImage and lightstickImage URLs
-    if (!isValidUrl(idolImage)) {
-      message.error('Idol image URL is not valid');
-      return;
-    }
+  if (funFactsList.length === 0) {
+    message.error('Please provide at least one fun fact about the idol');
+    return;
+  }
 
-    if (!isValidUrl(lightstickImage)) {
-      message.error('Lightstick image URL is not valid');
-      return;
-    }
-
-    const languagesArray = values.languages.filter(language => language && language.trim() !== '');
-    const lastEdited = moment().tz('Asia/Manila').format('YYYY-MM-DD HH:mm:ss');
-    const formattedBirthday = moment(values.birthday).format('YYYY-MM-DD');
-    const formattedDebut = moment(values.debut).format('YYYY-MM-DD');
-
-    const dataToSubmit = {
-      idolName: values.stageName,
-      nationality: values.nationality,
-      fullname: values.fullname,
-      birthday: formattedBirthday,
-      group: values.group,
-      age: values.age,
-      bloodtype: values.bloodtype,
-      height: values.height,
-      debut: formattedDebut,
-      koreanName: values.koreanName,
-      stageName: values.stageName,
-      trainingPeriod: values.trainingPeriod,
-      zodiacSign: values.zodiacSign,
-      activeYears: values.activeYears,
-      education: values.education,
-      fandom: values.fandom,
-      mbti: values.mbti,
-      musicShowWins: values.musicShowWins,
-      socialMediaPlatforms: values.socialMediaPlatforms,
-      totalAlbums: values.totalAlbums,
-      latestAlbum: values.latestAlbum,
-      introduction: values.introduction,
-      language: languagesArray,
-      country: selectedCountry,
-      companyCurrent: values.companies.map(company => company.name),
-      companySince: Object.fromEntries(values.companies.map(company => [
-        company.name,
-        moment(company.since).format('YYYY-MM-DD')
-      ])),
-      status: values.status,
-      funFacts: funFactsList,
-      lastEdited: lastEdited,
-      idolImage: idolImage,
-      lightstickImage: lightstickImage
-    };
-
+  const isValidUrl = (urlString) => {
     try {
+      new URL(urlString);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  };
+
+  if (!isValidUrl(idolImage)) {
+    message.error('Idol image URL is not valid');
+    return;
+  }
+
+  if (!isValidUrl(lightstickImage)) {
+    message.error('Lightstick image URL is not valid');
+    return;
+  }
+
+  if (isValidDateFormat(values.birthday)) {
+    formattedBirthday = moment(values.birthday).format('YYYY-MM-DD');
+  } else {
+    message.error('Invalid birthday format. Please use YYYY-MM-DD.');
+    return; // Exit if invalid
+  }
+
+  if (isValidDateFormat(values.debut)) {
+    formattedDebut = moment(values.debut).format('YYYY-MM-DD');
+  } else {
+    message.error('Invalid debut format. Please use YYYY-MM-DD.');
+    return; 
+  }
+
+  const languagesArray = values.languages.filter(language => language && language.trim() !== '');
+  const lastEdited = moment().tz('Asia/Manila').format('YYYY-MM-DD HH:mm:ss');
+
+  const companySince = {};
+  let allCompaniesValid = true;
+
+  values.companies.forEach(company => {
+    if (isValidDateFormat(company.since)) {
+      companySince[company.name] = moment(company.since).format('YYYY-MM-DD');
+    } else {
+      message.error(`Invalid company since date for ${company.name}. Please use YYYY-MM-DD.`);
+      allCompaniesValid = false; // Set flag to false if any date is invalid
+    }
+  });
+
+  if (!allCompaniesValid) {
+    return; 
+  }
+
+  const dataToSubmit = {
+    idolName: values.stageName,
+    nationality: values.nationality,
+    fullname: values.fullname,
+    birthday: formattedBirthday,
+    group: values.group,
+    age: values.age,
+    bloodtype: values.bloodtype,
+    height: values.height,
+    debut: formattedDebut,
+    koreanName: values.koreanName,
+    stageName: values.stageName,
+    trainingPeriod: values.trainingPeriod,
+    zodiacSign: values.zodiacSign,
+    activeYears: values.activeYears,
+    education: values.education,
+    fandom: values.fandom,
+    mbti: values.mbti,
+    musicShowWins: values.musicShowWins,
+    socialMediaPlatforms: values.socialMediaPlatforms,
+    totalAlbums: values.totalAlbums,
+    latestAlbum: values.latestAlbum,
+    introduction: values.introduction,
+    language: languagesArray,
+    country: selectedCountry,
+    companyCurrent: values.companies.map(company => company.name),
+    companySince: companySince, 
+    status: values.status,
+    funFacts: funFactsList,
+    lastEdited: lastEdited,
+    idolImage: idolImage,
+    lightstickImage: lightstickImage
+  };
+
+  try {
+    if (location.pathname === '/EditIdol' && idolData._id) {
+      const response = await axios.put(`http://localhost:8000/idols/${idolData._id}`, dataToSubmit);
+      message.success(response.data.message);
+    } else {
       const response = await axios.post('http://localhost:8000/idols', dataToSubmit);
       message.success(response.data.message);
       form.resetFields();
-      clearInput(); 
+      clearInput();
       setSelectedCountry(undefined);
       setFunFactsList([]);
       setUrlInput('');
       setIdolImage('');
       setLightstickImage('');
-    } catch (error) {
-      message.error('Failed to save idol');
-      console.error('Error saving idol:', error);
     }
-  };
+  } catch (error) {
+    message.error('Failed to save or update idol');
+    console.error('Error saving or updating idol:', error);
+  }
+};
+
 
   ////////////////  FETCH COUNTRY NAMES API - *START 
   const fetchCountryNames = async () => {
@@ -128,9 +170,33 @@ const IdolForm = () => {
   };
 
   useEffect(() => {
-    // Fetch country names when component mounts
     fetchCountryNames();
   }, []);
+
+  useEffect(() => {
+    if (idolData) {
+      const companies = idolData.companyCurrent.map((company, index) => ({
+        name: company, 
+        since: idolData.companySince[company] || '', 
+      }));
+      const initialFunFactsArray = idolData.funFacts || []; 
+      const formattedFacts = initialFunFactsArray
+        .map((fact, index) => `${index + 1}.) ${fact}`) 
+        .join('\n'); // Join with new lines
+  
+      setFunFactsTextAreaValue(formattedFacts);
+      setFunFactsList(initialFunFactsArray); 
+
+      form.setFieldsValue({
+        languages: idolData.language || [], 
+        companies: companies.length > 0 ? companies : [{ name: '', since: null }], 
+      });
+
+      setSelectedCountry(idolData.country); 
+      setIdolImage(idolData.idolImage); 
+      setLightstickImage(idolData.lightstickImage); 
+    }
+  }, [idolData, form]);
 
   const handleCountrySelect = (value) => {
     setSelectedCountry(value);
@@ -305,7 +371,7 @@ const IdolForm = () => {
     <div className='idolForm-maincontainer'>
       <div className='idolForm'>
         <h1 className='idolform-title'>KPOP IDOL INFORMATION</h1>
-        <Form form={form} onFinish={handleSubmit} scrollToFirstError>
+        <Form form={form} onFinish={handleSubmit} scrollToFirstError initialValues={idolData}>
           <div className='page-box-container'>
             <div className="idolform-box-container" id="idolform-box1">
               {/* Content for box 1 */}
@@ -336,7 +402,7 @@ const IdolForm = () => {
                     <Input
                       style={{ marginBottom: '12px' }}
                       placeholder="Enter Idol Image URL"
-                      value={urlInput}
+                      value={idolImage}
                       onChange={(e) => handleUrlChange(e.target.value, setIdolImage)}
                     />
                   </Form.Item>
@@ -367,7 +433,7 @@ const IdolForm = () => {
                       <Input
                         style={{ marginBottom: '12px' }}
                         placeholder="Enter Lightstick Image URL"
-                        value={urlInput}
+                        value={lightstickImage}
                         onChange={(e) => handleUrlChange(e.target.value, setLightstickImage)}
                       />
                     </Form.Item>
@@ -376,7 +442,7 @@ const IdolForm = () => {
                   {/* Modal for URL input */}
                   <Modal
                     title="Enter Image URL"
-                    visible={isModalVisible}
+                    open={isModalVisible}
                     onOk={handleModalOk}
                     onCancel={handleModalCancel}
                   >
@@ -473,7 +539,7 @@ const IdolForm = () => {
                     {/* Birthday Field */}
                     <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
                       <Form.Item label="Birthday" name="birthday" rules={[{ required: true, message: 'Please input Birthday!' }]} style={{ flexGrow: 1, marginBottom: "0" }}>
-                        <DatePicker placeholder='Birthday' required style={{ width: '100%' }} />
+                          <Input placeholder="YYYY-MM-DD" required rules={[{ required: true, message: 'Please input Birthday!' }]} style={{ flexGrow: 1 }} />
                       </Form.Item>
                     </div>
 
@@ -514,14 +580,12 @@ const IdolForm = () => {
                                 <Form.Item
                                   {...field}
                                   name={[field.name, 'since']}
-                                  rules={[{ required: true, message: 'Please select the year of the corresponding company.' }]}
+                                  rules={[{ required: true, message: 'Please input the year of the corresponding company.' }]}
                                   noStyle
                                 >
-                                  <DatePicker
-                                    placeholder="Select date"
+                                  <Input
+                                    placeholder="YYYY-MM-DD"
                                     style={{ width: '80%' }}
-                                    format="YYYY-MM-DD" // Set the format you need
-                                    disabledDate={current => current && current > moment().endOf('day')} // Disable future dates if necessary
                                   />
                                 </Form.Item>
                               </Form.Item>
@@ -573,7 +637,7 @@ const IdolForm = () => {
 
                   <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
                     <Form.Item label="Debut" name="debut" rules={[{ required: true, message: 'Please input Debut!' }]} style={{ flexGrow: 1, marginBottom: "0" }}>
-                      <DatePicker placeholder='Debut' required style={{ width: '100%' }} />
+                        <Input placeholder='Debut' required style={{ width: '100%' }} />
                     </Form.Item>
                   </div>
 
@@ -675,100 +739,100 @@ const IdolForm = () => {
               <div className='anotherbox'>
                 <div className='anotherbox-small'>
 
-                <label className='headline'>ENTER FUN FACTS ABOUT THIS IDOL!</label>
-                <div className='field'>
-                  <label>Add Fun Facts:</label>
-                  <Input
-                    value={funFactInputValue}
-                    onChange={(e) => setFunFactInputValue(e.target.value)} // Update input value state
-                    placeholder='Enter fun fact here'
-                  />
-                  <Button onClick={addFunFact}>Add</Button>
-                  <Button onClick={clearInput} style={{ marginLeft: '8px' }}>Clear All</Button>
-                  <Button onClick={eraseLast} style={{ marginLeft: '8px' }}>Undo</Button>
-                </div>
-                <Form.Item
-                  label="Fun Facts"
-                  rules={[{ required: true, message: 'Please provide at least one fun fact about the idol' }]}
-                >
-                  <TextArea
-                    required
-                    value={funFactsTextAreaValue}
-                    placeholder="What makes this idol unique? Share a fun tidbit..."
-                    autoSize={{ minRows: 5, maxRows: 10 }}
-                    readOnly
-                    style={{ cursor: "not-allowed" }}
-                  />
-                </Form.Item>
-
-
-                <div className='anotherbox-container'>
-                  <div className='anotherbox-small'>
-                    <label className='headline'>6.) Social Media Platforms</label>
-                    <Form.Item
-                      label={
-                        <span style={{ display: 'flex', alignItems: 'center' }}>
-                          <span style={{ marginRight: '8px'}}><FontAwesomeIcon icon={faYoutube} /></span>
-                          <span>YouTube</span>
-                        </span>
-                      }
-                      name={['socialMediaPlatforms', 'youtube']} // Nested under socialMedia object
-                    >
-                      <Input placeholder="Enter YouTube URL" />
-                    </Form.Item>
-
-                    <Form.Item
-                      label={
-                        <span style={{ display: 'flex', alignItems: 'center' }}>
-                          <span style={{ marginRight: '8px' }}><FontAwesomeIcon icon={faSpotify} /></span>
-                          <span>Spotify</span>
-                        </span>
-                      }
-                      name={['socialMediaPlatforms', 'spotify']} // Nested under socialMedia object
-                    >
-                      <Input placeholder="Enter Spotify URL" />
-                    </Form.Item>
-
-                    <Form.Item
-                      label={
-                        <span style={{ display: 'flex', alignItems: 'center' }}>
-                          <span style={{ marginRight: '8px' }}><i className='bx bxl-tiktok'></i></span>
-                          <span>TikTok</span>
-                        </span>
-                      }
-                      name={['socialMediaPlatforms', 'tiktok']} // Nested under socialMedia object
-                    >
-                      <Input placeholder="Enter TikTok URL" />
-                    </Form.Item>
+                  <label className='headline'>ENTER FUN FACTS ABOUT THIS IDOL!</label>
+                  <div className='field'>
+                    <label>Add Fun Facts:</label>
+                    <Input
+                      value={funFactInputValue}
+                      onChange={(e) => setFunFactInputValue(e.target.value)} // Update input value state
+                      placeholder='Enter fun fact here'
+                    />
+                    <Button onClick={addFunFact}>Add</Button>
+                    <Button onClick={clearInput} style={{ marginLeft: '8px' }}>Clear All</Button>
+                    <Button onClick={eraseLast} style={{ marginLeft: '8px' }}>Undo</Button>
                   </div>
-                  <div className='anotherbox-small'>
-                    <Form.Item
-                      style={{ marginTop: '20px' }}
-                      label={
-                        <span style={{ display: 'flex', alignItems: 'center' }}>
-                          <span style={{ marginRight: '8px' }}><i className='bx bxl-instagram-alt'></i></span>
-                          <span>Instagram</span>
-                        </span>
-                      }
-                      name={['socialMediaPlatforms', 'instagram']} // Nested under socialMedia object
-                    >
-                      <Input placeholder="Enter Instagram Account URL" />
-                    </Form.Item>
+                  <Form.Item
+                    label="Fun Facts"
+                    rules={[{ required: true, message: 'Please provide at least one fun fact about the idol' }]}
+                  >
+                    <TextArea
+                      required
+                      value={funFactsTextAreaValue}
+                      placeholder="What makes this idol unique? Share a fun tidbit..."
+                      autoSize={{ minRows: 5, maxRows: 10 }}
+                      readOnly
+                      style={{ cursor: "not-allowed" }}
+                    />
+                  </Form.Item>
 
-                    <Form.Item
-                      label={
-                        <span style={{ display: 'flex', alignItems: 'center' }}>
-                          <span style={{ marginRight: '8px' }}><FontAwesomeIcon icon={faXTwitter} /></span>
-                          <span>X</span>
-                        </span>
-                      }
-                      name={['socialMediaPlatforms', 'x']} // Nested under socialMedia object
-                    >
-                      <Input placeholder="Enter X Account URL" />
-                    </Form.Item>
+
+                  <div className='anotherbox-container'>
+                    <div className='anotherbox-small'>
+                      <label className='headline'>6.) Social Media Platforms</label>
+                      <Form.Item
+                        label={
+                          <span style={{ display: 'flex', alignItems: 'center' }}>
+                            <span style={{ marginRight: '8px'}}><FontAwesomeIcon icon={faYoutube} /></span>
+                            <span>YouTube</span>
+                          </span>
+                        }
+                        name={['socialMediaPlatforms', 'youtube']} // Nested under socialMedia object
+                      >
+                        <Input placeholder="Enter YouTube URL" />
+                      </Form.Item>
+
+                      <Form.Item
+                        label={
+                          <span style={{ display: 'flex', alignItems: 'center' }}>
+                            <span style={{ marginRight: '8px' }}><FontAwesomeIcon icon={faSpotify} /></span>
+                            <span>Spotify</span>
+                          </span>
+                        }
+                        name={['socialMediaPlatforms', 'spotify']} // Nested under socialMedia object
+                      >
+                        <Input placeholder="Enter Spotify URL" />
+                      </Form.Item>
+
+                      <Form.Item
+                        label={
+                          <span style={{ display: 'flex', alignItems: 'center' }}>
+                            <span style={{ marginRight: '8px' }}><i className='bx bxl-tiktok'></i></span>
+                            <span>TikTok</span>
+                          </span>
+                        }
+                        name={['socialMediaPlatforms', 'tiktok']} // Nested under socialMedia object
+                      >
+                        <Input placeholder="Enter TikTok URL" />
+                      </Form.Item>
+                    </div>
+                    <div className='anotherbox-small'>
+                      <Form.Item
+                        style={{ marginTop: '20px' }}
+                        label={
+                          <span style={{ display: 'flex', alignItems: 'center' }}>
+                            <span style={{ marginRight: '8px' }}><i className='bx bxl-instagram-alt'></i></span>
+                            <span>Instagram</span>
+                          </span>
+                        }
+                        name={['socialMediaPlatforms', 'instagram']} // Nested under socialMedia object
+                      >
+                        <Input placeholder="Enter Instagram Account URL" />
+                      </Form.Item>
+
+                      <Form.Item
+                        label={
+                          <span style={{ display: 'flex', alignItems: 'center' }}>
+                            <span style={{ marginRight: '8px' }}><FontAwesomeIcon icon={faXTwitter} /></span>
+                            <span>X</span>
+                          </span>
+                        }
+                        name={['socialMediaPlatforms', 'x']} // Nested under socialMedia object
+                      >
+                        <Input placeholder="Enter X Account URL" />
+                      </Form.Item>
+                    </div>
                   </div>
                 </div>
-              </div>
               </div>
             </div>
           </div>

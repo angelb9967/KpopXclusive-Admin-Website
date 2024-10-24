@@ -33,8 +33,8 @@ const UserManagement = () => {
       // Format dates before setting users
       const formattedData = data.map(user => ({
         ...user,
-        createdAt: moment(user.createdAt).format('YYYY/MM/DD, hh:mm:ss A'), // Format createdAt
-        updatedAt: moment(user.updatedAt).format('YYYY/MM/DD, hh:mm:ss A')  // Format updatedAt
+        createdAt: moment(user.createdAt).format('YYYY/MM/DD, hh:mm:ss A'), 
+        updatedAt: moment(user.updatedAt).format('YYYY/MM/DD, hh:mm:ss A') 
       }));
       setUsers(formattedData);
       setFilteredUsers(formattedData);
@@ -56,8 +56,8 @@ const UserManagement = () => {
       username: user.username || '',
       password: user.password || '',
       status: user.status || 'Inactive',
-      createdAt: user.createdAt || '', // Don't format here; it will be formatted on display
-      updatedAt: user.updatedAt || '', // Don't format here; it will be formatted on display
+      createdAt: user.createdAt || '', 
+      updatedAt: user.updatedAt || '', 
       user_id: user._id || ''
     });
     setIsModalVisible(true);
