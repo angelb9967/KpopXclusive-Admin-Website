@@ -292,6 +292,7 @@ const handleSubmit = async (values) => {
   };
 
   const showModal = (type) => {
+    setUrlInput('');
     setImageType(type); // Set the image type ('idol' or 'lightstick')
     setIsModalVisible(true);
   };

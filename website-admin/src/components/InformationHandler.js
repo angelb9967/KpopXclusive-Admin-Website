@@ -123,6 +123,34 @@ const InformationHandler = () => {
 
   const idolColumns = [
     {
+      title: 'Image',
+      dataIndex: 'idolImage',
+      key: 'idolImage',
+      render: (imageUrl) => (
+        <img 
+          src={imageUrl} 
+          alt="Idol" 
+          style={{ 
+            width: 80, 
+            height: 80, 
+            borderRadius: '50%', 
+            objectFit: 'cover',      // Ensures the image covers the entire area
+            objectPosition: 'center' // Centers the image content
+          }} 
+        />
+      ),  
+    },
+    {
+      title: 'ID',
+      dataIndex: '_id',
+      key: '_id',
+      render: (text) => (
+        <a href={text} target="_blank" rel="noopener noreferrer">
+          {text}
+        </a>
+      ),
+    },
+    {
       title: 'Idol Name',
       dataIndex: 'idolName',
       key: 'idolName',
@@ -210,7 +238,7 @@ const InformationHandler = () => {
     <div className='container'>
       {/* Idols Section */}
       <div className='infohandler-container'>
-        <h2>KPOP IDOLS</h2>
+        <label>KPOP IDOLS</label>
         <div className="infohandleraction-container">
           <div className="infohandlerSearch-container">
             <Search
@@ -247,7 +275,7 @@ const InformationHandler = () => {
 
       {/* Groups Section */}
       <div className='infohandler-container'>
-        <h2>KPOP GROUPS</h2>
+        <label>KPOP GROUPS</label>
         <div className="infohandleraction-container">
           <div className="infohandlerSearch-container">
             <Search
@@ -266,7 +294,10 @@ const InformationHandler = () => {
         <div className="table-container">
           <Table
             columns={groupColumns}
-            dataSource={filteredGroups.slice((groupPagination.current - 1) * groupPagination.pageSize, groupPagination.current * groupPagination.pageSize)}
+            dataSource={filteredGroups.slice(
+              (groupPagination.current - 1) * groupPagination.pageSize,
+              groupPagination.current * groupPagination.pageSize
+            )}
             rowKey="_id"
             pagination={{
               current: groupPagination.current,
@@ -277,8 +308,10 @@ const InformationHandler = () => {
                 console.log('Groups - Page:', page, 'Page Size:', pageSize);
               },
               showSizeChanger: true,
+              position: ['bottomLeft', 'bottomRight'], 
             }}
           />
+
         </div>
       </div>
     </div>

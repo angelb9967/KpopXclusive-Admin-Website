@@ -6,9 +6,14 @@ import 'boxicons/css/boxicons.min.css';
 import { Modal } from 'antd'; // Import Modal from Ant Design
 
 const Main = () => {
-  const location = useLocation(); 
-  const navigate = useNavigate(); 
-  const [title, setTitle] = useState('Dashboard'); 
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [title, setTitle] = useState('Dashboard');
+  const [collapsed, setCollapsed] = useState(true); // New state for sidebar collapse
+
+  const toggleSidebar = () => {
+    setCollapsed(!collapsed); // Toggle the sidebar state
+  };
 
   const updateTitle = () => {
     switch (location.pathname) {
@@ -28,7 +33,7 @@ const Main = () => {
         setTitle('ACCESS WEBSITE');
         break;
       default:
-        setTitle('DASHBOARD'); 
+        setTitle('DASHBOARD');
     }
   };
 
@@ -41,7 +46,7 @@ const Main = () => {
       title: 'Confirm Logout',
       content: 'Are you sure you want to log out?',
       onOk() {
-        navigate("/"); 
+        navigate("/");
         console.log('User logged out');
       },
       onCancel() {
@@ -55,44 +60,53 @@ const Main = () => {
       <div className='main-navbar'>
         <img src={logo1} className="main-image" alt="Logo 1" />
         <div className="vertical-divider"></div>
-        <h2 className='main-title'>{title}</h2> 
+        <h2 className='main-title'>{title}</h2>
       </div>
 
-      <div className='main-sidebar'>
+      <div className={`main-sidebar ${collapsed ? 'collapsed' : ''}`}>
         <div className='sidebar-content'>
-          <h2 className='sidebar-greet'>WELCOME,<br/>USER ACCOUNT!</h2>
-          <ul className="lists">
-            <li className="list">
-              <Link to="/Main/Dashboard" className="nav-link">
-                <i className='bx bxs-dashboard'></i> 
-                <span className="link">DASHBOARD</span>
-              </Link>
-            </li>
-            <li className="list">
-              <Link to="/Main/User-Management" className="nav-link">
-                <i className='bx bxs-user'></i> 
-                <span className="link">USER MANAGEMENT</span>
-              </Link>
-            </li>
-            <li className="list">
-              <Link to="/Main/Information-Handler" className="nav-link">
-                <i className='bx bxs-info-circle'></i> 
-                <span className="link">INFORMATION HANDLER</span>
-              </Link>
-            </li>
-            <li className="list">
-              <Link to="/Main/Access-Website" className="nav-link">
-                <i className='bx bx-desktop'></i> 
-                <span className="link">ACCESS WEBSITE</span>
-              </Link>
-            </li>
-            <li className="list">
-              <span onClick={confirmLogout} className="nav-link logout" style={{ cursor: 'pointer' }}>
-                <i className='bx bx-log-out'></i> 
-                <span className="link">LOGOUT</span>
-              </span>
-            </li>
-          </ul>
+          <button onClick={toggleSidebar} className="toggle-btn">
+            <i className={`bx ${collapsed ? 'bx-menu' : 'bx-x'}`}></i>
+          </button>
+
+          {!collapsed && (
+            <>
+              <h2 className='sidebar-greet'>WELCOME,<br />USER ACCOUNT!</h2>
+              <ul className="lists">
+                <li className="list">
+                  <Link to="/Main/Dashboard" className="nav-link">
+                    <i className='bx bxs-dashboard'></i>
+                    <span className={`link ${collapsed ? 'collapsed' : ''}`}>DASHBOARD</span>
+                  </Link>
+                </li>
+                <li className="list">
+                  <Link to="/Main/User-Management" className="nav-link">
+                    <i className='bx bxs-user'></i>
+                    <span className={`link ${collapsed ? 'collapsed' : ''}`}>USER MANAGEMENT</span>
+                  </Link>
+                </li>
+                <li className="list">
+                  <Link to="/Main/Information-Handler" className="nav-link">
+                    <i className='bx bxs-info-circle'></i>
+                    <span className={`link ${collapsed ? 'collapsed' : ''}`}>INFORMATION HANDLER</span>
+                  </Link>
+                </li>
+                <li className="list">
+                  <Link to="/Main/Access-Website" className="nav-link">
+                    <i className='bx bx-desktop'></i>
+                    <span className={`link ${collapsed ? 'collapsed' : ''}`}>ACCESS WEBSITE</span>
+                  </Link>
+                </li>
+                <li className="list">
+                  <span onClick={confirmLogout} className="nav-link logout" style={{ cursor: 'pointer' }}>
+                    <i className='bx bx-log-out'></i>
+                    <span className={`link ${collapsed ? 'collapsed' : ''}`}>LOGOUT</span>
+                  </span>
+                </li>
+
+              </ul>
+            </>
+          )}
         </div>
       </div>
 

@@ -221,12 +221,6 @@ const GroupForm = () => {
     const memberName = form.getFieldValue('idolName');
     const memberLink = form.getFieldValue('memberLink');
 
-    // Ensure required fields are filled
-    if (!memberImage || !memberName || !memberLink) {
-        message.error('Please fill out all member fields.');
-        return;
-    }
-
     // Function to validate image URL
     const isValidUrl = (urlString) => {
         try {
@@ -241,6 +235,12 @@ const GroupForm = () => {
         message.error('Member image URL is not valid');
         return;
     }
+
+     // Ensure required fields are filled
+     if (!memberImage || !memberName || !memberLink) {
+      message.error('Please fill out all member fields.');
+      return;
+  }
 
     // Create the new or updated member object
     const newMember = {
@@ -435,7 +435,8 @@ const GroupForm = () => {
   };
 
   const showModal = (type) => {
-    setImageType(type); // Set the image type ('group' or 'lightstick' or 'member')
+    setUrlInput('')
+    setImageType(type); 
     setIsModalVisible(true);
   };
 
@@ -812,7 +813,7 @@ const GroupForm = () => {
                       />
                   </Form.Item>
 
-                  <Form.Item label="Member Name" name="idolName" style={{ flexGrow: 1, marginBottom: '0' }}>
+                  <Form.Item label="Member Name" name="idolName" style={{ flexGrow: 1, marginBottom: '12px' }}>
                     <AutoComplete
                       options={options} // Options to display in the dropdown
                       onSearch={handleSearch} // Handle input changes

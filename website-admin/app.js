@@ -178,19 +178,25 @@ app.get('/groups/:id', async (request, response) => {
 app.put('/groups/:id', async (request, response) => {
     const groupId = request.params.id;
 
-    // Fetch the user from the database
-    const group = await Group.findById(groupId);
-
-    if (!group) {
-        return response.status(404).json({ message: "Group not found" });
+      // Validate ObjectId format
+    if (!ObjectId.isValid(groupId)) {
+        return response.status(400).json({ message: "Invalid ID format" });
     }
 
-    // Update only the fields that are being changed
-    group.groupName = request.body.groupName;
-    group.lastEdited = request.body.lastEdited;
-
-    const updatedItem = await group.save();
-    response.status(200).json(updatedItem);
+    try {
+        const updatedGroup = await Group.findByIdAndUpdate(
+            groupId, 
+            request.body, // This will update all fields from request.body
+            { new: true, runValidators: true } // new: true returns the updated document, runValidators ensures schema validation
+        );
+        
+        if (!updatedGroup) {
+            return response.status(404).json({ message: 'Group not found' });
+        }
+        response.status(200).json(updatedGroup);
+    } catch (error) {
+        response.status(500).json({ message: 'Error updating group', error });
+    }
 });
 
 app.delete('/groups/:id', async (request, response) => {

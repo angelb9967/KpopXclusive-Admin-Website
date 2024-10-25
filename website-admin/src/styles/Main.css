@@ -115,12 +115,83 @@
     color: black;
 }
 
-.section-content {
+/* Sidebar Base Styles */
+.main-sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 300px;
+    background: black;
+    color: white;
+    transition: width 0.3s ease;
+    overflow: hidden;
+}
+
+.main-sidebar.collapsed {
+    width: 80px; /* Adjust width when collapsed */
+}
+
+.sidebar-content {
     padding: 20px;
+    text-align: center;
+}
+
+.toggle-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+/* Show/hide link text when collapsed */
+.collapsed .link {
+    display: none; /* Hide text when collapsed */
+}
+
+.lists {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.list .nav-link {
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    padding: 20px 12px;
+    text-decoration: none;
+    color: white;
+}
+
+.nav-link i {
+    font-size: 24px;
+}
+
+.nav-link:hover {
+    background: rgb(255, 95, 95);
+    color: black;
+}
+
+.section-content {
     background-color: #E8E8E8; 
     color: black;
     font-size: 1.5rem; 
     height: calc(100vh - 90px); 
     overflow: auto; 
+    transition: margin-right 0.3s ease; /* Smooth transition for margin change */
 }
+
+/* Adjust margin based on sidebar state */
+.main-sidebar.collapsed ~ .section-content {
+    margin-right: 80px; /* Space when sidebar is collapsed */
+}
+
+.main-sidebar:not(.collapsed) ~ .section-content {
+    margin-right: 300px; /* Space when sidebar is expanded */
+}
+
+
 
