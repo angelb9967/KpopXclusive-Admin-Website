@@ -115,8 +115,13 @@ const groupSchema = new mongoose.Schema({
     debutToFirstWin: String, 
     country: String, 
     fandom: String,
-    companyCurrent: String,
-    companySince: String,
+    companyCurrent: [String], 
+    companySince: {
+        type: Map, 
+        of: String, 
+        required: true,
+        default: {}
+    },
     activeYears: Number, 
     status: String,
     musicShowWins: Number,

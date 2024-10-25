@@ -32,6 +32,31 @@ const IdolForm = () => {
   const [funFactInputValue, setFunFactInputValue] = useState('');
   const [funFactsTextAreaValue, setFunFactsTextAreaValue] = useState('');
 
+  useEffect(() => {
+    if (idolData) {
+      const companies = idolData.companyCurrent.map((company, index) => ({
+        name: company, 
+        since: idolData.companySince[company] || '', 
+      }));
+      const initialFunFactsArray = idolData.funFacts || []; 
+      const formattedFacts = initialFunFactsArray
+        .map((fact, index) => `${index + 1}.) ${fact}`) 
+        .join('\n'); 
+  
+      setFunFactsTextAreaValue(formattedFacts);
+      setFunFactsList(initialFunFactsArray); 
+
+      form.setFieldsValue({
+        languages: idolData.language || [], 
+        companies: companies.length > 0 ? companies : [{ name: '', since: null }], 
+      });
+
+      setSelectedCountry(idolData.country); 
+      setIdolImage(idolData.idolImage); 
+      setLightstickImage(idolData.lightstickImage); 
+    }
+  }, [idolData, form]);
+
   const isValidDateFormat = (dateString) => {
     // Regular expression to check for YYYY-MM-DD format
     const regex = /^\d{4}-\d{2}-\d{2}$/;
@@ -154,7 +179,6 @@ const handleSubmit = async (values) => {
   }
 };
 
-
   ////////////////  FETCH COUNTRY NAMES API - *START 
   const fetchCountryNames = async () => {
     try {
@@ -172,31 +196,6 @@ const handleSubmit = async (values) => {
   useEffect(() => {
     fetchCountryNames();
   }, []);
-
-  useEffect(() => {
-    if (idolData) {
-      const companies = idolData.companyCurrent.map((company, index) => ({
-        name: company, 
-        since: idolData.companySince[company] || '', 
-      }));
-      const initialFunFactsArray = idolData.funFacts || []; 
-      const formattedFacts = initialFunFactsArray
-        .map((fact, index) => `${index + 1}.) ${fact}`) 
-        .join('\n'); // Join with new lines
-  
-      setFunFactsTextAreaValue(formattedFacts);
-      setFunFactsList(initialFunFactsArray); 
-
-      form.setFieldsValue({
-        languages: idolData.language || [], 
-        companies: companies.length > 0 ? companies : [{ name: '', since: null }], 
-      });
-
-      setSelectedCountry(idolData.country); 
-      setIdolImage(idolData.idolImage); 
-      setLightstickImage(idolData.lightstickImage); 
-    }
-  }, [idolData, form]);
 
   const handleCountrySelect = (value) => {
     setSelectedCountry(value);
@@ -531,8 +530,8 @@ const handleSubmit = async (values) => {
 
                     {/* Group Field */}
                     <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
-                      <Form.Item label="Group" name="group" rules={[{ required: true, message: 'Please input Group!' }]} style={{ width: '100%', marginBottom: '0' }}>
-                        <Input placeholder="Group" required rules={[{ required: true, message: 'Please input Group!' }]} style={{ flexGrow: 1 }} />
+                      <Form.Item label="Group" name="group" style={{ width: '100%', marginBottom: '0' }}>
+                        <Input placeholder="Group" style={{ flexGrow: 1 }} />
                       </Form.Item>
                     </div>
 
@@ -613,6 +612,7 @@ const handleSubmit = async (values) => {
                       <Radio.Group >
                         <Radio value="Active">Active</Radio>
                         <Radio value="Inactive">Inactive</Radio>
+                        <Radio value="In Hiatus">In Hiatus</Radio>
                       </Radio.Group>
                     </Form.Item>
                   </div>
@@ -637,7 +637,7 @@ const handleSubmit = async (values) => {
 
                   <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
                     <Form.Item label="Debut" name="debut" rules={[{ required: true, message: 'Please input Debut!' }]} style={{ flexGrow: 1, marginBottom: "0" }}>
-                        <Input placeholder='Debut' required style={{ width: '100%' }} />
+                        <Input placeholder='YYYY-MM-DD' required style={{ width: '100%' }} />
                     </Form.Item>
                   </div>
 

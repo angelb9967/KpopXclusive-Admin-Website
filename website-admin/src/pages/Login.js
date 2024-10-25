@@ -48,7 +48,7 @@ const Login = () => {
         <h2 className='login-desc'>"Your go-to source for K-pop news, artist updates, and concert info! Join the K-pop community today!"</h2>
         <form className="login-form" action="POST">
             <div className='login-greet'>
-                <h1>Anyeong, Admin!</h1>
+                <h1>Annyeong, Admin!</h1>
                 <h1>안녕하세요</h1>
             </div>
             <label htmlFor="username" className="login-label">Username</label>
