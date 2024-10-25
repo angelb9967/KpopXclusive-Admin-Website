@@ -265,7 +265,7 @@ const idolSchema = new mongoose.Schema({
         required: true,
         default: {}
     },
-    language: [String] // Array of languages
+    language: [String] 
 });
 
 const Idol = mongoose.model('idols', idolSchema);
@@ -277,11 +277,13 @@ app.post('/idols', async (req, res) => {
     };
 
     try {
+        console.log('Incoming idol data:', req.body);
         const newIdol = new Idol(idolData);
         await newIdol.save();
         res.status(201).json({ success: true, message: 'Idol saved successfully!' });
     } catch (error) {
         console.error('Error saving idol:', error);
+        console.error('Error stack:', error.stack);
         res.status(500).json({ success: false, message: 'Failed to save idol' });
     }
 });
@@ -355,3 +357,100 @@ app.delete('/idols/:id', async (request, response) => {
     }
 });
 
+/////////////////////////////////// NEWS
+
+const newsSchema = new mongoose.Schema({
+    title: String,
+    description: String,
+    author: String,
+    date: String,
+    thumbnail: String,
+    content: String,
+})
+
+const News = mongoose.model('news', newsSchema); 
+
+// POST Route to create a new news
+app.post('/news', async (req, res) => {
+    const newsData = {
+        ...req.body,
+    };
+
+    try {
+        console.log('Incoming news data:', req.body);
+        const newNews = new News(newsData);
+        await newNews.save();
+        res.status(201).json({ success: true, message: 'News saved successfully!' });
+    } catch (error) {
+        console.error('Error saving news:', error);
+        console.error('Error stack:', error.stack);
+        res.status(500).json({ success: false, message: 'Failed to save news' });
+    }
+});
+
+// GET Route to retrieve all news
+app.get('/news', async (request, response) => {
+    try {
+        const allNews = await News.find();
+        response.status(200).json(allNews);
+    } catch (error) {
+        response.status(500).json({ message: 'Error retrieving news', error });
+    }
+});
+
+// GET Route to retrieve a single news by ID
+app.get('/news/:id', async (request, response) => {
+    try {
+        const singleNews = await News.findById(request.params.id);
+        if (!singleNews) {
+            return response.status(404).json({ message: 'News not found' });
+        }
+        response.status(200).json(singleNews);
+    } catch (error) {
+        response.status(500).json({ message: 'Error retrieving news', error });
+    }
+});
+
+// PUT Route to update a single news by ID
+app.put('/news/:id', async (request, response) => {
+    const newsId = request.params.id;
+
+    if (!ObjectId.isValid(newsId)) {
+        return response.status(400).json({ message: "Invalid ID format" });
+    }
+
+    try {
+        const updatedNews = await News.findByIdAndUpdate(
+            newsId, 
+            request.body,
+            { new: true, runValidators: true }
+        );
+        
+        if (!updatedNews) {
+            return response.status(404).json({ message: 'News not found' });
+        }
+        response.status(200).json(updatedNews);
+    } catch (error) {
+        response.status(500).json({ message: 'Error updating news', error });
+    }
+});
+
+// DELETE Route to delete a single news by ID
+app.delete('/news/:id', async (request, response) => {
+    const newsId = request.params.id;
+
+    if (!ObjectId.isValid(newsId)) {
+        return response.status(400).json({ message: "Invalid ID format" });
+    }
+
+    try {
+        const deletedNews = await News.findByIdAndDelete(newsId);
+        if (!deletedNews) {
+            return response.status(404).json({ message: "News not found" });
+        }
+        response.status(200).json({ message: 'News deleted successfully' });
+    } catch (error) {
+        console.error("Error deleting news:", error);
+        response.status(500).json({ message: 'Error deleting news', error });
+    }
+});

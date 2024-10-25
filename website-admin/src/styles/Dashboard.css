@@ -1,8 +1,7 @@
 .dashboard-container {
     display: flex;
-    height: 100%;
     gap: 6%; 
-    padding: 2%; 
+    padding: 40px; 
     flex-wrap: wrap; 
     align-items: stretch; 
     justify-content: center; 

@@ -10,6 +10,7 @@ const Main = () => {
   const navigate = useNavigate();
   const [title, setTitle] = useState('Dashboard');
   const [collapsed, setCollapsed] = useState(true); // New state for sidebar collapse
+  const [showSubmenu, setShowSubmenu] = useState(false); // New state for submenu visibility
 
   const toggleSidebar = () => {
     setCollapsed(!collapsed); // Toggle the sidebar state
@@ -27,10 +28,15 @@ const Main = () => {
         setTitle('ADMIN APPROVAL');
         break;
       case '/Main/Information-Handler':
+      case '/Main/Information-Handler/Idols':
+      case '/Main/Information-Handler/Groups':
         setTitle('INFORMATION HANDLER');
         break;
       case '/Main/Access-Website':
         setTitle('ACCESS WEBSITE');
+        break;
+      case '/Main/Create-News':
+        setTitle('CREATE NEWS');
         break;
       default:
         setTitle('DASHBOARD');
@@ -71,7 +77,7 @@ const Main = () => {
 
           {!collapsed && (
             <>
-              <h2 className='sidebar-greet'>WELCOME,<br />USER ACCOUNT!</h2>
+              <h2 className='sidebar-greet'>WELCOME,<br />ADMIN ACCOUNT!</h2>
               <ul className="lists">
                 <li className="list">
                   <Link to="/Main/Dashboard" className="nav-link">
@@ -85,11 +91,27 @@ const Main = () => {
                     <span className={`link ${collapsed ? 'collapsed' : ''}`}>USER MANAGEMENT</span>
                   </Link>
                 </li>
-                <li className="list">
-                  <Link to="/Main/Information-Handler" className="nav-link">
+                <li className="list" 
+                    onMouseEnter={() => setShowSubmenu(true)} 
+                    onMouseLeave={() => setShowSubmenu(false)}>
+                  <span className="nav-link">
                     <i className='bx bxs-info-circle'></i>
                     <span className={`link ${collapsed ? 'collapsed' : ''}`}>INFORMATION HANDLER</span>
-                  </Link>
+                  </span>
+                  {showSubmenu && (
+                    <ul className="submenu">
+                      <li>
+                        <Link to="/Main/Information-Handler/Idols" className="nav-link">
+                          <span className={`link ${collapsed ? 'collapsed' : ''}`}>Idols</span>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link to="/Main/Information-Handler/Groups" className="nav-link">
+                          <span className={`link ${collapsed ? 'collapsed' : ''}`}>Groups</span>
+                        </Link>
+                      </li>
+                    </ul>
+                  )}
                 </li>
                 <li className="list">
                   <Link to="/Main/Access-Website" className="nav-link">
@@ -98,12 +120,17 @@ const Main = () => {
                   </Link>
                 </li>
                 <li className="list">
+                  <Link to="/Main/Create-News" className="nav-link">
+                    <i class='bx bxs-news'></i>
+                    <span className={`link ${collapsed ? 'collapsed' : ''}`}>CREATE NEWS</span>
+                  </Link>
+                </li>
+                <li className="list">
                   <span onClick={confirmLogout} className="nav-link logout" style={{ cursor: 'pointer' }}>
                     <i className='bx bx-log-out'></i>
                     <span className={`link ${collapsed ? 'collapsed' : ''}`}>LOGOUT</span>
                   </span>
                 </li>
-
               </ul>
             </>
           )}

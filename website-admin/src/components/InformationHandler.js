@@ -191,7 +191,7 @@ const InformationHandler = () => {
       title: 'Last Edited',
       dataIndex: 'lastEdited',
       key: 'lastEdited',
-      render: (text) => formatDate(text), // Format the date
+      render: (text) => formatDate(text), 
     },
     {
       title: 'Action',

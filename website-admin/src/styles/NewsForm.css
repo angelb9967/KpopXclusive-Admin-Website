@@ -1,0 +1,25 @@
+ .newsForm-container {
+    padding: 16px;
+    display: flex;
+    border: 2px solid black;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    font-size: 30px;
+ }
+
+ .newsForm-subContainer {
+    margin-top: 16px;
+    display: flex;
+    border: 2px solid rgb(166, 14, 14);
+    display: flex;
+    flex-direction: row;
+    gap: 20px; 
+ }
+
+ .newsForm-box {
+    display: flex;
+    flex-direction: column;
+    border: 2px solid rgb(0, 0, 0);
+    flex:1
+ }

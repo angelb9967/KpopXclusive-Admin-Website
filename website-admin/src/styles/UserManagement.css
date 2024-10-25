@@ -1,5 +1,5 @@
 .usermanage-container {
-    padding: 20px;
+    padding: 40px;
 }
 
 .action-container {
@@ -9,7 +9,7 @@
 }
 
 .dashboardSearch-container {
-    margin-right: 10px; /* Space between search and button */
+    margin-right: 10px;
 }
 
 .dashboardSearch {
@@ -25,3 +25,27 @@
 .dashboardSearch .ant-input-search-button {
     border-radius: 25px;
 }
+
+.searchInput .ant-input,
+.searchInput .ant-input-search-button {
+    font-family: 'Saira Condensed', sans-serif;
+    border-radius: 25px;
+    box-shadow: inset 0px 1px 5px 0px rgba(0, 0, 0, 0.75);
+}
+
+.status-active {
+    border-radius: 5px;
+    padding: 4px 2px;
+    background-color: green;
+    color: white;
+    text-align: center;
+  }
+  
+  .status-inactive {
+    border-radius: 5px;
+    background-color: rgb(185,59,61);
+    padding: 4px 2px;
+    color: white;
+    text-align: center;
+  }
+  

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Input, Button, Table, Modal, message, Select } from 'antd';
-import moment from 'moment'; // Import moment
+import { Input, Button, Table, Modal, message, Select, Space } from 'antd';
+import { EyeInvisibleOutlined, EyeOutlined, EditOutlined, DeleteOutlined} from '@ant-design/icons';
+import moment from 'moment'; 
 import '../styles/UserManagement.css';
 
 const { Search } = Input;
@@ -12,14 +13,24 @@ const UserManagement = () => {
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
+  const [visiblePassword, setVisiblePassword] = useState({}); 
+
   const [formData, setFormData] = useState({
     username: '',
     password: '',
     status: 'Inactive',
     createdAt: '',
     updatedAt: '',
-    user_id: ''
+    user_id: '',
+    showPassword: false,
   });
+
+  const togglePasswordVisibility = (userId) => {
+    setVisiblePassword((prev) => ({
+        ...prev,
+        [userId]: !prev[userId], 
+    }));
+};
 
   useEffect(() => {
     getData();
@@ -156,31 +167,56 @@ const UserManagement = () => {
 
   const columns = [
     { title: 'Username', dataIndex: 'username', key: 'username' },
-    { title: 'Password', dataIndex: 'password', key: 'password' },
-    { title: 'Status', dataIndex: 'status', key: 'status' },
+    {
+      title: 'Password',
+      dataIndex: 'password',
+      key: 'password',
+      render: (text, record) => (
+        <span>
+          {visiblePassword[record._id] ? text : '********'} {/* Show/hide password */}
+          <Button
+            type="link"
+            icon={visiblePassword[record._id] ? <EyeInvisibleOutlined /> : <EyeOutlined />}
+            onClick={() => togglePasswordVisibility(record._id)}
+            style={{ marginLeft: 8 }}
+          />
+        </span>
+      ),
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
+      render: (status) => (
+        <div className={status === 'Active' ? 'status-active' : 'status-inactive'}>
+          {status}
+        </div>
+      ),
+    },
     { title: 'Created At', dataIndex: 'createdAt', key: 'createdAt' },
     { title: 'Updated At', dataIndex: 'updatedAt', key: 'updatedAt' },
     {
       title: 'Action',
       key: 'action',
       render: (text, record) => (
-        <>
+        <Space size="middle">
           <Button
-            type="link"
+            icon={<EditOutlined />}
             onClick={() => showModal('Edit User', 'editData', record)}
           >
             Edit
           </Button>
           <Button
-            type="link"
+            icon={<DeleteOutlined />}
             danger
-            onClick={() => deleteData(record._id)}
+            onClick={() => deleteData(record.key)} // Use record._id if that's your unique identifier
           >
             Delete
           </Button>
-        </>
+        </Space>
       )
     }
+    
   ];
 
   return (
@@ -202,7 +238,7 @@ const UserManagement = () => {
             type="primary"
             onClick={() => showModal('Add User', 'insertData')}
           >
-            Add User
+            ADD
           </Button>
         </div>
       </div>
@@ -216,7 +252,7 @@ const UserManagement = () => {
 
       <Modal
         title={modalTitle}
-        visible={isModalVisible}
+        open={isModalVisible}
         onOk={handleOk}
         onCancel={() => setIsModalVisible(false)}
       >
@@ -228,12 +264,22 @@ const UserManagement = () => {
           />
         </div>
         <div className="mb-3">
-          <label>Password</label>
-          <Input
-            type="password"
+        <label>Password</label>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+        <Input
+            type={formData.showPassword ? 'text' : 'password'} // Toggle between text and password
             value={formData.password}
             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-          />
+            style={{ flex: 1 }}
+            suffix={null} // Remove any suffix icons from the input
+        />
+        <Button
+            type="link"
+            icon={formData.showPassword ? <EyeInvisibleOutlined /> : <EyeOutlined />}
+            onClick={() => setFormData({ ...formData, showPassword: !formData.showPassword })}
+            style={{ marginLeft: 8 }}
+        />
+    </div>
         </div>
         <div className="mb-3">
           <label>Status</label>

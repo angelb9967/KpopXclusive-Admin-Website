@@ -12,25 +12,24 @@
 }
 
 .idolform-box-container {
-  height: 100%; /* Fill height of viewport */
+  height: 100%;
   transition: background-color 0.3s ease-in-out;
 }
 
 .idolform-box-container1 {
   display: flex;
   flex: 1;
-  margin: 0; /* Ensure no extra margins */
-  padding: 0; /* Ensure no extra padding */
+  margin: 0; 
+  padding: 0;
 }
 
-/* Box 1 */
 #idolform-box1 {
-  flex: 1; /* Takes 1 part of the available space */
+  flex: 1; 
   border: 2px solid #ff6550;
-  background-color: #fff; /* Background color for box 1 */
+  background-color: #fff;
   display: flex;
-  flex-direction: column; /* Stack content vertically */
-  padding: 16px; /* Optional: add padding if needed */
+  flex-direction: column; 
+  padding: 16px; 
 }
 
 /* Box 2 */
