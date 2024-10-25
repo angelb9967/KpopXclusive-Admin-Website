@@ -650,7 +650,7 @@ const handleSubmit = async (values) => {
 
                   <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
                     <Form.Item label="Active Years" name="activeYears" rules={[{ required: true, message: 'Please input Active Years!' }]} style={{ flexGrow: 1, marginBottom: '0' }}>
-                      <Input placeholder="Active Years" required style={{ width: '100%' }} />
+                      <Input type='number' placeholder="Active Years" required style={{ width: '100%' }} />
                     </Form.Item>
                   </div>
 
