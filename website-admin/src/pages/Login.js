@@ -23,6 +23,7 @@ const Login = () => {
                 console.log("Response from server:", res.data); 
                 if (res.data === "exist") {
                     history("/Main/Dashboard")
+                    localStorage.setItem("isAuthenticated", true);
                 } else if (res.data === "notexist") {
                     alert("User does not exist")
                 } else if (res.data === "wrong password") {

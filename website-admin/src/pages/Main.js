@@ -53,6 +53,7 @@ const Main = () => {
       content: 'Are you sure you want to log out?',
       onOk() {
         navigate("/");
+        localStorage.removeItem("isAuthenticated");
         console.log('User logged out');
       },
       onCancel() {
