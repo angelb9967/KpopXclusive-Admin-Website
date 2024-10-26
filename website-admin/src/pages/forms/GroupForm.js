@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../../styles/GroupForm.css';
-import { Button, Select, Input, message, Form, Radio, Table, Modal, AutoComplete } from 'antd';
+import { Button, Select, Input, message, Form, Radio, Table, Modal, AutoComplete, DatePicker } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import Title from 'antd/es/skeleton/Title';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,6 +9,7 @@ import TextArea from 'antd/es/input/TextArea';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import moment from 'moment-timezone';
+import dayjs from 'dayjs';
 
 const { Option } = Select;
 
@@ -22,6 +23,11 @@ const GroupForm = () => {
   const buttonText = location.pathname === '/EditGroup' ? 'Update Group' : 'Save Group';
 
   console.log('Group Data:', groupData);
+  const initialValues = {
+    ...groupData,
+    debut: groupData?.debut ? dayjs(groupData.debut) : null,
+
+};
 
   const [memberImage, setMemberImage] = useState(null);
   const [groupImage, setGroupImage] = useState(null);
@@ -534,7 +540,7 @@ const GroupForm = () => {
     <div className='groupForm-maincontainer'>
       <div className='groupForm'>
         <h1 className='groupform-title'>KPOP GROUP INFORMATION</h1>
-        <Form form={form} onFinish={handleSubmit} scrollToFirstError initialValues={groupData}>
+        <Form form={form} onFinish={handleSubmit} scrollToFirstError initialValues={initialValues}>
           <div className="groupform-box-container">
             <div className="groupform-box1" id="groupform-box1">
               {/* Content for box 1 */}
@@ -663,10 +669,19 @@ const GroupForm = () => {
                       </Form.Item>
                     </div>
 
-                    {/* Debut Name Text Field  */}
+                    {/* Debut Text Field  */}
                     <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
                       <Form.Item label="Debut" name="debut" rules={[{ required: true, message: 'Please input Debut!' }]} style={{ flexGrow: 1, marginBottom: "0" }}>
-                        <Input placeholder='YYYY-MM-DD' required style={{ width: '100%' }} />
+                      <DatePicker
+                        placeholder='Debut'
+                        format="YYYY-MM-DD"
+                        required
+                        rules={[{ required: true, message: 'Please input Debut!' }]}
+                        style={{ flexGrow: 1, width: '100%' }}
+                        value={form.getFieldValue('debut')}
+                        onChange={(debut) => form.setFieldsValue({ debut })}
+                        disabledDate={(current) => current && current > moment().endOf('day')}
+                      />
                       </Form.Item>
                     </div>
 
@@ -814,9 +829,9 @@ const GroupForm = () => {
 
                   <Form.Item label="Member Name" name="idolName" style={{ flexGrow: 1, marginBottom: '12px' }}>
                     <AutoComplete
-                      options={options} // Options to display in the dropdown
-                      onSearch={handleSearch} // Handle input changes
-                      onSelect={handleSelect} // Handle when an option is selected
+                      options={options} 
+                      onSearch={handleSearch} 
+                      onSelect={handleSelect} 
                       placeholder="Search and select an Idol"
                       style={{ width: '100%' }}
                     >

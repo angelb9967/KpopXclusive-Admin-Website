@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import 'boxicons/css/boxicons.min.css';
 import '../../styles/IdolForm.css';
-import { Button, Select, Input, Space, message, DatePicker, Radio, Form, Modal } from 'antd';
-import { DownOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Select, Input, message, DatePicker, Radio, Form, Modal, AutoComplete } from 'antd';
+import {MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXTwitter, faSpotify, faYoutube } from '@fortawesome/free-brands-svg-icons';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import moment from 'moment-timezone';
+import dayjs from 'dayjs';
 
 const { Option } = Select;
 
@@ -20,12 +21,20 @@ const IdolForm = () => {
   const buttonText = location.pathname === '/EditIdol' ? 'Update Idol' : 'Save Idol';
 
   console.log('Idol Data:', idolData);
+  const initialValues = {
+    ...idolData,
+    birthday: idolData?.birthday ? dayjs(idolData.birthday) : null,
+    debut: idolData?.debut ? dayjs(idolData.debut) : null,
+
+};
+
 
   const [idolImage, setIdolImage] = useState(null);
   const [lightstickImage, setLightstickImage] = useState(null);
   const [countryData, setCountryData] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [funFactsList, setFunFactsList] = useState([]);
+  const [groupOptions, setGroupOptions] = useState([]);
   const [urlInput, setUrlInput] = useState('');
   const [imageType, setImageType] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -58,15 +67,11 @@ const IdolForm = () => {
   }, [idolData, form]);
 
   const isValidDateFormat = (dateString) => {
-    // Regular expression to check for YYYY-MM-DD format
     const regex = /^\d{4}-\d{2}-\d{2}$/;
     return regex.test(dateString);
 };
 
 const handleSubmit = async (values) => {
-  let formattedBirthday = '';
-  let formattedDebut = '';
-
   if (funFactsList.length === 0) {
     message.error('Please provide at least one fun fact about the idol');
     return;
@@ -91,20 +96,6 @@ const handleSubmit = async (values) => {
     return;
   }
 
-  if (isValidDateFormat(values.birthday)) {
-    formattedBirthday = moment(values.birthday).format('YYYY-MM-DD');
-  } else {
-    message.error('Invalid birthday format. Please use YYYY-MM-DD.');
-    return; // Exit if invalid
-  }
-
-  if (isValidDateFormat(values.debut)) {
-    formattedDebut = moment(values.debut).format('YYYY-MM-DD');
-  } else {
-    message.error('Invalid debut format. Please use YYYY-MM-DD.');
-    return; 
-  }
-
   const languagesArray = values.languages.filter(language => language && language.trim() !== '');
   const lastEdited = moment().tz('Asia/Manila').format('YYYY-MM-DD HH:mm:ss');
 
@@ -116,7 +107,7 @@ const handleSubmit = async (values) => {
       companySince[company.name] = moment(company.since).format('YYYY-MM-DD');
     } else {
       message.error(`Invalid company since date for ${company.name}. Please use YYYY-MM-DD.`);
-      allCompaniesValid = false; // Set flag to false if any date is invalid
+      allCompaniesValid = false; 
     }
   });
 
@@ -128,12 +119,12 @@ const handleSubmit = async (values) => {
     idolName: values.stageName,
     nationality: values.nationality,
     fullname: values.fullname,
-    birthday: formattedBirthday,
+    birthday: values.birthday,
     group: values.group,
     age: values.age,
     bloodtype: values.bloodtype,
     height: values.height,
-    debut: formattedDebut,
+    debut: values.debut,
     koreanName: values.koreanName,
     stageName: values.stageName,
     trainingPeriod: values.trainingPeriod,
@@ -179,7 +170,7 @@ const handleSubmit = async (values) => {
   }
 };
 
-  ////////////////  FETCH COUNTRY NAMES API - *START 
+  ////////////////  FETCH SUGGESTIONS API - *START 
   const fetchCountryNames = async () => {
     try {
       const response = await fetch(`https://restcountries.com/v3.1/all`);
@@ -193,14 +184,27 @@ const handleSubmit = async (values) => {
     }
   };
 
+  const fetchGroupNames = async () => {
+    try {
+      const response = await axios.get('http://localhost:8000/groups'); 
+      const groupNames = response.data.map(group => ({
+        value: group.groupName, 
+      }));
+      setGroupOptions(groupNames);
+    } catch (error) {
+      console.error('Error fetching group names:', error);
+    }
+  };
+
   useEffect(() => {
     fetchCountryNames();
+    fetchGroupNames();
   }, []);
 
   const handleCountrySelect = (value) => {
     setSelectedCountry(value);
   };
-  ////////////////  FETCH COUNTRY NAMES API - *END 
+  ////////////////  FETCH  SUGGESTIONS API - *END 
 
   ////////////////  UPLOAD IMAGE - *START 
   const handleUrlChange = (newUrl, setImageCallback) => {
@@ -371,7 +375,7 @@ const handleSubmit = async (values) => {
     <div className='idolForm-maincontainer'>
       <div className='idolForm'>
         <h1 className='idolform-title'>KPOP IDOL INFORMATION</h1>
-        <Form form={form} onFinish={handleSubmit} scrollToFirstError initialValues={idolData}>
+        <Form form={form} onFinish={handleSubmit} scrollToFirstError initialValues={initialValues}>
           <div className='page-box-container'>
             <div className="idolform-box-container" id="idolform-box1">
               {/* Content for box 1 */}
@@ -530,16 +534,30 @@ const handleSubmit = async (values) => {
                     </div>
 
                     {/* Group Field */}
-                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
-                      <Form.Item label="Group" name="group" style={{ width: '100%', marginBottom: '0' }}>
-                        <Input placeholder="Group" style={{ flexGrow: 1 }} />
-                      </Form.Item>
-                    </div>
+                    <Form.Item label="Group" name="group" style={{ width: '100%', marginBottom: '12px' }}>
+                      <AutoComplete
+                        options={groupOptions} 
+                        placeholder="Group"
+                        style={{ flexGrow: 1 }}
+                        onSearch={fetchGroupNames} 
+                      >
+                        <Input />
+                      </AutoComplete>
+                    </Form.Item>
 
                     {/* Birthday Field */}
                     <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
                       <Form.Item label="Birthday" name="birthday" rules={[{ required: true, message: 'Please input Birthday!' }]} style={{ flexGrow: 1, marginBottom: "0" }}>
-                          <Input placeholder="YYYY-MM-DD" required rules={[{ required: true, message: 'Please input Birthday!' }]} style={{ flexGrow: 1 }} />
+                          <DatePicker 
+                          placeholder='Birthday' 
+                          format="YYYY-MM-DD" 
+                          required 
+                          rules={[{ required: true, message: 'Please input Birthday!' }]} 
+                          style={{ flexGrow: 1 , width: '100%'}} 
+                          value={form.getFieldValue('birthday')}
+                          onChange={(birthday) => form.setFieldsValue({ birthday })}
+                          disabledDate={(current) => current && current > moment().endOf('day')}
+                        />
                       </Form.Item>
                     </div>
 
@@ -574,7 +592,7 @@ const handleSubmit = async (values) => {
                               </Form.Item>
 
                               <Form.Item
-                                label={`Company Since (Company ${index + 1})`} // Keep the label for Company Since
+                                label={`Company Since (Company ${index + 1})`}
                                 required={true}
                               >
                                 <Form.Item
@@ -638,7 +656,16 @@ const handleSubmit = async (values) => {
 
                   <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
                     <Form.Item label="Debut" name="debut" rules={[{ required: true, message: 'Please input Debut!' }]} style={{ flexGrow: 1, marginBottom: "0" }}>
-                        <Input placeholder='YYYY-MM-DD' required style={{ width: '100%' }} />
+                      <DatePicker
+                        placeholder='Debut'
+                        format="YYYY-MM-DD"
+                        required
+                        rules={[{ required: true, message: 'Please input Debut!' }]}
+                        style={{ flexGrow: 1, width: '100%' }}
+                        value={form.getFieldValue('debut')}
+                        onChange={(debut) => form.setFieldsValue({ debut })}
+                        disabledDate={(current) => current && current > moment().endOf('day')}
+                      />
                     </Form.Item>
                   </div>
 
