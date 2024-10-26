@@ -102,12 +102,14 @@ const Main = () => {
                     <ul className="submenu">
                       <li>
                         <Link to="/Main/Information-Handler/Idols" className="nav-link">
-                          <span className={`link ${collapsed ? 'collapsed' : ''}`}>Idols</span>
+                          <i class='bx bxs-user'></i>
+                          <span className={`link ${collapsed ? 'collapsed' : ''}`}>IDOLS</span>
                         </Link>
                       </li>
                       <li>
                         <Link to="/Main/Information-Handler/Groups" className="nav-link">
-                          <span className={`link ${collapsed ? 'collapsed' : ''}`}>Groups</span>
+                          <i class='bx bxs-group' ></i>
+                          <span className={`link ${collapsed ? 'collapsed' : ''}`}>GROUPS</span>
                         </Link>
                       </li>
                     </ul>

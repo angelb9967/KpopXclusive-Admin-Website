@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Input, Button, Table, Modal, message, Select, Space } from 'antd';
-import { EyeInvisibleOutlined, EyeOutlined, EditOutlined, DeleteOutlined} from '@ant-design/icons';
-import moment from 'moment'; 
-import '../styles/UserManagement.css';
+import { Input, Button, Table, Modal, message, Select, Space, Tag } from 'antd';
+import { EyeInvisibleOutlined, EyeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import moment from 'moment';
+import '../../styles/UserManagement.css';
 
 const { Search } = Input;
 const { Option } = Select;
@@ -11,9 +11,10 @@ const UserManagement = () => {
   const [users, setUsers] = useState([]);
   const [searchInput, setSearchInput] = useState('');
   const [filteredUsers, setFilteredUsers] = useState([]);
+  const [userPagination, setUserPagination] = useState({ current: 1, pageSize: 10 });
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
-  const [visiblePassword, setVisiblePassword] = useState({}); 
+  const [visiblePassword, setVisiblePassword] = useState({});
 
   const [formData, setFormData] = useState({
     username: '',
@@ -27,10 +28,10 @@ const UserManagement = () => {
 
   const togglePasswordVisibility = (userId) => {
     setVisiblePassword((prev) => ({
-        ...prev,
-        [userId]: !prev[userId], 
+      ...prev,
+      [userId]: !prev[userId],
     }));
-};
+  };
 
   useEffect(() => {
     getData();
@@ -44,8 +45,8 @@ const UserManagement = () => {
       // Format dates before setting users
       const formattedData = data.map(user => ({
         ...user,
-        createdAt: moment(user.createdAt).format('YYYY/MM/DD, hh:mm:ss A'), 
-        updatedAt: moment(user.updatedAt).format('YYYY/MM/DD, hh:mm:ss A') 
+        createdAt: moment(user.createdAt).format('YYYY/MM/DD, hh:mm:ss A'),
+        updatedAt: moment(user.updatedAt).format('YYYY/MM/DD, hh:mm:ss A')
       }));
       setUsers(formattedData);
       setFilteredUsers(formattedData);
@@ -67,8 +68,8 @@ const UserManagement = () => {
       username: user.username || '',
       password: user.password || '',
       status: user.status || 'Inactive',
-      createdAt: user.createdAt || '', 
-      updatedAt: user.updatedAt || '', 
+      createdAt: user.createdAt || '',
+      updatedAt: user.updatedAt || '',
       user_id: user._id || ''
     });
     setIsModalVisible(true);
@@ -100,7 +101,6 @@ const UserManagement = () => {
         const url = user_id ? `http://localhost:8000/users/${user_id}` : 'http://localhost:8000/users';
         const method = user_id ? 'PUT' : 'POST';
 
-        // Prepare data for saving
         const dataToSend = {
           username,
           password,
@@ -151,7 +151,7 @@ const UserManagement = () => {
 
           if (response.ok) {
             console.log('User deleted successfully');
-            getData(); // Refresh user list
+            getData();
           } else {
             console.error("Failed to delete user:", response.statusText);
           }
@@ -166,7 +166,10 @@ const UserManagement = () => {
   };
 
   const columns = [
-    { title: 'Username', dataIndex: 'username', key: 'username' },
+    { title: 'Username', dataIndex: 'username', key: 'username' ,
+      sorter: (a, b) => a.username.localeCompare(b.username),
+      sortDirections: ['ascend', 'descend'],
+    },
     {
       title: 'Password',
       dataIndex: 'password',
@@ -187,14 +190,24 @@ const UserManagement = () => {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
-      render: (status) => (
-        <div className={status === 'Active' ? 'status-active' : 'status-inactive'}>
-          {status}
-        </div>
-      ),
+      render: (status) => {
+        let color = status === 'Active' ? 'green' : 'red'; // Set color based on status
+        let displayText = status === 'Active' ? status : 'Inactive'; // Display "Inactive" for non-active statuses
+        return (
+          <Tag color={color}>
+            {displayText} 
+          </Tag>
+        );
+      }
     },
-    { title: 'Created At', dataIndex: 'createdAt', key: 'createdAt' },
-    { title: 'Updated At', dataIndex: 'updatedAt', key: 'updatedAt' },
+    { title: 'Created At', dataIndex: 'createdAt', key: 'createdAt',
+      sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
+      sortDirections: ['descend', 'ascend'],
+     },
+    { title: 'Updated At', dataIndex: 'updatedAt', key: 'updatedAt',
+      sorter: (a, b) => new Date(a.updatedAt) - new Date(b.updatedAt),
+      sortDirections: ['descend', 'ascend'],
+     },
     {
       title: 'Action',
       key: 'action',
@@ -209,14 +222,14 @@ const UserManagement = () => {
           <Button
             icon={<DeleteOutlined />}
             danger
-            onClick={() => deleteData(record.key)} // Use record._id if that's your unique identifier
+            onClick={() => deleteData(record.key)}
           >
             Delete
           </Button>
         </Space>
       )
     }
-    
+
   ];
 
   return (
@@ -243,12 +256,21 @@ const UserManagement = () => {
         </div>
       </div>
 
-      <Table
-        dataSource={filteredUsers}
-        columns={columns}
-        rowKey="_id"
-        className="mt-3"
-      />
+      <div className="table-container">
+        <Table
+          dataSource={filteredUsers}
+          columns={columns}
+          rowKey="_id"
+          className="mt-3"
+          pagination={{
+            current: userPagination.current,
+            pageSize: userPagination.pageSize,
+            total: filteredUsers.length,
+            onChange: (page, pageSize) => setUserPagination({ current: page, pageSize }),
+            showSizeChanger: true,
+          }}
+        />
+      </div>
 
       <Modal
         title={modalTitle}
@@ -264,22 +286,22 @@ const UserManagement = () => {
           />
         </div>
         <div className="mb-3">
-        <label>Password</label>
-    <div style={{ display: 'flex', alignItems: 'center' }}>
-        <Input
-            type={formData.showPassword ? 'text' : 'password'} // Toggle between text and password
-            value={formData.password}
-            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-            style={{ flex: 1 }}
-            suffix={null} // Remove any suffix icons from the input
-        />
-        <Button
-            type="link"
-            icon={formData.showPassword ? <EyeInvisibleOutlined /> : <EyeOutlined />}
-            onClick={() => setFormData({ ...formData, showPassword: !formData.showPassword })}
-            style={{ marginLeft: 8 }}
-        />
-    </div>
+          <label>Password</label>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <Input
+              type={formData.showPassword ? 'text' : 'password'} // Toggle between text and password
+              value={formData.password}
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              style={{ flex: 1 }}
+              suffix={null}
+            />
+            <Button
+              type="link"
+              icon={formData.showPassword ? <EyeInvisibleOutlined /> : <EyeOutlined />}
+              onClick={() => setFormData({ ...formData, showPassword: !formData.showPassword })}
+              style={{ marginLeft: 8 }}
+            />
+          </div>
         </div>
         <div className="mb-3">
           <label>Status</label>

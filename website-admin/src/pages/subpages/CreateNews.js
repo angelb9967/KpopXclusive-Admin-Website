@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Table, Button, Space, Input, Modal, message } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import '../styles/InformationHandler.css';
+import '../../styles/InformationHandler.css';
 
 const { Search } = Input;
 
@@ -93,8 +93,10 @@ const CreateNews = () => {
             dataIndex: 'title',
             key: 'title',
             render: (text) => (
-                <span style={{ fontSize: '20px', fontWeight: 'bold' }}>{text}</span> // Adjust font size as needed
+                <span style={{ fontSize: '16px', fontWeight: 'bold' }}>{text}</span> // Adjust font size as needed
             ),
+            sorter: (a, b) => a.title.localeCompare(b.title),
+            sortDirections: ['ascend', 'descend'],
         },
         {
             title: 'Description',
@@ -104,13 +106,18 @@ const CreateNews = () => {
         {
             title: 'Author',
             dataIndex: 'author',
-            key: 'author',
+            key: 'author', 
+            sorter: (a, b) => a.author.localeCompare(b.author),
+            sortDirections: ['ascend', 'descend'],
+            
         },
         {
             title: 'Date',
             dataIndex: 'date',
             key: 'date',
             render: (text) => formatDate(text),
+            sorter: (a, b) => new Date(a.date) - new Date(b.date),
+            sortDirections: ['descend', 'ascend'],
         },
         {
             title: 'Thumbnail',

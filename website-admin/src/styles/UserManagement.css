@@ -4,7 +4,7 @@
 
 .action-container {
     display: flex;
-    justify-content: flex-end; 
+    justify-content: flex-end;
     margin-bottom: 10px;
 }
 
@@ -19,7 +19,7 @@
 .dashboardSearch .ant-input {
     font-family: 'Saira Condensed', sans-serif;
     border-radius: 25px;
-    box-shadow: inset 0px 1px 5px 0px rgba(0,0,0,0.75);
+    box-shadow: inset 0px 1px 5px 0px rgba(0, 0, 0, 0.75);
 }
 
 .dashboardSearch .ant-input-search-button {
@@ -33,19 +33,19 @@
     box-shadow: inset 0px 1px 5px 0px rgba(0, 0, 0, 0.75);
 }
 
-.status-active {
-    border-radius: 5px;
-    padding: 4px 2px;
-    background-color: green;
-    color: white;
-    text-align: center;
-  }
-  
-  .status-inactive {
-    border-radius: 5px;
-    background-color: rgb(185,59,61);
-    padding: 4px 2px;
-    color: white;
-    text-align: center;
-  }
-  
+.table-container .ant-pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+}
+
+.table-container .ant-pagination-item,
+.table-container .ant-pagination-prev,
+.table-container .ant-pagination-next {
+    margin-right: 0.5rem;
+}
+
+.table-container .ant-pagination-options {
+    margin-left: auto;
+}

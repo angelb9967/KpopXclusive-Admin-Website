@@ -1,10 +1,10 @@
 import React from 'react'
 import 'boxicons/css/boxicons.min.css';
-import '../styles/NewsForm.css';
-import { Button, Select, Input, Space, message, DatePicker, Radio, Form, Modal } from 'antd';
-import { DownOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import '../../styles/NewsForm.css';
+import { Button, Input, message, DatePicker, Form, Modal } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { useLocation } from 'react-router-dom';
+import moment from 'moment';
 import axios from 'axios';
 import dayjs from 'dayjs';
 
@@ -91,9 +91,10 @@ const NewsForm = () => {
                                 <DatePicker
                                     format="YYYY-MM-DD"
                                     placeholder="Select or enter the publication date"
-                                    value={form.getFieldValue('date')} 
-                                    onChange={(date) => form.setFieldsValue({ date })} 
+                                    value={form.getFieldValue('date')}
+                                    onChange={(date) => form.setFieldsValue({ date })}
                                     style={{ width: '100%' }}
+                                    disabledDate={(current) => current && current > moment().endOf('day')}
                                 />
                             </Form.Item>
 

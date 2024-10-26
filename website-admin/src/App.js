@@ -1,16 +1,15 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Main from './pages/Main';
 import Login from './pages/Login';
-import Dashboard from './components/Dashboard';
-import UserManagement from './components/UserManagement';
-import InformationHandler from './components/InformationHandler';
+import Dashboard from './pages/subpages/Dashboard';
+import UserManagement from './pages/subpages/UserManagement';
 import AccessWebsite from './components/AccessWebsite';
-import IdolForm from './pages/IdolForm';
-import GroupForm from './pages/GroupForm';
-import IdolTable from './components/IdolTable';
-import GroupTable from './components/GroupTable';
-import CreateNews from './components/CreateNews';
-import NewsForm from './components/NewsForm';
+import IdolForm from './pages/forms/IdolForm';
+import GroupForm from './pages/forms/GroupForm';
+import IdolTable from './pages/subpages/IdolTable';
+import GroupTable from './pages/subpages/GroupTable';
+import CreateNews from './pages/subpages/CreateNews';
+import NewsForm from './pages/forms/NewsForm';
 
 const App = () => {
   return (

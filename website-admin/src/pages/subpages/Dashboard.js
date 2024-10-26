@@ -1,22 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import '../styles/Dashboard.css';
+import '../../styles/Dashboard.css';
 
 const Dashboard = () => {
-  const [numberOfAccounts, setNumberOfAccounts] = useState(0); // State for number of accounts
-  const [activeUsersCount, setActiveUsersCount] = useState(0); // State for active users
+  const [numberOfAccounts, setNumberOfAccounts] = useState(0); 
+  const [activeUsersCount, setActiveUsersCount] = useState(0); 
+  const [totalLogins, setTotalLogins] = useState(0); 
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch('http://localhost:8000/users'); // Fetch user data
+        const response = await fetch('http://localhost:8000/users'); 
         if (response.ok) {
           const data = await response.json();
-          setNumberOfAccounts(data.length); // Set total number of accounts
+          setNumberOfAccounts(data.length);
 
-          // Calculate active users based on the status string
-          const activeUsers = data.filter(user => user.status === 'Active').length; // Corrected the condition to check for 'Active'
+          const activeUsers = data.filter(user => user.status === 'Active').length; 
+          setActiveUsersCount(activeUsers);
 
-          setActiveUsersCount(activeUsers); // Set active users count
+          const totalLoginCounts = data.reduce((sum, user) => sum + user.loginCount, 0);
+          setTotalLogins(totalLoginCounts);
         } else {
           console.error('Failed to fetch users:', response.statusText);
         }
@@ -32,7 +34,7 @@ const Dashboard = () => {
     <div className='dashboard-container'>
       <div className='container-box'>
         <h5>Number of Visitors on Website</h5>
-        <h2>XX</h2>
+        <h2>{totalLogins}</h2> 
       </div>
       <div className='container-box'>
         <h5>Number of Accounts Created on Website</h5>

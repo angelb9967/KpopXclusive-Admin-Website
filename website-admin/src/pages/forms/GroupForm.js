@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/GroupForm.css';
+import '../../styles/GroupForm.css';
 import { Button, Select, Input, message, Form, Radio, Table, Modal, AutoComplete } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import Title from 'antd/es/skeleton/Title';
@@ -336,7 +336,6 @@ const GroupForm = () => {
   };
 
   useEffect(() => {
-    // Fetch country names when component mounts
     fetchCountryNames();
   }, []);
 

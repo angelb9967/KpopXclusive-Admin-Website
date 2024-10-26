@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import '../styles/Login.css'; 
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
-import { Input, Button } from 'antd'; // Import Ant Design components
+import { Input, Button } from 'antd'; 
 import logo1 from '../assets/Logo 1.png'; 
 import logo2 from '../assets/Logo 2.png'; 
 

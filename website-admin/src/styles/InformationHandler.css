@@ -1,17 +1,15 @@
-
 .infohandler-container {
     padding: 40px;
 }
 
 .infohandleraction-container {
-    /* border: 2px solid black; */
     display: flex;
     justify-content: flex-end;
     margin-bottom: 10px;
 }
 
 .infohandlerSearch-container {
-    margin-right: 10px; 
+    margin-right: 10px;
 }
 
 .searchInput .ant-input,
@@ -24,6 +22,7 @@
 .addButton-container Button {
     height: 2.4rem;
 }
+
 .searchInput {
     width: 300px;
 }
@@ -38,21 +37,21 @@
     justify-content: space-between;
     align-items: center;
     padding: 1rem 0;
-  }
-  
-  .table-container .ant-pagination-item,
-  .table-container .ant-pagination-prev,
-  .table-container .ant-pagination-next {
+}
+
+.table-container .ant-pagination-item,
+.table-container .ant-pagination-prev,
+.table-container .ant-pagination-next {
     margin-right: 0.5rem;
-  }
-  
-  .table-container .ant-pagination-options {
-    margin-left: auto; 
-  }
-  
-  .ant-table-thead > tr > th {
-    background-color: rgb(185,59,61) !important; 
-    color: white !important; 
+}
+
+.table-container .ant-pagination-options {
+    margin-left: auto;
+}
+
+.ant-table-thead>tr>th {
+    background-color: rgb(185, 59, 61) !important;
+    color: white !important;
     font-size: 17px;
 }
 

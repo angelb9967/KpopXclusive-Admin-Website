@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import 'boxicons/css/boxicons.min.css';
-import '../styles/IdolForm.css';
+import '../../styles/IdolForm.css';
 import { Button, Select, Input, Space, message, DatePicker, Radio, Form, Modal } from 'antd';
 import { DownOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
@@ -676,7 +676,7 @@ const handleSubmit = async (values) => {
                   <Form.Item label="Language(s):" required>
                     <Form.List
                       name="languages"
-                      initialValue={['']} // Start with one empty input
+                      initialValue={['']}
                       rules={[
                         {
                           validator: async (_, languages) => {

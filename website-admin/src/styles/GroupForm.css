@@ -12,48 +12,44 @@
 }
 
 .groupform-box1 {
-  height: 100%; /* Fill height of viewport */
+  height: 100%;
   transition: background-color 0.3s ease-in-out;
 }
 
 .groupform-box-container1 {
   display: flex;
   flex: 1;
-  margin: 0; /* Ensure no extra margins */
-  padding: 0; /* Ensure no extra padding */
+  margin: 0;
+  padding: 0;
 }
 
 .groupform-box {
   flex: 1;
-  /* Make boxes take up equal space */
   height: 100%;
-  /* Fill height of viewport */
   transition: background-color 0.3s ease-in-out;
 }
 
-/* Box 1 */
 #groupform-box1 {
-  flex: 1; /* Takes 1 part of the available space */
+  flex: 1;
   border: 2px solid #ff6550;
-  background-color: #fff; /* Background color for box 1 */
+  background-color: #fff;
   display: flex;
-  flex-direction: column; /* Stack content vertically */
-  padding: 16px; /* Optional: add padding if needed */
+  flex-direction: column;
+  padding: 16px;
+  flex-wrap: wrap;
 }
 
-/* Box 2 */
 #groupform-box2 {
   border: 2px solid #f8ad00;
-  background-color: #fff; /* Background color for box 2 */
+  background-color: #fff;
   display: flex;
   height: auto;
   flex-direction: row;
   flex-wrap: wrap;
 }
 
-/* Box 3 */
 #groupform-box3 {
-  flex: 1; /* Make box 3 take equal space as box 4 */
+  flex: 1;
   border: 2px solid #46b45a;
   background-color: #fff;
   display: flex;
@@ -61,9 +57,8 @@
   padding: 16px;
 }
 
-/* Box 4 */
 #groupform-box4 {
-  flex: 1; /* Make box 4 take equal space as box 3 */
+  flex: 1;
   border: 2px solid #4682b4;
   background-color: #fff;
   display: flex;
@@ -72,15 +67,14 @@
   height: auto;
 }
 
-/* Box 5 */
 #groupform-box5 {
   height: 50px;
-  flex: 1 1 0; /* Flex-grow: 1, Flex-shrink: 1, Flex-basis: 0 */
+  flex: 1 1 0;
   border: 2px solid #32126b;
-  background-color: #fff; /* Background color for box 4 */
+  background-color: #fff;
   display: flex;
-  flex-direction: column; /* Stack content vertically */
-  padding: 16px; /* Optional: add padding if needed */
+  flex-direction: column;
+  padding: 16px;
 }
 
 .groupform-image-upload-container {
@@ -92,7 +86,6 @@
 .groupform-image-upload-box {
   border: 2px dashed #0000FF;
   width: 100%;
-  /* Make the upload box full width of its container */
   height: 250px;
   display: flex;
   justify-content: center;
@@ -134,15 +127,14 @@
 }
 
 .trylang {
-  flex: 3; /* Takes 2 parts of the available space */
+  flex: 3;
   border: 2px solid #4682b4;
   display: flex;
   flex-direction: column;
 }
 
 .anotherbox {
-  padding: 0; /* Optional: add padding if needed */
-  /* Optional: add padding if needed */
+  padding: 0;
   text-align: center;
   border: 2px solid #b44657;
   display: flex;
@@ -159,12 +151,12 @@
   margin-right: 8px;
 }
 
-.field Input{
+.field Input {
   height: 30px;
   margin-right: 8px;
 }
 
-.field Button{
+.field Button {
   width: 150px;
 }
 
@@ -173,7 +165,7 @@
 }
 
 .anotherbox-container {
-  display:flex;
+  display: flex;
   flex-direction: row;
 }
 
@@ -181,7 +173,7 @@
   text-align: left;
   border: 2px solid #000000;
   flex: 1;
-  padding: 16px; /* Optional: add padding if needed */
+  padding: 16px;
   overflow-y: hidden;
 }
 

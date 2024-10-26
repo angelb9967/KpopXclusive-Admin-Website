@@ -2,16 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { Table, Button, Space, Input, Modal, message } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import '../styles/InformationHandler.css';
+import '../../styles/InformationHandler.css';
 
 const { Search } = Input;
 
-const IdolTable = () => {
+const GroupTable = () => {
   const navigate = useNavigate();
-  const [idols, setIdols] = useState([]);
-  const [idolSearchInput, setIdolSearchInput] = useState('');
-  const [filteredIdols, setFilteredIdols] = useState([]);
-  const [idolPagination, setIdolPagination] = useState({ current: 1, pageSize: 10 });
+  const [groups, setGroups] = useState([]);
+  const [groupSearchInput, setGroupSearchInput] = useState('');
+  const [filteredGroups, setFilteredGroups] = useState([]);
+  const [groupPagination, setGroupPagination] = useState({ current: 1, pageSize: 10 });
 
   useEffect(() => {
     getData();
@@ -19,27 +19,27 @@ const IdolTable = () => {
 
   const getData = async () => {
     try {
-      const response = await fetch('http://localhost:8000/idols');
-      const idolData = await response.json();
-      setIdols(idolData);
-      setFilteredIdols(idolData);
+      const response = await fetch('http://localhost:8000/groups');
+      const groupData = await response.json();
+      setGroups(groupData);
+      setFilteredGroups(groupData);
     } catch (error) {
       message.error('An unexpected error occurred.');
       console.error("Error fetching data:", error);
     }
   };
 
-  const handleIdolSearch = () => {
-    const filtered = idols.filter(idol =>
-      idol.idolName.toLowerCase().includes(idolSearchInput.toLowerCase())
+  const handleGroupSearch = () => {
+    const filtered = groups.filter(group =>
+      group.groupName.toLowerCase().includes(groupSearchInput.toLowerCase())
     );
-    setFilteredIdols(filtered);
-    setIdolPagination({ current: 1, pageSize: 10 });
+    setFilteredGroups(filtered);
+    setGroupPagination({ current: 1, pageSize: 10 });
   };
 
   const deleteData = async (id) => {
     try {
-      const response = await fetch(`http://localhost:8000/idols/${id}`, { method: 'DELETE' });
+      const response = await fetch(`http://localhost:8000/groups/${id}`, { method: 'DELETE' });
       if (response.ok) {
         getData();
       } else {
@@ -47,7 +47,7 @@ const IdolTable = () => {
       }
     } catch (error) {
       message.error('An unexpected error occurred.');
-      console.error(`Error deleting idol:`, error);
+      console.error(`Error deleting group:`, error);
     }
   };
 
@@ -62,14 +62,14 @@ const IdolTable = () => {
     });
   };
 
-  const handleEdit = (record, source) => {
-      navigate('/EditIdol', { state: { record } });
-      console.log('Edit Idol', record);
-  };
+  const handleEdit = (record) => {
+    navigate('/EditGroup', { state: { record } });
+    console.log('Edit Group', record);
+};
 
   const formatDate = (dateString) => {
     const options = {
-      timeZone: 'Asia/Manila', // Philippine Time Zone
+      timeZone: 'Asia/Manila', 
       year: 'numeric',
       month: '2-digit',
       day: '2-digit',
@@ -89,29 +89,34 @@ const IdolTable = () => {
     return `${year}/${month}/${day}, ${time} ${modifier}`;
   };
 
-  const idolColumns = [
+  const groupColumns = [
     {
-        title: 'Image',
-        dataIndex: 'idolImage',
-        key: 'idolImage',
-        render: (imageUrl) => (
-          <img 
-            src={imageUrl} 
-            alt="Idol" 
-            style={{ 
-              width: 80, 
-              height: 80, 
-              borderRadius: '50%', 
-              objectFit: 'cover',      // Ensures the image covers the entire area
-              objectPosition: 'center' // Centers the image content
-            }} 
-          />
-        ),  
-      },
-      {
-        title: 'Idol Name',
-        dataIndex: 'idolName',
-        key: 'idolName',
+      title: 'Image',
+      dataIndex: 'groupImage',
+      key: 'groupImage',
+      render: (imageUrl) => (
+        <img 
+          src={imageUrl} 
+          alt="Group" 
+          style={{ 
+            width: 80, 
+            height: 80, 
+            borderRadius: '50%', 
+            objectFit: 'cover',   
+            objectPosition: 'center'
+          }} 
+        />
+      ),  
+    },
+    {
+        title: 'Group Name',
+        dataIndex: 'groupName',
+        key: 'groupName',
+        render: (text) => (
+          <span style={{ fontSize: '20px', fontWeight: 'bold' }}>{text}</span> // Adjust font size as needed
+        ),
+        sorter: (a, b) => a.groupName.localeCompare(b.groupName),
+        sortDirections: ['ascend', 'descend'],
       },
       {
         title: 'ID',
@@ -124,15 +129,12 @@ const IdolTable = () => {
         ),
       },
       {
-        title: 'Group',
-        dataIndex: 'group',
-        key: 'group',
-      },
-      {
         title: 'Last Edited',
         dataIndex: 'lastEdited',
         key: 'lastEdited',
-        render: (text) => formatDate(text), // Format the date
+        render: (text) => formatDate(text), 
+        sorter: (a, b) => new Date(a.lastEdited) - new Date(b.lastEdited),
+        sortDirections: ['descend', 'ascend'],
       },
       {
         title: 'Action',
@@ -160,27 +162,27 @@ const IdolTable = () => {
         <div className="infohandlerSearch-container">
           <Search
             size="large"
-            placeholder="Find Idol..."
-            className="idolSearch searchInput"
-            onSearch={handleIdolSearch}
-            onChange={(e) => setIdolSearchInput(e.target.value)}
-            value={idolSearchInput}
+            placeholder="Find Group..."
+            className="groupSearch searchInput"
+            onSearch={handleGroupSearch}
+            onChange={(e) => setGroupSearchInput(e.target.value)}
+            value={groupSearchInput}
           />
         </div>
         <div className="addButton-container">
-          <Button type="primary" onClick={() => navigate('/AddIdol')}>ADD</Button>
+          <Button type="primary" onClick={() => navigate('/AddGroup')}>ADD</Button>
         </div>
       </div>
       <div className="table-container">
         <Table
-          columns={idolColumns}
-          dataSource={filteredIdols.slice((idolPagination.current - 1) * idolPagination.pageSize, idolPagination.current * idolPagination.pageSize)}
+          columns={groupColumns}
+          dataSource={filteredGroups.slice((groupPagination.current - 1) * groupPagination.pageSize, groupPagination.current * groupPagination.pageSize)}
           rowKey="_id"
           pagination={{
-            current: idolPagination.current,
-            pageSize: idolPagination.pageSize,
-            total: filteredIdols.length,
-            onChange: (page, pageSize) => setIdolPagination({ current: page, pageSize }),
+            current: groupPagination.current,
+            pageSize: groupPagination.pageSize,
+            total: filteredGroups.length,
+            onChange: (page, pageSize) => setGroupPagination({ current: page, pageSize }),
             showSizeChanger: true,
           }}
         />
@@ -189,4 +191,4 @@ const IdolTable = () => {
   );
 };
 
-export default IdolTable;
+export default GroupTable;
