@@ -15,8 +15,8 @@ const { Option } = Select;
 const GroupForm = () => {
   const [form] = Form.useForm();
   const location = useLocation();
-  const [idols, setIdols] = useState([]); 
-  const [options, setOptions] = useState([]); 
+  const [idols, setIdols] = useState([]);
+  const [options, setOptions] = useState([]);
   const { state } = location;
   const groupData = state?.record;
   const buttonText = location.pathname === '/EditGroup' ? 'Update Group' : 'Save Group';
@@ -38,19 +38,19 @@ const GroupForm = () => {
     console.log("useEffect triggered", groupData);
     if (groupData) {
       const companies = groupData.companyCurrent.map((company, index) => ({
-        name: company, 
-        since: groupData.companySince[company] || '', 
+        name: company,
+        since: groupData.companySince[company] || '',
       }));
-      
+
       form.setFieldsValue({
-        companies: companies.length > 0 ? companies : [{ name: '', since: null }], 
+        companies: companies.length > 0 ? companies : [{ name: '', since: null }],
       });
 
-      setSelectedCountry(groupData.country); 
-      setGroupImage(groupData.groupImage); 
-      setLightstickImage(groupData.lightstickImage); 
+      setSelectedCountry(groupData.country);
+      setGroupImage(groupData.groupImage);
+      setLightstickImage(groupData.lightstickImage);
 
-      if (groupMembers.length === 0) { 
+      if (groupMembers.length === 0) {
         setGroupMembers(groupData.groupMembers.map(member => ({
           name: member.name,
           image: member.image,
@@ -74,9 +74,9 @@ const GroupForm = () => {
 
   useEffect(() => {
     console.log("Updated group members: ", groupMembers);
-}, [groupMembers]);
+  }, [groupMembers]);
 
-    /////////////////////// DROP DOWN AUTOCOMPLETE -*START
+  /////////////////////// DROP DOWN AUTOCOMPLETE -*START
 
   // Filter idols based on search text
   const handleSearch = (searchText) => {
@@ -95,7 +95,7 @@ const GroupForm = () => {
   // Handle selection of an idol from the dropdown
   const handleSelect = (value, option) => {
     form.setFieldsValue({
-      memberLink: option.memberLink, 
+      memberLink: option.memberLink,
       memberImage: option.memberImage,
     });
     setMemberImage(option.memberImage);
@@ -107,7 +107,7 @@ const GroupForm = () => {
     // Regular expression to check for YYYY-MM-DD format
     const regex = /^\d{4}-\d{2}-\d{2}$/;
     return regex.test(dateString);
-};
+  };
 
   const handleSubmit = async (values) => {
     let formattedDebut = '';
@@ -136,8 +136,8 @@ const GroupForm = () => {
       formattedDebut = moment(values.debut).format('YYYY-MM-DD');
     } else {
       message.error('Invalid debut format. Please use YYYY-MM-DD.');
-      return; 
-    }  
+      return;
+    }
 
     if (groupMembers.length === 0) {
       message.error('Please add at least one member to the group.');
@@ -159,7 +159,7 @@ const GroupForm = () => {
     });
 
     if (!allCompaniesValid) {
-      return; 
+      return;
     }
 
     console.log("Group Members Before Submit:", groupMembers);
@@ -172,7 +172,7 @@ const GroupForm = () => {
       fandom: values.fandom,
       country: values.country,
       companyCurrent: values.companies.map(company => company.name),
-      companySince: companySince, 
+      companySince: companySince,
       activeYears: values.activeYears,
       status: values.status,
       musicShowWins: values.musicShowWins,
@@ -192,11 +192,11 @@ const GroupForm = () => {
     };
 
     try {
-      console.log('Data to submit:', dataToSubmit); 
+      console.log('Data to submit:', dataToSubmit);
 
       if (location.pathname === '/EditGroup' && groupData._id) {
         const response = await axios.put(`http://localhost:8000/groups/${groupData._id}`, dataToSubmit);
-        console.log('Update Response:', response.data); 
+        console.log('Update Response:', response.data);
         message.success(response.data.message);
       } else {
         const response = await axios.post('http://localhost:8000/groups', dataToSubmit);
@@ -223,44 +223,44 @@ const GroupForm = () => {
 
     // Function to validate image URL
     const isValidUrl = (urlString) => {
-        try {
-            new URL(urlString);
-            return true;
-        } catch (error) {
-            return false;
-        }
+      try {
+        new URL(urlString);
+        return true;
+      } catch (error) {
+        return false;
+      }
     };
 
     if (!isValidUrl(memberImage)) {
-        message.error('Member image URL is not valid');
-        return;
+      message.error('Member image URL is not valid');
+      return;
     }
 
-     // Ensure required fields are filled
-     if (!memberImage || !memberName || !memberLink) {
+    // Ensure required fields are filled
+    if (!memberImage || !memberName || !memberLink) {
       message.error('Please fill out all member fields.');
       return;
-  }
+    }
 
     // Create the new or updated member object
     const newMember = {
-        link: memberLink,
-        name: memberName,
-        image: memberImage,
+      link: memberLink,
+      name: memberName,
+      image: memberImage,
     };
 
     let updatedMembers;
     if (editKey) {
-        // Update existing member by comparing link values
-        updatedMembers = groupMembers.map(member =>
-            member.link === editKey ? newMember : member
-        );
-        setEditKey(null);
-        message.success('Member updated successfully.');
+      // Update existing member by comparing link values
+      updatedMembers = groupMembers.map(member =>
+        member.link === editKey ? newMember : member
+      );
+      setEditKey(null);
+      message.success('Member updated successfully.');
     } else {
-        // Add new member
-        updatedMembers = [...groupMembers, newMember];
-        message.success('Member added successfully.');
+      // Add new member
+      updatedMembers = [...groupMembers, newMember];
+      message.success('Member added successfully.');
     }
 
     // Update groupMembers state
@@ -272,42 +272,42 @@ const GroupForm = () => {
     setUrlInput('');
     form.setFieldsValue({ idolName: '' });
     setOptions([]);
-};
-  
+  };
+
   // Edit member - populate fields for editing
   const handleEdit = (link) => {
     console.log("MemberLink passed to handleEdit: ", link); // Log the passed link
 
     if (!link) {
-        console.error("memberLink is undefined or missing");
-        return;
+      console.error("memberLink is undefined or missing");
+      return;
     }
 
     console.log("Group Members: ", groupMembers); // Log the groupMembers array
 
     const memberToEdit = groupMembers.find((member) => {
-        console.log("Comparing: member link:", member.link, "with passed link:", link); // Log the comparison
-        return String(member.link) === String(link); // Compare as strings
+      console.log("Comparing: member link:", member.link, "with passed link:", link); // Log the comparison
+      return String(member.link) === String(link); // Compare as strings
     });
 
     if (memberToEdit) {
-        console.log("Member found: ", memberToEdit); // Log the found member
+      console.log("Member found: ", memberToEdit); // Log the found member
 
-        form.setFieldsValue({
-            name: memberToEdit.name,
-            memberLink: memberToEdit.link,
-            memberImage: memberToEdit.image,
-        });
-        setMemberImage(memberToEdit.image);
-        setUrlInput(memberToEdit.image);
-        setEditKey(link);
+      form.setFieldsValue({
+        name: memberToEdit.name,
+        memberLink: memberToEdit.link,
+        memberImage: memberToEdit.image,
+      });
+      setMemberImage(memberToEdit.image);
+      setUrlInput(memberToEdit.image);
+      setEditKey(link);
 
-         // Set the AutoComplete input to the member's name
-         form.setFieldsValue({ idolName: memberToEdit.name });
+      // Set the AutoComplete input to the member's name
+      form.setFieldsValue({ idolName: memberToEdit.name });
     } else {
-        console.error("No member found with the given link");
+      console.error("No member found with the given link");
     }
-};
+  };
 
 
   // Remove member from the table
@@ -316,7 +316,7 @@ const GroupForm = () => {
     const updatedMembers = groupMembers.filter(member => member.link !== link);
     setGroupMembers(updatedMembers);
     message.success('Member removed successfully.');
-};
+  };
 
 
   ////////////////  FETCH MEMBER TABLE - *END
@@ -435,7 +435,7 @@ const GroupForm = () => {
 
   const showModal = (type) => {
     setUrlInput('')
-    setImageType(type); 
+    setImageType(type);
     setIsModalVisible(true);
   };
 
@@ -453,7 +453,7 @@ const GroupForm = () => {
           form.setFieldsValue({ lightstickImage: urlInput });
           setLightstickImage(urlInput);
         } else if (imageType === 'member') {
-          form.setFieldValue({ memberImage: urlInput });
+          form.setFieldsValue({ memberImage: urlInput });
           setMemberImage(urlInput);
         }
         setIsModalVisible(false); // Close modal
@@ -506,20 +506,20 @@ const GroupForm = () => {
       key: 'action',
       render: (_, record) => (
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-          <Button 
-             onClick={() => {
-              console.log("Record link: ", record.link); 
-              handleEdit(record.link); 
-            }} 
-            type="primary" 
+          <Button
+            onClick={() => {
+              console.log("Record link: ", record.link);
+              handleEdit(record.link);
+            }}
+            type="primary"
             size="small"
             style={{ flex: '1 1 auto' }}
           >
             Edit
           </Button>
-          <Button 
-            onClick={() => handleRemove(record.link)} 
-            type="danger" 
+          <Button
+            onClick={() => handleRemove(record.link)}
+            type="danger"
             size="small"
             style={{ flex: '1 1 auto' }}
           >
@@ -527,8 +527,8 @@ const GroupForm = () => {
           </Button>
         </div>
       ),
-    }    
-  ];  
+    }
+  ];
 
   return (
     <div className='groupForm-maincontainer'>
@@ -807,9 +807,9 @@ const GroupForm = () => {
                     <Input
                       style={{ marginBottom: '12px' }}
                       placeholder="Enter Member Image URL"
-                      value={form.getFieldValue('memberImage')} 
+                      value={memberImage}
                       onChange={(e) => handleUrlChange(e.target.value, setMemberImage)}
-                      />
+                    />
                   </Form.Item>
 
                   <Form.Item label="Member Name" name="idolName" style={{ flexGrow: 1, marginBottom: '12px' }}>
@@ -820,10 +820,10 @@ const GroupForm = () => {
                       placeholder="Search and select an Idol"
                       style={{ width: '100%' }}
                     >
-                      <Input/>
+                      <Input />
                     </AutoComplete>
                   </Form.Item>
-                  
+
                   <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
                     <Form.Item label="Member Link" name="memberLink" style={{ flexGrow: 1, marginBottom: '0' }}>
                       <Input placeholder="Add Member Link" style={{ flexGrow: 1 }} />
