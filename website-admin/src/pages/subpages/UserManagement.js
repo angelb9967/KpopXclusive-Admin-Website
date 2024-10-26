@@ -138,6 +138,7 @@ const UserManagement = () => {
   };
 
   const deleteData = (id) => {
+    console.log("Received ID in deleteData:", id); // Check if ID is passed correctly
     Modal.confirm({
       title: 'Are you sure you want to delete this?',
       content: 'This action cannot be undone.',
@@ -151,9 +152,10 @@ const UserManagement = () => {
 
           if (response.ok) {
             console.log('User deleted successfully');
-            getData();
+            getData(); // Refreshes data after deletion
           } else {
-            console.error("Failed to delete user:", response.statusText);
+            const errorText = await response.text();
+            console.error(`Failed to delete user: ${response.status} - ${errorText}`);
           }
         } catch (error) {
           console.error("Error deleting user:", error);
@@ -166,7 +168,8 @@ const UserManagement = () => {
   };
 
   const columns = [
-    { title: 'Username', dataIndex: 'username', key: 'username' ,
+    {
+      title: 'Username', dataIndex: 'username', key: 'username',
       sorter: (a, b) => a.username.localeCompare(b.username),
       sortDirections: ['ascend', 'descend'],
     },
@@ -195,19 +198,21 @@ const UserManagement = () => {
         let displayText = status === 'Active' ? status : 'Inactive'; // Display "Inactive" for non-active statuses
         return (
           <Tag color={color}>
-            {displayText} 
+            {displayText}
           </Tag>
         );
       }
     },
-    { title: 'Created At', dataIndex: 'createdAt', key: 'createdAt',
+    {
+      title: 'Created At', dataIndex: 'createdAt', key: 'createdAt',
       sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
       sortDirections: ['descend', 'ascend'],
-     },
-    { title: 'Updated At', dataIndex: 'updatedAt', key: 'updatedAt',
+    },
+    {
+      title: 'Updated At', dataIndex: 'updatedAt', key: 'updatedAt',
       sorter: (a, b) => new Date(a.updatedAt) - new Date(b.updatedAt),
       sortDirections: ['descend', 'ascend'],
-     },
+    },
     {
       title: 'Action',
       key: 'action',
@@ -222,7 +227,7 @@ const UserManagement = () => {
           <Button
             icon={<DeleteOutlined />}
             danger
-            onClick={() => deleteData(record.key)}
+            onClick={() => deleteData(record._id)}
           >
             Delete
           </Button>
@@ -289,7 +294,7 @@ const UserManagement = () => {
           <label>Password</label>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <Input
-              type={formData.showPassword ? 'text' : 'password'} // Toggle between text and password
+              type={formData.showPassword ? 'text' : 'password'} 
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               style={{ flex: 1 }}
