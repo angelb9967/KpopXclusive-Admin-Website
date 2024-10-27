@@ -81,7 +81,6 @@ const GroupTable = () => {
     
     const date = new Date(dateString).toLocaleString('en-PH', options);
 
-    // Replace the standard locale format with the custom format
     const [datePart, timePart] = date.split(', ');
     const [year, month, day] = datePart.split('/');
     const [time, modifier] = timePart.split(' ');
@@ -127,6 +126,13 @@ const GroupTable = () => {
             {text}
           </a>
         ),
+      },
+      {
+        title: 'Fandom',
+        dataIndex: 'fandom',
+        key: 'fandom',
+        sorter: (a, b) => a.fandom.localeCompare(b.fandom),
+        sortDirections: ['ascend', 'descend'],
       },
       {
         title: 'Last Edited',

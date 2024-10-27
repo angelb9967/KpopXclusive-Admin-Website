@@ -1,5 +1,6 @@
 .idolForm {
-  border: 2px solid #c850ff;
+  background-color: #f5f5f5;
+  /* border: 2px solid #c850ff; */
 }
 
 .idolform-title {
@@ -25,16 +26,15 @@
 
 #idolform-box1 {
   flex: 1;
-  border: 2px solid #ff6550;
-  background-color: #fff;
+  /* border: 2px solid #ff6550; */
   display: flex;
   flex-direction: column;
   padding: 16px;
 }
 
 #idolform-box2 {
-  border: 2px solid #f8ad00;
-  background-color: #fff;
+  /* border: 2px solid #f8ad00; */
+  border: 0;
   display: flex;
   height: auto;
   flex-direction: row;
@@ -43,8 +43,7 @@
 
 #idolform-box3 {
   flex: 1;
-  border: 2px solid #46b45a;
-  background-color: #fff;
+  /* border: 2px solid #46b45a; */
   display: flex;
   flex-direction: column;
   padding: 16px;
@@ -52,8 +51,7 @@
 
 #idolform-box4 {
   flex: 1;
-  border: 2px solid #4682b4;
-  background-color: #fff;
+  /* border: 2px solid #4682b4; */
   display: flex;
   flex-direction: column;
   padding: 16px;
@@ -63,8 +61,8 @@
 #idolform-box5 {
   height: 50px;
   flex: 1 1 0;
-  border: 2px solid #32126b;
-  background-color: #fff;
+  /* border: 2px solid #32126b; */
+  border: 0;
   display: flex;
   flex-direction: column;
   padding: 16px;
@@ -103,17 +101,20 @@
 
 .trylang {
   flex: 3;
-  border: 2px solid #4682b4;
+  /* border: 2px solid #4682b4; */
+  border:none!important;
   display: flex;
   flex-direction: column;
 }
 
 .anotherbox {
-  padding: 16px;
+  /* padding: 16px; */
   text-align: center;
-  border: 2px solid #b44657;
+  /* border: 2px solid #b44657; */
+  border:none!important;
   display: flex;
   flex-direction: column;
+  margin-top: none;
 }
 
 .field {
@@ -143,14 +144,16 @@
   display: flex;
   gap: 20px;
   flex-direction: row;
+  padding: 0;
 }
 
 .anotherbox-small {
-  padding: 0px;
   text-align: left;
-  border: 2px solid #000000;
+  /* border: 2px solid #000000; */
+  border:none!important;
   flex: 1;
   overflow-y: hidden;
+  padding: 16px;
 }
 
 .social-media-item {
@@ -180,6 +183,8 @@
   float: right;
   align-self: flex-end;
   margin-bottom: 30px;
+  font-size: 22px;
+  box-shadow: inset 0px 1px 5px 0px rgba(0, 0, 0, 0.75);
 }
 
 .addFlex {
@@ -198,4 +203,8 @@
 
 .dynamic-delete-button:hover {
   color: #777;
+}
+
+.headline {
+  font-size: 20px;
 }

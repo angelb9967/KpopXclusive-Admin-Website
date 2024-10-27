@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import 'boxicons/css/boxicons.min.css';
 import '../../styles/IdolForm.css';
+import '../../styles/Main.css';
 import { Button, Select, Input, message, DatePicker, Radio, Form, Modal, AutoComplete } from 'antd';
 import {MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXTwitter, faSpotify, faYoutube } from '@fortawesome/free-brands-svg-icons';
+import logo1 from '../../assets/Logo 1.png';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import moment from 'moment-timezone';
@@ -19,6 +21,8 @@ const IdolForm = () => {
   const { state } = location;
   const idolData = state?.record;
   const buttonText = location.pathname === '/EditIdol' ? 'Update Idol' : 'Save Idol';
+  const buttonColor = location.pathname === '/EditIdol' ? 'rgb(190,167,44)' : 'green';
+  const headingText = location.pathname === '/EditIdol' ? 'EDIT IDOL' : 'ADD IDOL';
 
   console.log('Idol Data:', idolData);
   const initialValues = {
@@ -374,7 +378,11 @@ const handleSubmit = async (values) => {
   return (
     <div className='idolForm-maincontainer'>
       <div className='idolForm'>
-        <h1 className='idolform-title'>KPOP IDOL INFORMATION</h1>
+        <div className='main-navbar'>
+          <img src={logo1} className="main-image" alt="Logo 1" />
+          <div className="vertical-divider"></div>
+          <h2 className='main-title'>{headingText}</h2>
+        </div>
         <Form form={form} onFinish={handleSubmit} scrollToFirstError initialValues={initialValues}>
           <div className='page-box-container'>
             <div className="idolform-box-container" id="idolform-box1">
@@ -766,8 +774,9 @@ const handleSubmit = async (values) => {
 
               <div className='anotherbox'>
                 <div className='anotherbox-small'>
-
-                  <label className='headline'>ENTER FUN FACTS ABOUT THIS IDOL!</label>
+                  <label className='headline' style={{ textAlign: 'center', display: 'block', fontSize: '24px', fontWeight: 'bold', marginBottom: '16px' }}>
+                    ENTER FUN FACTS ABOUT THIS IDOL
+                  </label>
                   <div className='field'>
                     <label>Add Fun Facts:</label>
                     <Input
@@ -795,7 +804,7 @@ const handleSubmit = async (values) => {
 
 
                   <div className='anotherbox-container'>
-                    <div className='anotherbox-small'>
+                    <div className='anotherbox-small' style={{padding: "0px"}}>
                       <label className='headline'>6.) Social Media Platforms</label>
                       <Form.Item
                         label={
@@ -804,7 +813,7 @@ const handleSubmit = async (values) => {
                             <span>YouTube</span>
                           </span>
                         }
-                        name={['socialMediaPlatforms', 'youtube']} // Nested under socialMedia object
+                        name={['socialMediaPlatforms', 'youtube']} 
                       >
                         <Input placeholder="Enter YouTube URL" />
                       </Form.Item>
@@ -816,7 +825,7 @@ const handleSubmit = async (values) => {
                             <span>Spotify</span>
                           </span>
                         }
-                        name={['socialMediaPlatforms', 'spotify']} // Nested under socialMedia object
+                        name={['socialMediaPlatforms', 'spotify']} 
                       >
                         <Input placeholder="Enter Spotify URL" />
                       </Form.Item>
@@ -828,7 +837,7 @@ const handleSubmit = async (values) => {
                             <span>TikTok</span>
                           </span>
                         }
-                        name={['socialMediaPlatforms', 'tiktok']} // Nested under socialMedia object
+                        name={['socialMediaPlatforms', 'tiktok']} 
                       >
                         <Input placeholder="Enter TikTok URL" />
                       </Form.Item>
@@ -842,7 +851,7 @@ const handleSubmit = async (values) => {
                             <span>Instagram</span>
                           </span>
                         }
-                        name={['socialMediaPlatforms', 'instagram']} // Nested under socialMedia object
+                        name={['socialMediaPlatforms', 'instagram']} 
                       >
                         <Input placeholder="Enter Instagram Account URL" />
                       </Form.Item>
@@ -880,7 +889,13 @@ const handleSubmit = async (values) => {
 
               {/* Submit Button */}
               <Form.Item>
-                <Button type="primary" htmlType='submit' className='submitBtn'>
+                <Button type="primary" htmlType='submit' className='submitBtn'
+                  style={{
+                    backgroundColor: buttonColor,
+                    fontSize: "22px",
+                    boxShadow: "inset 0px 1px 5px 0px rgba(0, 0, 0, 0.75)"
+                }}
+                >
                   {buttonText}
                 </Button>
               </Form.Item>

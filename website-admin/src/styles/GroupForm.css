@@ -1,5 +1,6 @@
-.groupForm {
-  border: 2px solid #c850ff;
+.groupForm {  
+  background-color: #f5f5f5;
+  /* border: 2px solid #c850ff; */
 }
 
 .groupform-title {
@@ -31,8 +32,8 @@
 
 #groupform-box1 {
   flex: 1;
-  border: 2px solid #ff6550;
-  background-color: #fff;
+  border:none!important;
+  /* border: 2px solid #ff6550; */
   display: flex;
   flex-direction: column;
   padding: 16px;
@@ -40,8 +41,9 @@
 }
 
 #groupform-box2 {
-  border: 2px solid #f8ad00;
-  background-color: #fff;
+  /* border: 2px solid #f8ad00; */
+  background-color: #f5f5f5;
+  border:none!important;
   display: flex;
   height: auto;
   flex-direction: row;
@@ -50,8 +52,9 @@
 
 #groupform-box3 {
   flex: 1;
-  border: 2px solid #46b45a;
-  background-color: #fff;
+  /* border: 2px solid #46b45a; */
+  background-color: #f5f5f5;
+  border:none!important;
   display: flex;
   flex-direction: column;
   padding: 16px;
@@ -59,8 +62,9 @@
 
 #groupform-box4 {
   flex: 1;
-  border: 2px solid #4682b4;
-  background-color: #fff;
+  /* border: 2px solid #4682b4; */
+  background-color: #f5f5f5;
+  border:none!important;
   display: flex;
   flex-direction: column;
   padding: 16px;
@@ -243,4 +247,8 @@
   width: 200px;
   margin-right: 8px;
   margin-bottom: 10px;
+}
+
+.headline {
+  font-size: 20px;
 }

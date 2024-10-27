@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import '../../styles/GroupForm.css';
 import { Button, Select, Input, message, Form, Radio, Table, Modal, AutoComplete, DatePicker } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import Title from 'antd/es/skeleton/Title';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXTwitter, faSpotify, faYoutube } from '@fortawesome/free-brands-svg-icons';
-import TextArea from 'antd/es/input/TextArea';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useLocation } from 'react-router-dom';
+import TextArea from 'antd/es/input/TextArea';
+import logo1 from '../../assets/Logo 1.png';
+import Title from 'antd/es/skeleton/Title';
+import '../../styles/GroupForm.css';
+import '../../styles/Main.css';
 import axios from 'axios';
 import moment from 'moment-timezone';
 import dayjs from 'dayjs';
@@ -21,6 +23,8 @@ const GroupForm = () => {
   const { state } = location;
   const groupData = state?.record;
   const buttonText = location.pathname === '/EditGroup' ? 'Update Group' : 'Save Group';
+  const buttonColor = location.pathname === '/EditGroup' ? 'rgb(190,167,44)' : 'green';
+  const headingText = location.pathname === '/EditGroup' ? 'EDIT GROUP' : 'ADD GROUP';
 
   console.log('Group Data:', groupData);
   const initialValues = {
@@ -517,9 +521,13 @@ const GroupForm = () => {
               console.log("Record link: ", record.link);
               handleEdit(record.link);
             }}
-            type="primary"
             size="small"
-            style={{ flex: '1 1 auto' }}
+            style={{
+              flex: '1 1 auto',
+              backgroundColor: '#B93B3D',
+              boxShadow: 'inset 0px 1px 5px 0px rgba(0, 0, 0, 0.75)',
+              color: 'white'              
+            }}
           >
             Edit
           </Button>
@@ -533,13 +541,17 @@ const GroupForm = () => {
           </Button>
         </div>
       ),
-    }
+    }    
   ];
 
   return (
     <div className='groupForm-maincontainer'>
       <div className='groupForm'>
-        <h1 className='groupform-title'>KPOP GROUP INFORMATION</h1>
+        <div className='main-navbar'>
+          <img src={logo1} className="main-image" alt="Logo 1" />
+          <div className="vertical-divider"></div>
+          <h2 className='main-title'>{headingText}</h2>
+        </div>
         <Form form={form} onFinish={handleSubmit} scrollToFirstError initialValues={initialValues}>
           <div className="groupform-box-container">
             <div className="groupform-box1" id="groupform-box1">
@@ -844,7 +856,19 @@ const GroupForm = () => {
                       <Input placeholder="Add Member Link" style={{ flexGrow: 1 }} />
                     </Form.Item>
                   </div>
-                  <Button onClick={handleSaveMember} style={{ width: '150px', marginLeft: '8px', backgroundColor: '#45a049', color: 'white', float: 'right' }} >Save Member</Button>
+                  <Button
+                    onClick={handleSaveMember}
+                    style={{
+                      width: '150px',
+                      marginLeft: '8px',
+                      backgroundColor: '#B93B3D',
+                      boxShadow: 'inset 0px 1px 5px 0px rgba(0, 0, 0, 0.75)',
+                      color: 'white',
+                      float: 'right'
+                    }}
+                  >
+                    Save Member
+                  </Button>
                 </div>
 
 
@@ -940,7 +964,13 @@ const GroupForm = () => {
 
               {/* Submit Button */}
               <Form.Item>
-                <Button type="primary" htmlType='submit' className='submitBtn'>
+                <Button type="primary" htmlType='submit' className='submitBtn'
+                  style={{
+                    backgroundColor: buttonColor,
+                    fontSize: "22px",
+                    boxShadow: "inset 0px 1px 5px 0px rgba(0, 0, 0, 0.75)"
+                }}
+                >
                   {buttonText}
                 </Button>
               </Form.Item>
