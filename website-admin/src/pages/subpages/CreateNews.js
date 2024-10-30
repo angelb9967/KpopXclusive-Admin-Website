@@ -1,6 +1,6 @@
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { Button, Input, Modal, Space, Table, message } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Space, Input, Modal, message } from 'antd';
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/InformationHandler.css';
 
@@ -106,10 +106,10 @@ const CreateNews = () => {
         {
             title: 'Author',
             dataIndex: 'author',
-            key: 'author', 
+            key: 'author',
             sorter: (a, b) => a.author.localeCompare(b.author),
             sortDirections: ['ascend', 'descend'],
-            
+
         },
         {
             title: 'Date',
@@ -153,7 +153,7 @@ const CreateNews = () => {
                     {text}
                 </div>
             ),
-        },        
+        },
         {
             title: 'Action',
             key: 'action',

@@ -50,7 +50,7 @@ const QuizForm = () => {
         ...state.record,
         gamePlayRules: {
           ...state.record.gamePlayRules,
-          scoringSystem: [correctPoints, incorrectPoints], 
+          scoringSystem: [correctPoints, incorrectPoints],
         },
       };
 
@@ -64,7 +64,7 @@ const QuizForm = () => {
             : [''],
           rounds: initialQuizData.gameSetup.rounds.length > 0
             ? initialQuizData.gameSetup.rounds
-            : [''], 
+            : [''],
         },
         gamePlayRules: {
           ...initialQuizData.gamePlayRules,
@@ -73,7 +73,7 @@ const QuizForm = () => {
             : [''],
           timer: initialQuizData.gamePlayRules.timer.length > 0
             ? initialQuizData.gamePlayRules.timer
-            : [''], 
+            : [''],
         },
       });
     }
@@ -87,8 +87,8 @@ const QuizForm = () => {
 
       setQuizData(initialQuizData);
 
-      const selectedIds = initialQuizData.questions; 
-      console.log("Setting selected questions:", selectedIds); 
+      const selectedIds = initialQuizData.questions;
+      console.log("Setting selected questions:", selectedIds);
       setSelectedQuestions(selectedIds);
     }
   }, [state]);
@@ -125,7 +125,7 @@ const QuizForm = () => {
   };
 
   const handleValuesChange = (changedValues) => {
-    const { playerOptions, title, objective, rounds, timer, imageDisplay} = changedValues;
+    const { playerOptions, title, objective, rounds, timer, imageDisplay } = changedValues;
 
     if (playerOptions) {
       setQuizData((prevData) => {
@@ -306,6 +306,7 @@ const QuizForm = () => {
     <div className='quizContainer'>
       <div className='main-navbar'>
         <img src={logo1} className="main-image" alt="Logo 1" />
+        <div className="vertical-divider"></div>
         <h2 className='main-title'>{location.pathname === '/EditQuiz' ? 'EDIT QUIZ' : 'ADD QUIZ'}</h2>
       </div>
 
@@ -414,7 +415,7 @@ const QuizForm = () => {
 
               <Form.Item label="Rounds:" required>
                 <Form.List
-                  name="rounds" 
+                  name="rounds"
                   initialValue={quizData.gameSetup.rounds.length > 0 ? quizData.gameSetup.rounds : ['']}
                   rules={[{
                     validator: async (_, rounds) => {
@@ -669,51 +670,51 @@ const QuizForm = () => {
               </div>
 
               <Form.Item>
-              <div style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                justifyContent: 'space-between'
-              }}>
-                {availableQuestions.map(question => (
-                  <div
-                    key={question._id}
-                    style={{
-                      marginBottom: '20px',
-                      padding: '10px',
-                      borderRadius: '4px',
-                      border: '2px dashed #4caf50',
-                      backgroundColor: selectedQuestions.includes(question._id) ? '#d3f9d8' : 'transparent', // Change background when selected
-                      cursor: 'pointer',
-                      flex: '0 0 calc(33.33% - 10px)',
-                      boxSizing: 'border-box'
-                    }}
-                    onClick={() => handleQuestionSelection(question._id)}
-                  >
-                    <h4 style={{ textAlign: "center" }}>{question.question}</h4>
-                    {question.imageUrl && (
-                      <img
-                        src={question.imageUrl}
-                        alt={question.question}
-                        style={{
-                          display: 'block',
-                          margin: '0 auto',
-                          maxWidth: '100px',
-                          maxHeight: '100px'
-                        }}
-                      />
-                    )}
-                    <ul style={{ listStyleType: 'disc', paddingLeft: '20px' }}>
-                      {question.options.map((option, index) => (
-                        <li key={index}>{option} {/* Display each option as a bullet point */}</li>
-                      ))}
-                    </ul>
-                    <p>Correct Answer: {question.correctAnswer}</p> {/* Display correct answer */}
-                    <Checkbox checked={selectedQuestions.includes(question._id)} style={{ display: 'none' }} /> {/* Hidden checkbox */}
-                  </div>
-                ))}
-              </div>
-              <BackTop/>
-            </Form.Item>
+                <div style={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  justifyContent: 'space-between'
+                }}>
+                  {availableQuestions.map(question => (
+                    <div
+                      key={question._id}
+                      style={{
+                        marginBottom: '20px',
+                        padding: '10px',
+                        borderRadius: '4px',
+                        border: '2px dashed #4caf50',
+                        backgroundColor: selectedQuestions.includes(question._id) ? '#d3f9d8' : 'transparent', // Change background when selected
+                        cursor: 'pointer',
+                        flex: '0 0 calc(33.33% - 10px)',
+                        boxSizing: 'border-box'
+                      }}
+                      onClick={() => handleQuestionSelection(question._id)}
+                    >
+                      <h4 style={{ textAlign: "center" }}>{question.question}</h4>
+                      {question.imageUrl && (
+                        <img
+                          src={question.imageUrl}
+                          alt={question.question}
+                          style={{
+                            display: 'block',
+                            margin: '0 auto',
+                            maxWidth: '100px',
+                            maxHeight: '100px'
+                          }}
+                        />
+                      )}
+                      <ul style={{ listStyleType: 'disc', paddingLeft: '20px' }}>
+                        {question.options.map((option, index) => (
+                          <li key={index}>{option} {/* Display each option as a bullet point */}</li>
+                        ))}
+                      </ul>
+                      <p>Correct Answer: {question.correctAnswer}</p> {/* Display correct answer */}
+                      <Checkbox checked={selectedQuestions.includes(question._id)} style={{ display: 'none' }} /> {/* Hidden checkbox */}
+                    </div>
+                  ))}
+                </div>
+                <BackTop />
+              </Form.Item>
             </>
           )}
 

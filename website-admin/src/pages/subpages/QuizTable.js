@@ -78,14 +78,11 @@ const QuizTable = () => {
       sortDirections: ['ascend', 'descend'],
     },
     {
-      title: 'ID',
-      dataIndex: '_id',
-      key: '_id',
-      render: (text) => (
-        <a href={text} target="_blank" rel="noopener noreferrer">
-          {text}
-        </a>
-      ),
+      title: 'Objective',
+      dataIndex: 'objective',
+      key: 'objective',
+      sorter: (a, b) => a.objective.localeCompare(b.objective),
+      sortDirections: ['ascend', 'descend'],
     },
     {
       title: 'Action',

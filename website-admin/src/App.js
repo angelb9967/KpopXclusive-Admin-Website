@@ -12,6 +12,8 @@ import CreateNews from './pages/subpages/CreateNews';
 import NewsForm from './pages/forms/NewsForm';
 import ProtectedRoute from './components/ProtectedRoute';
 import QuizTable from './pages/subpages/QuizTable';
+import QuestionTable from './pages/subpages/QuestionTable';
+import QuestionForm from './pages/forms/QuestionForm';
 
 const App = () => {
   return (
@@ -26,14 +28,17 @@ const App = () => {
         <Route path="/EditIdol" element={<ProtectedRoute> <IdolForm /> </ProtectedRoute>} />
         <Route path="/AddQuiz" element={<ProtectedRoute> <QuizForm /> </ProtectedRoute>} />
         <Route path="/EditQuiz" element={<ProtectedRoute> <QuizForm /> </ProtectedRoute>} />
-        <Route path="/Main" element={<ProtectedRoute> <Main/> </ProtectedRoute>}>
+        <Route path="/AddQuestion" element={<ProtectedRoute> <QuestionForm /> </ProtectedRoute>} />
+        <Route path="/EditQuestion" element={<ProtectedRoute> <QuestionForm /> </ProtectedRoute>} />
+        <Route path="/Main" element={<ProtectedRoute> <Main /> </ProtectedRoute>}>
           <Route index element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="Dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="User-Management" element={<ProtectedRoute><UserManagement /></ProtectedRoute>} />
           <Route path="Information-Handler/Idols" element={<ProtectedRoute><IdolTable /></ProtectedRoute>} />
           <Route path="Information-Handler/Groups" element={<ProtectedRoute><GroupTable /></ProtectedRoute>} />
-          <Route path="Create-News" element={<ProtectedRoute><CreateNews/></ProtectedRoute>} />
-          <Route path="Manage-Quizzes" element={<ProtectedRoute><QuizTable/></ProtectedRoute>} />
+          <Route path="Quiz-Handler/Quizzes" element={<ProtectedRoute><QuizTable /></ProtectedRoute>} />
+          <Route path="Quiz-Handler/Questions" element={<ProtectedRoute><QuestionTable /></ProtectedRoute>} />
+          <Route path="Create-News" element={<ProtectedRoute><CreateNews /></ProtectedRoute>} />
         </Route>
       </Routes>
     </Router>

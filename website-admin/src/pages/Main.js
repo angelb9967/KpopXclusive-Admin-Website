@@ -3,17 +3,18 @@ import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import '../styles/Main.css';
 import logo1 from '../assets/Logo 1.png';
 import 'boxicons/css/boxicons.min.css';
-import { Modal } from 'antd'; // Import Modal from Ant Design
+import { Modal } from 'antd';
 
 const Main = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [title, setTitle] = useState('Dashboard');
-  const [collapsed, setCollapsed] = useState(true); // New state for sidebar collapse
-  const [showSubmenu, setShowSubmenu] = useState(false); // New state for submenu visibility
+  const [collapsed, setCollapsed] = useState(true);
+  const [showSubmenu, setShowSubmenu] = useState(false);
+  const [showQuizSubmenu, setShowQuizSubmenu] = useState(false);
 
   const toggleSidebar = () => {
-    setCollapsed(!collapsed); // Toggle the sidebar state
+    setCollapsed(!collapsed);
   };
 
   const updateTitle = () => {
@@ -35,9 +36,11 @@ const Main = () => {
       case '/Main/Create-News':
         setTitle('CREATE NEWS');
         break;
-        case '/Main/Manage-Quizzes':
-          setTitle('MANAGE QUIZZES');
-          break;
+      case '/Main/Quiz-Handler':
+      case '/Main/Quiz-Handler/Quizzes':
+      case '/Main/Quiz-Handler/Questions':
+        setTitle('QUIZ HANDLER');
+        break;
       default:
         setTitle('DASHBOARD');
     }
@@ -116,16 +119,34 @@ const Main = () => {
                     </ul>
                   )}
                 </li>
+                <li className="list" 
+                    onMouseEnter={() => setShowQuizSubmenu(true)} 
+                    onMouseLeave={() => setShowQuizSubmenu(false)}>
+                  <span className="nav-link">
+                    <i className='bx bxs-dice-6'></i>
+                    <span className={`link ${collapsed ? 'collapsed' : ''}`}>QUIZ HANDLER</span>
+                  </span>
+                  {showQuizSubmenu && (
+                    <ul className="submenu">
+                      <li>
+                        <Link to="/Main/Quiz-Handler/Quizzes" className="nav-link">
+                          <i class='bx bxs-book-content'></i>
+                          <span className={`link ${collapsed ? 'collapsed' : ''}`}>QUIZZES</span>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link to="/Main/Quiz-Handler/Questions" className="nav-link">
+                          <i class='bx bx-question-mark'></i>
+                          <span className={`link ${collapsed ? 'collapsed' : ''}`}>QUESTIONS</span>
+                        </Link>
+                      </li>
+                    </ul>
+                  )}
+                </li>
                 <li className="list">
                   <Link to="/Main/Create-News" className="nav-link">
                     <i class='bx bxs-news'></i>
                     <span className={`link ${collapsed ? 'collapsed' : ''}`}>CREATE NEWS</span>
-                  </Link>
-                </li>
-                <li className="list">
-                  <Link to="/Main/Manage-Quizzes" className="nav-link">
-                  <i class='bx bxs-dice-6'></i>
-                    <span className={`link ${collapsed ? 'collapsed' : ''}`}>MANAGE QUIZZES</span>
                   </Link>
                 </li>
                 <li className="list">
@@ -141,7 +162,7 @@ const Main = () => {
       </div>
 
       <div className='section-content'>
-        <Outlet /> {/* This is where the nested components will render */}
+        <Outlet />
       </div>
     </div>
   );
