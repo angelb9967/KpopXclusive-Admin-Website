@@ -120,8 +120,6 @@ const GroupForm = () => {
   };
 
   const handleSubmit = async (values) => {
-    let formattedDebut = '';
-
     const isValidUrl = (urlString) => {
       try {
         new URL(urlString);
@@ -142,20 +140,13 @@ const GroupForm = () => {
       return;
     }
 
-    if (isValidDateFormat(values.debut)) {
-      formattedDebut = moment(values.debut).format('YYYY-MM-DD');
-    } else {
-      message.error('Invalid debut format. Please use YYYY-MM-DD.');
-      return;
-    }
-
     if (groupMembers.length === 0) {
       message.error('Please add at least one member to the group.');
       return;
     }
 
     const lastEdited = moment().tz('Asia/Manila').format('YYYY-MM-DD HH:mm:ss');
-
+    
     const companySince = {};
     let allCompaniesValid = true;
 
@@ -177,7 +168,7 @@ const GroupForm = () => {
     const dataToSubmit = {
       groupName: values.groupName,
       koreanGroupName: values.koreanGroupName,
-      debut: formattedDebut,
+      debut: values.debut,
       debutToFirstWin: values.debutToFirstWin,
       fandom: values.fandom,
       country: values.country,

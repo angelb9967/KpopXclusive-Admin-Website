@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema({
     status: String,
     createdAt: Date,
     updatedAt: Date,
+    loginCount: Number
 });
 
 module.exports = mongoose.model('users', userSchema);

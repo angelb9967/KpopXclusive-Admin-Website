@@ -32,12 +32,12 @@ const Main = () => {
       case '/Main/Information-Handler/Groups':
         setTitle('INFORMATION HANDLER');
         break;
-      case '/Main/Access-Website':
-        setTitle('ACCESS WEBSITE');
-        break;
       case '/Main/Create-News':
         setTitle('CREATE NEWS');
         break;
+        case '/Main/Manage-Quizzes':
+          setTitle('MANAGE QUIZZES');
+          break;
       default:
         setTitle('DASHBOARD');
     }
@@ -117,15 +117,15 @@ const Main = () => {
                   )}
                 </li>
                 <li className="list">
-                  <Link to="/Main/Access-Website" className="nav-link">
-                    <i className='bx bx-desktop'></i>
-                    <span className={`link ${collapsed ? 'collapsed' : ''}`}>ACCESS WEBSITE</span>
-                  </Link>
-                </li>
-                <li className="list">
                   <Link to="/Main/Create-News" className="nav-link">
                     <i class='bx bxs-news'></i>
                     <span className={`link ${collapsed ? 'collapsed' : ''}`}>CREATE NEWS</span>
+                  </Link>
+                </li>
+                <li className="list">
+                  <Link to="/Main/Manage-Quizzes" className="nav-link">
+                  <i class='bx bxs-dice-6'></i>
+                    <span className={`link ${collapsed ? 'collapsed' : ''}`}>MANAGE QUIZZES</span>
                   </Link>
                 </li>
                 <li className="list">

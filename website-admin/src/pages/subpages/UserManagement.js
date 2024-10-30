@@ -96,7 +96,7 @@ const UserManagement = () => {
         if (hasError) return;
 
         const { username, password, user_id } = formData;
-        const nowPht = moment().utcOffset(8).format('YYYY-MM-DD hh:mm:ss A'); // Get current time in PHT
+        const nowPht = moment().utcOffset(8).format('YYYY-MM-DD hh:mm:ss A');
 
         const url = user_id ? `http://localhost:8000/users/${user_id}` : 'http://localhost:8000/users';
         const method = user_id ? 'PUT' : 'POST';
@@ -105,8 +105,9 @@ const UserManagement = () => {
           username,
           password,
           status: formData.status,
-          createdAt: user_id ? formData.createdAt : nowPht, // Keep existing createdAt when updating
-          updatedAt: nowPht, // Always set updatedAt to current PHT time
+          createdAt: user_id ? formData.createdAt : nowPht, 
+          updatedAt: nowPht,
+          loginCount: user_id ? formData.loginCount : 0, 
         };
 
         try {
@@ -149,16 +150,17 @@ const UserManagement = () => {
         try {
           const response = await fetch(`http://localhost:8000/users/${id}`, { method: 'DELETE' });
           console.log(`Attempting to delete user with ID: ${id}`);
-
+  
           if (response.ok) {
             console.log('User deleted successfully');
-            getData(); // Refreshes data after deletion
+            getData(); 
           } else {
             const errorText = await response.text();
             console.error(`Failed to delete user: ${response.status} - ${errorText}`);
           }
         } catch (error) {
-          console.error("Error deleting user:", error);
+          console.error("Error deleting user:", error); // Capture error details
+          message.error('An error occurred while deleting the user.');
         }
       },
       onCancel() {
@@ -166,6 +168,7 @@ const UserManagement = () => {
       },
     });
   };
+  
 
   const columns = [
     {
@@ -194,8 +197,8 @@ const UserManagement = () => {
       dataIndex: 'status',
       key: 'status',
       render: (status) => {
-        let color = status === 'Active' ? 'green' : 'red'; // Set color based on status
-        let displayText = status === 'Active' ? status : 'Inactive'; // Display "Inactive" for non-active statuses
+        let color = status === 'Active' ? 'green' : 'red'; 
+        let displayText = status === 'Active' ? status : 'Inactive'; 
         return (
           <Tag color={color}>
             {displayText}

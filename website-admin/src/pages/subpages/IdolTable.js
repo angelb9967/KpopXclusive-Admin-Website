@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Space, Input, Modal, message } from 'antd';
+import { Table, Button, Space, Input, Modal, message, BackTop } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/InformationHandler.css';
@@ -207,7 +207,6 @@ const IdolTable = () => {
           }}
         />
       </div>
-  
     </div>
   );
 };

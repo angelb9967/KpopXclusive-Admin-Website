@@ -1,0 +1,51 @@
+.quizContainer {
+    background: rgb(255,95,95);
+    background: linear-gradient(0deg, rgba(255,95,95,1) 39%, rgba(73,4,4,1) 100%);
+    min-height: 100vh;
+    padding-bottom: 80px; 
+}
+
+.inputField {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.inputField .ant-input {
+    width: 100%;
+}
+
+.textContainer {
+    display: flex;
+    flex-direction: column;
+    font-family: "Saira Condensed", sans-serif;
+}
+
+.heading {
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.subheading {
+    font-weight: 400;
+    font-size: 1.5rem;
+}
+
+.content {
+    font-weight: 400;
+    font-size: 1.2rem;
+}
+
+.textContainer ul {
+    font-size: 1rem;
+    margin-left: 20px;
+}
+
+.textContainer li {
+    line-height: 1.5;
+}
+
+.textContainer li strong {
+    font-weight: 500;
+    text-align: justify;
+}

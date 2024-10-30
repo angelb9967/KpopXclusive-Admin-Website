@@ -6,6 +6,8 @@ const userRoutes = require('./routes/userRoutes');
 const newsRoutes = require('./routes/newsRoutes');
 const idolRoutes = require('./routes/idolRoutes');
 const groupRoutes = require('./routes/groupRoutes'); 
+const quizRoutes = require('./routes/quizRoutes'); 
+const questionRoutes = require('./routes/questionRoutes'); 
 const app = express();
 
 app.use(cors());
@@ -18,6 +20,8 @@ app.use('/users', userRoutes);
 app.use('/news', newsRoutes);
 app.use('/idols', idolRoutes);
 app.use('/groups', groupRoutes);
+app.use('/quizzes', quizRoutes);
+app.use('/questions', questionRoutes);
 
 app.get('/', (req, res) => {
     res.send("CORS is working");
