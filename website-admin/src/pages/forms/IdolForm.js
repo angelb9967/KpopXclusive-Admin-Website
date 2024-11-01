@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import 'boxicons/css/boxicons.min.css';
 import '../../styles/IdolForm.css';
 import '../../styles/Main.css';
-import { Button, Select, Input, message, DatePicker, Radio, Form, Modal, AutoComplete } from 'antd';
+import { Button, Select, Input, message, DatePicker, Radio, Form, Modal, AutoComplete, InputNumber } from 'antd';
 import {MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -74,12 +74,49 @@ const IdolForm = () => {
     return regex.test(dateString);
 };
 
+const getZodiacSign = (date) => {
+  const month = date.getMonth() + 1; // Month is zero-based in JS
+  const day = date.getDate();
+
+  if ((month === 1 && day >= 20) || (month === 2 && day <= 18)) return 'Aquarius';
+  if ((month === 2 && day >= 19) || (month === 3 && day <= 20)) return 'Pisces';
+  if ((month === 3 && day >= 21) || (month === 4 && day <= 19)) return 'Aries';
+  if ((month === 4 && day >= 20) || (month === 5 && day <= 20)) return 'Taurus';
+  if ((month === 5 && day >= 21) || (month === 6 && day <= 20)) return 'Gemini';
+  if ((month === 6 && day >= 21) || (month === 7 && day <= 22)) return 'Cancer';
+  if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) return 'Leo';
+  if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) return 'Virgo';
+  if ((month === 9 && day >= 23) || (month === 10 && day <= 22)) return 'Libra';
+  if ((month === 10 && day >= 23) || (month === 11 && day <= 21)) return 'Scorpio';
+  if ((month === 11 && day >= 22) || (month === 12 && day <= 21)) return 'Sagittarius';
+  if ((month === 12 && day >= 22) || (month === 1 && day <= 19)) return 'Capricorn';
+
+  return null; // Default case
+};
+
 const handleSubmit = async (values) => {
+  // Check if there is atleast one fun fact
   if (funFactsList.length === 0) {
     message.error('Please provide at least one fun fact about the idol');
     return;
   }
-
+   // Check if the Korean name contains Hangul characters
+   const containsKoreanCharacters = (text) => {
+    const koreanRegex = /[가-힣]/; // Regular expression for Hangul characters
+    return koreanRegex.test(text);
+  };
+  if (!containsKoreanCharacters(values.koreanName)) {
+    message.error('Korean Name must contain valid Hangul characters.');
+    return;
+  }
+  // Zodiac Sign Validation
+  const validZodiacSigns = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
+  const zodiacInput = values.zodiacSign?.trim(); // Get zodiac sign input and trim whitespace
+  if (zodiacInput && !validZodiacSigns.map(sign => sign.toLowerCase()).includes(zodiacInput.toLowerCase())) {
+    message.error('Invalid zodiac sign. Please provide a valid sign (e.g., Aries, Taurus).');
+    return;
+  }
+  // Check if URLs are valid  
   const isValidUrl = (urlString) => {
     try {
       new URL(urlString);
@@ -88,23 +125,71 @@ const handleSubmit = async (values) => {
       return false;
     }
   };
-
   if (!isValidUrl(idolImage)) {
     message.error('Idol image URL is not valid');
     return;
   }
-
   if (!isValidUrl(lightstickImage)) {
     message.error('Lightstick image URL is not valid');
     return;
   }
+  // Validate Birthdate
+  const birthdateInput = values.birthday;
+  const birthdate = new Date(birthdateInput);
+  // Get the zodiac sign based on the birthdate
+  const calculatedZodiacSign = getZodiacSign(birthdate);
+  // Check if the provided zodiac sign matches the calculated zodiac sign
+  if (values.zodiacSign && calculatedZodiacSign.toLowerCase() !== values.zodiacSign.toLowerCase()) {
+    message.error(`The provided zodiac sign (${values.zodiacSign}) does not match the birthdate. It should be ${calculatedZodiacSign}.`);
+    return;
+  }
+   
+  // Calculate the current age based on birthdate
+  const today = new Date();
+  let calculatedAge = today.getUTCFullYear() - birthdate.getUTCFullYear(); // Use UTC methods to avoid timezone issues
+  const monthDiff = today.getUTCMonth() - birthdate.getUTCMonth();
+  // Adjust age if the birthday hasn't occurred yet this year
+  if (monthDiff < 0 || (monthDiff === 0 && today.getUTCDate() < birthdate.getUTCDate())) {
+    calculatedAge--;
+  }
+  // Age Validation - Check if the provided age matches the calculated age
+  if (values.age && values.age !== calculatedAge) {
+    message.error(`The provided age (${values.age}) does not match the birthdate. It should be ${calculatedAge}.`);
+    return;
+  }
 
+  // Extract social media URLs from form values
+  const socialMediaUrls = values.socialMediaPlatforms;
+
+  // Validate each social media URL
+  for (const [platform, url] of Object.entries(socialMediaUrls)) {
+    if (url && !isValidUrl(url)) {
+      message.error(`The ${platform.charAt(0).toUpperCase() + platform.slice(1)} URL is not valid.`);
+      return;
+    }
+  }
+  
+  // Language Validation - remove whitespace
   const languagesArray = values.languages.filter(language => language && language.trim() !== '');
+  // Save Last Edited
   const lastEdited = moment().tz('Asia/Manila').format('YYYY-MM-DD HH:mm:ss');
-
+  // MBTI Validation
+  const validMBTITypes = ['INTJ', 'INTP', 'ENTJ', 'ENTP', 'INFJ', 'INFP', 'ENFJ', 'ENFP', 'ISTJ', 'ISFJ', 'ESTJ', 'ESFJ', 'ISTP', 'ISFP', 'ESTP', 'ESFP'];
+  const mbtiInput = values.mbti?.trim(); // Get MBTI input and trim whitespace
+  if (mbtiInput && !validMBTITypes.includes(mbtiInput)) {
+    message.error('Invalid MBTI type. Please provide a valid type (e.g., INFJ, ENTP).');
+    return;
+  }
+  // Blood Type Validation
+  const validBloodTypes = ['A', 'B', 'AB', 'O'];
+  const bloodTypeInput = values.bloodtype?.trim(); // Get blood type input and trim whitespace
+  if (bloodTypeInput && !validBloodTypes.includes(bloodTypeInput)) {
+    message.error('Invalid blood type. Please provide a valid type (A, B, AB, or O).');
+    return;
+  }
+  // Check if Date are valid format
   const companySince = {};
   let allCompaniesValid = true;
-
   values.companies.forEach(company => {
     if (isValidDateFormat(company.since)) {
       companySince[company.name] = moment(company.since).format('YYYY-MM-DD');
@@ -113,7 +198,6 @@ const handleSubmit = async (values) => {
       allCompaniesValid = false; 
     }
   });
-
   if (!allCompaniesValid) {
     return; 
   }
@@ -153,7 +237,47 @@ const handleSubmit = async (values) => {
   };
 
   try {
-    if (location.pathname === '/EditIdol' && idolData._id) {
+    const existingIdolsResponse = await axios.get('http://localhost:8000/idols'); // Fetch existing idols
+    const existingIdols = existingIdolsResponse.data;
+
+    // Check for duplicates (case insensitive)
+    const stageNameLower = dataToSubmit.stageName?.toLowerCase();
+    const duplicateStageName = existingIdols.some(idol => 
+      idol.stageName.toLowerCase() === stageNameLower
+    );
+
+    let contentMessage = '';
+    const isEditing = location.pathname === '/EditIdol' && idolData._id;
+
+    if (duplicateStageName) {
+      // If editing, check if the existing idol has the same ID
+      const sameIdExists = existingIdols.some(idol => 
+        idol.stageName.toLowerCase() === stageNameLower && idol._id === idolData._id
+      );
+
+      // If the same ID doesn't exist, show the warning
+      if (!sameIdExists) {
+        contentMessage = 'You are about to save or update an idol record with the same stage name as an existing record. Do you wish to continue?';
+      }
+    }
+
+    // Show confirmation if there is a conflict 
+    if (contentMessage) { 
+      const confirmProceed = await new Promise((resolve) => {
+        Modal.confirm({
+          title: 'Duplicate Record Warning',
+          content: contentMessage,
+          okText: 'Yes',
+          okType: 'danger',
+          cancelText: 'No',
+          onOk: () => resolve(true),
+          onCancel: () => resolve(false),
+        });
+      });
+      if (!confirmProceed) return; // Exit if user chooses not to proceed
+    }
+
+    if (isEditing) {
       const response = await axios.put(`http://localhost:8000/idols/${idolData._id}`, dataToSubmit);
       message.success(response.data.message);
     } else {
@@ -173,7 +297,6 @@ const handleSubmit = async (values) => {
   }
 };
 
-  ////////////////  FETCH SUGGESTIONS API - *START 
   const fetchCountryNames = async () => {
     try {
       const response = await fetch(`https://restcountries.com/v3.1/all`);
@@ -187,6 +310,11 @@ const handleSubmit = async (values) => {
     }
   };
 
+  useEffect(() => {
+    fetchCountryNames();
+    fetchGroupNames();
+  }, []);
+
   const fetchGroupNames = async () => {
     try {
       const response = await axios.get('http://localhost:8000/groups'); 
@@ -199,15 +327,9 @@ const handleSubmit = async (values) => {
     }
   };
 
-  useEffect(() => {
-    fetchCountryNames();
-    fetchGroupNames();
-  }, []);
-
   const handleCountrySelect = (value) => {
     setSelectedCountry(value);
   };
-  ////////////////  FETCH  SUGGESTIONS API - *END 
 
   ////////////////  UPLOAD IMAGE - *START 
   const handleUrlChange = (newUrl, setImageCallback) => {
@@ -339,8 +461,15 @@ const handleSubmit = async (values) => {
   //////////////// ADD FUN FACT AREA - *START
   const addFunFact = () => {
     if (funFactInputValue.trim() === '') return; // Ignore empty input
-
     const newFact = funFactInputValue.trim();
+
+    // Check if the fun fact already exists (case insensitive)
+    if (funFactsList.some(fact => fact.toLowerCase() === newFact.toLowerCase())) {
+      // Optionally, show a message or feedback to the user
+      message.warning('This fun fact already exists!'); // You can use any feedback mechanism you prefer
+      return; // Exit the function if the fact exists
+    }
+
     let formattedFact;
 
     // Prepare the formatted fact with numbering
@@ -351,7 +480,7 @@ const handleSubmit = async (values) => {
       const nextIndex = existingFacts.length + 1; // Determine the next index for numbering
       formattedFact = `${nextIndex}.) ${newFact}`; // Format the new fun fact with index
     }
-
+  
     // Save the plain fun fact (without prefix) for submission
     setFunFactsList([...funFactsList, newFact]); // Store just the fact without the prefix
     setFunFactsTextAreaValue((prev) => (prev ? `${prev}\n${formattedFact}` : formattedFact)); // Append to textarea
@@ -471,20 +600,53 @@ const handleSubmit = async (values) => {
               </div>
 
               <label className='headline'>5.) Input the awards and albums here</label>
+              {/* Music Show Wins Field */}
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
-                <Form.Item label="Music Show Wins" name="musicShowWins" rules={[{ required: true, message: 'Please input Music Show Wins!' }]} style={{ flexGrow: 1, marginBottom: '0' }}>
-                  <Input type='number' placeholder="Music Show Wins" required rules={[{ required: true, message: 'Please input Music Show Wins!' }]} style={{ flexGrow: 1 }} />
+                <Form.Item
+                  label="Music Show Wins"
+                  name="musicShowWins"
+                  rules={[
+                    { required: true, message: 'Please input Music Show Wins!' },
+                    { pattern: /^[0-9]+$/, message: 'Only numbers are allowed!' } // Only digits
+                  ]}
+                  style={{ flexGrow: 1, marginBottom: '0' }}
+                >
+                  <InputNumber
+                    placeholder="Input total music show wins (e.g., 164)"
+                    min={0} // Minimum value of 0
+                    type='number'
+                    style={{ flexGrow: 1, width: '100%' }}
+                    formatter={(value) => (value ? String(value).replace(/[^0-9]/g, '') : '')}
+                    parser={(value) => (value ? value.replace(/[^0-9]/g, '') : '')}
+                  />
                 </Form.Item>
               </div>
+
+              {/* Total Albums Field */}
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
-                <Form.Item label="Total Albums" name="totalAlbums" rules={[{ required: true, message: 'Please input Total Albums!' }]} style={{ flexGrow: 1, marginBottom: '0' }}>
-                  <Input type='number' placeholder="Total Albums" required rules={[{ required: true, message: 'Please input Total Albums!' }]} style={{ flexGrow: 1 }} />
+                <Form.Item
+                  label="Total Albums"
+                  name="totalAlbums"
+                  rules={[
+                    { required: true, message: 'Please input Total Albums!' },
+                    { pattern: /^[0-9]+$/, message: 'Only numbers are allowed!' } // Only digits
+                  ]}
+                  style={{ flexGrow: 1, marginBottom: '0' }}
+                >
+                  <InputNumber
+                    placeholder="Indicate total number of albums released"
+                    min={0} // Minimum value of 0
+                    type='number'
+                    style={{ flexGrow: 1, width: '100%' }}
+                    formatter={(value) => (value ? String(value).replace(/[^0-9]/g, '') : '')}
+                    parser={(value) => (value ? value.replace(/[^0-9]/g, '') : '')}
+                  />
                 </Form.Item>
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
                 <Form.Item label="Latest Album" name="latestAlbum" rules={[{ required: true, message: 'Please input Latest Album!' }]} style={{ flexGrow: 1, marginBottom: '0' }}>
-                  <Input placeholder="Latest Album" required rules={[{ required: true, message: 'Please input Latest Album!' }]} style={{ flexGrow: 1 }} />
+                  <Input placeholder="Enter their most recent album title" required rules={[{ required: true, message: 'Please input Latest Album!' }]} style={{ flexGrow: 1 }} />
                 </Form.Item>
               </div>
             </div>
@@ -498,7 +660,7 @@ const handleSubmit = async (values) => {
                     <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0' }}>
                       <Form.Item name="country" label="Country" rules={[{ required: true, message: 'Please select a country!' }]} style={{ width: '100%', marginBottom: '14px' }}  >
                         <Select
-                          placeholder="Select a country"
+                          placeholder="Select the country of origin"
                           style={{ width: '100%' }}
                           onChange={handleCountrySelect}
                           value={selectedCountry}
@@ -518,29 +680,29 @@ const handleSubmit = async (values) => {
 
                     {/* Nationality Text Field  */}
                     <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
-                      <Form.Item label="Nationality" name="nationality" rules={[{ required: true, message: 'Please input Nationality!' }]} style={{ flexGrow: 1, marginBottom: '0' }}>
-                        <Input placeholder="Nationality" style={{ width: '100%' }} required rules={[{ required: true, message: 'Please input Nationality!' }]} />
+                      <Form.Item label="Nationality" name="nationality" rules={[{ required: true, message: 'Please input Nationality!' }, { pattern: /^[A-Za-z\s\-]+$/, message: 'Only letters, spaces, and hyphens are allowed!' }]} style={{ flexGrow: 1, marginBottom: '0' }}>
+                        <Input placeholder="Enter the nationality (e.g., South Korean)" style={{ width: '100%' }} required rules={[{ required: true, message: 'Please input Nationality!' }]} />
                       </Form.Item>
                     </div>
 
                     {/* Full Name Text Field  */}
                     <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
                       <Form.Item label="Full Name" name="fullname" rules={[{ required: true, message: 'Please input Full Name!' }]} style={{ width: '100%', marginBottom: '0' }}>
-                        <Input placeholder="Full Name" required rules={[{ required: true, message: 'Please input Full Name!' }]} style={{ flexGrow: 1 }} />
+                        <Input placeholder="Provide the full name of the idol " required rules={[{ required: true, message: 'Please input Full Name!' }]} style={{ flexGrow: 1 }} />
                       </Form.Item>
                     </div>
 
                     {/* Blood Type Field  */}
                     <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
                       <Form.Item label="Blood Type" name="bloodtype" rules={[{ required: true, message: 'Please input Blood Type!' }]} style={{ width: '100%', marginBottom: '0' }}>
-                        <Input placeholder="Blood Type" required rules={[{ required: true, message: 'Please input Blood Type!' }]} style={{ flexGrow: 1 }} />
+                        <Input placeholder="Input the blood type (e.g., A, B, AB, O)" required rules={[{ required: true, message: 'Please input Blood Type!' }]} style={{ flexGrow: 1 }} />
                       </Form.Item>
                     </div>
 
                     {/* Height Field  */}
                     <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
                       <Form.Item label="Height" name="height" rules={[{ required: true, message: 'Please input Height!' }]} style={{ width: '100%', marginBottom: '0' }}>
-                        <Input placeholder="Height" required rules={[{ required: true, message: 'Please input Height!' }]} style={{ flexGrow: 1 }} />
+                        <Input placeholder="Enter the height (e.g., 177 cm)" required rules={[{ required: true, message: 'Please input Height!' }]} style={{ flexGrow: 1 }} />
                       </Form.Item>
                     </div>
 
@@ -548,7 +710,7 @@ const handleSubmit = async (values) => {
                     <Form.Item label="Group" name="group" style={{ width: '100%', marginBottom: '12px' }}>
                       <AutoComplete
                         options={groupOptions} 
-                        placeholder="Group"
+                        placeholder="Specify the idol's group name (optional)"
                         style={{ flexGrow: 1 }}
                         onSearch={fetchGroupNames} 
                       >
@@ -560,25 +722,41 @@ const handleSubmit = async (values) => {
                     <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
                       <Form.Item label="Birthday" name="birthday" rules={[{ required: true, message: 'Please input Birthday!' }]} style={{ flexGrow: 1, marginBottom: "0" }}>
                           <DatePicker 
-                          placeholder='Birthday' 
+                          placeholder='Select the birth date' 
                           format="YYYY-MM-DD" 
                           required 
                           rules={[{ required: true, message: 'Please input Birthday!' }]} 
                           style={{ flexGrow: 1 , width: '100%'}} 
                           value={form.getFieldValue('birthday')}
                           onChange={(birthday) => form.setFieldsValue({ birthday })}
-                          disabledDate={(current) => current && current > moment().endOf('day')}
+                          disabledDate={(current) => // Dont allow unreasonable dates
+                            current && (current > moment().endOf('day') || current < moment().subtract(110, 'years'))
+                          }
                         />
                       </Form.Item>
                     </div>
 
                     {/* Age Field */}
                     <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
-                      <Form.Item label="Age" name="age" rules={[{ required: true, message: 'Please input Age!' }]} style={{ width: '100%', marginBottom: '0' }}>
-                        <Input type='number' placeholder='Age' required rules={[{ required: true, message: 'Please input Age!' }]} style={{ flexGrow: 1 }} />
+                      <Form.Item
+                        label="Age"
+                        name="age"
+                        rules={[
+                          { required: true, message: 'Please input Age!' },
+                          { pattern: /^[0-9]+$/, message: 'Only numbers are allowed!' } // Only digits
+                        ]}
+                        style={{ width: '100%', marginBottom: '0' }}
+                      >
+                        <InputNumber
+                          placeholder="Specify the age"
+                          type='number'
+                          style={{ flexGrow: 1, width: '100%' }}
+                          min={1} // Sets minimum to prevent negative or zero input
+                          formatter={(value) => (value ? String(value).replace(/[^0-9]/g, '') : '')}
+                          parser={(value) => (value ? value.replace(/[^0-9]/g, '') : '')}
+                        />
                       </Form.Item>
                     </div>
-
 
                     <Form.List name="companies" initialValue={[{ name: '', since: null }]}>
                       {(fields, { add, remove }) => (
@@ -595,7 +773,7 @@ const handleSubmit = async (values) => {
                                   rules={[{ required: true, whitespace: true, message: "Please input company's name." }]}
                                   noStyle
                                 >
-                                  <Input placeholder="Company Name" style={{ width: '85%' }} />
+                                  <Input placeholder="Specify the entertainment company" style={{ width: '85%' }} />
                                 </Form.Item>
                                 {fields.length > 1 ? (
                                   <MinusCircleOutlined className="dynamic-delete-button" onClick={() => remove(field.name)} />
@@ -613,7 +791,7 @@ const handleSubmit = async (values) => {
                                   noStyle
                                 >
                                   <Input
-                                    placeholder="YYYY-MM-DD"
+                                    placeholder="Enter the date when the idol joined the company (e.g., YYYY-MM-DD)"
                                     style={{ width: '80%' }}
                                   />
                                 </Form.Item>
@@ -649,26 +827,26 @@ const handleSubmit = async (values) => {
 
                   <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
                     <Form.Item label="Korean Name" name="koreanName" rules={[{ required: true, message: 'Please input Korean Name!' }]} style={{ flexGrow: 1, marginBottom: '0' }}>
-                      <Input placeholder="Korean Name" required style={{ width: '100%' }} />
+                      <Input placeholder="Provide the idol's name in Hangul (e.g., 제이홉)" required style={{ width: '100%' }} />
                     </Form.Item>
                   </div>
 
                   <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
                     <Form.Item label="Zodiac Sign" name="zodiacSign" rules={[{ required: true, message: 'Please input Zodiac Sign!' }]} style={{ flexGrow: 1, marginBottom: '0' }}>
-                      <Input placeholder="Zodiac Sign" required style={{ width: '100%' }} />
+                      <Input placeholder="Enter the zodiac sign (e.g., Aquarius)" required style={{ width: '100%' }} />
                     </Form.Item>
                   </div>
 
                   <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
                     <Form.Item label="Training Period" name="trainingPeriod" rules={[{ required: true, message: 'Please input Training Period!' }]} style={{ flexGrow: 1, marginBottom: '0' }}>
-                      <Input placeholder="Training Period" required style={{ width: '100%' }} />
+                      <Input placeholder="Indicate duration of training (e.g., 3 Years)" required style={{ width: '100%' }} />
                     </Form.Item>
                   </div>
 
                   <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
                     <Form.Item label="Debut" name="debut" rules={[{ required: true, message: 'Please input Debut!' }]} style={{ flexGrow: 1, marginBottom: "0" }}>
                       <DatePicker
-                        placeholder='Debut'
+                        placeholder='Select the debut date'
                         format="YYYY-MM-DD"
                         required
                         rules={[{ required: true, message: 'Please input Debut!' }]}
@@ -682,31 +860,41 @@ const handleSubmit = async (values) => {
 
                   <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
                     <Form.Item label="Stage Name" name="stageName" rules={[{ required: true, message: 'Please input Stage Name!' }]} style={{ flexGrow: 1, marginBottom: '0' }}>
-                      <Input placeholder="Stage Name" required style={{ width: '100%' }} />
+                      <Input placeholder="Enter the stage name of the idol" required style={{ width: '100%' }} />
                     </Form.Item>
                   </div>
 
                   <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
-                    <Form.Item label="Active Years" name="activeYears" rules={[{ required: true, message: 'Please input Active Years!' }]} style={{ flexGrow: 1, marginBottom: '0' }}>
-                      <Input type='number' placeholder="Active Years" required style={{ width: '100%' }} />
+                    <Form.Item
+                      label="Active Years"
+                      name="activeYears"
+                      rules={[{ required: true, message: 'Please input Active Years!' }]}
+                      style={{ flexGrow: 1, marginBottom: '0' }}
+                    >
+                      <InputNumber
+                        min={0} // Prevent negative numbers
+                        placeholder="State how many years the idol has been active"
+                        required
+                        style={{ width: '100%' }}
+                      />
                     </Form.Item>
                   </div>
 
                   <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
                     <Form.Item label="Education" name="education" rules={[{ required: true, message: 'Please input Education!' }]} style={{ flexGrow: 1, marginBottom: '0' }}>
-                      <Input placeholder="Education" required style={{ width: '100%' }} />
+                      <Input placeholder="Provide educational background" required style={{ width: '100%' }} />
                     </Form.Item>
                   </div>
 
                   <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
                     <Form.Item label="Fandom" name="fandom" rules={[{ required: true, message: 'Please input Fandom!' }]} style={{ flexGrow: 1, marginBottom: '0' }}>
-                      <Input placeholder="Fandom" required style={{ width: '100%' }} />
+                      <Input placeholder="Specify the fandom name" required style={{ width: '100%' }} />
                     </Form.Item>
                   </div>
 
                   <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
                     <Form.Item label="MBTI" name="mbti" rules={[{ required: true, message: 'Please input MBTI!' }]} style={{ flexGrow: 1, marginBottom: '0' }}>
-                      <Input placeholder="MBTI" required style={{ width: '100%' }} />
+                      <Input placeholder="Specify the MBTI personality type (e.g., INFJ)" required style={{ width: '100%' }} />
                     </Form.Item>
                   </div>
 
@@ -744,7 +932,7 @@ const handleSubmit = async (values) => {
                                 noStyle
                               >
                                 <Input
-                                  placeholder="Language"
+                                  placeholder="List the languages spoken by the idol"
                                   required
                                   style={{ width: '80%', marginRight: '8px' }}
                                 />
@@ -804,7 +992,6 @@ const handleSubmit = async (values) => {
                       style={{ cursor: "not-allowed" }}
                     />
                   </Form.Item>
-
 
                   <div className='anotherbox-container'>
                     <div className='anotherbox-small' style={{padding: "0px"}}>

@@ -105,6 +105,22 @@ const IdolTable = () => {
     return `${year}/${month}/${day}, ${time} ${modifier}`;
   };
 
+  // Check if some idol happens to have the same stage name as another idol
+  const nameCount = idols.reduce((acc, idol) => {
+    const idolNameLower = idol.idolName.toLowerCase();
+    
+    // Log the current idol name being compared and the current count
+    console.log(`Comparing: "${idol.idolName}" (lowercase: "${idolNameLower}")`);
+    
+    acc[idolNameLower] = (acc[idolNameLower] || 0) + 1;
+  
+    // Log the result for this comparison
+    console.log(`Current count for "${idolNameLower}": ${acc[idolNameLower]}`);
+  
+    return acc;
+  }, {});
+  
+
   const idolColumns = [
     {
       title: 'Image',
@@ -128,9 +144,13 @@ const IdolTable = () => {
       title: 'Idol Name',
       dataIndex: 'idolName',
       key: 'idolName',
-      render: (text) => (
-        <span style={{ fontSize: '20px', fontWeight: 'bold' }}>{text}</span> // Adjust font size as needed
-      ),
+      render: (text, record) => {
+        const idolNameLower = text.toLowerCase();
+        const displayName = nameCount[idolNameLower] > 1 ? `${text} (${record.fullname})` : text; // Check count using lowercase
+        return (
+          <span style={{ fontSize: '20px', fontWeight: 'bold' }}>{displayName}</span>
+        );
+      },
       sorter: (a, b) => a.idolName.localeCompare(b.idolName),
       sortDirections: ['ascend', 'descend'],
     },
