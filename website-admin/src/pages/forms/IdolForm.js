@@ -367,11 +367,15 @@ const handleSubmit = async (values) => {
 
   const eraseLast = () => {
     const existingFacts = funFactsTextAreaValue.split('\n').filter(Boolean); // Split by new line and filter empty lines
-    if (existingFacts.length === 0) return; // If there are no facts, do nothing
-    // Remove the last fun fact
-    existingFacts.pop();
-    const updatedTextAreaValue = existingFacts.join('\n'); // Join the remaining facts
-    setFunFactsTextAreaValue(updatedTextAreaValue); // Update the textarea
+  if (existingFacts.length === 0) return; // If there are no facts, do nothing
+
+  // Remove the last fun fact from both the display and the list
+  existingFacts.pop();
+  const updatedTextAreaValue = existingFacts.join('\n'); // Join the remaining facts
+  setFunFactsTextAreaValue(updatedTextAreaValue); // Update the textarea
+  
+  const updatedFunFactsList = funFactsList.slice(0, -1); // Remove the last item from funFactsList
+  setFunFactsList(updatedFunFactsList); // Update funFactsList for submission
   };
   //////////////// ADD FUN FACT AREA - *END
 
