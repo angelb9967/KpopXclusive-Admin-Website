@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Space, Input, Modal, message } from 'antd';
+import { Table, Button, Space, Input, Modal, message, Skeleton } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/InformationHandler.css';
@@ -13,8 +13,10 @@ const QuestionTable = () => {
   const [questionSearchInput, setQuestionSearchInput] = useState('');
   const [filteredQuestions, setFilteredQuestions] = useState([]);
   const [questionPagination, setQuestionPagination] = useState({ current: 1, pageSize: 10 });
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  useEffect(() => { 
+    setLoading(true); 
     const fetchQuestions = async () => {
       try {
         const response = await axios.get('http://localhost:8000/questions');
@@ -22,6 +24,8 @@ const QuestionTable = () => {
         setFilteredQuestions(response.data);
       } catch (error) {
         console.error('Failed to fetch questions:', error);
+      } finally {
+        setLoading(false); 
       }
     };
 
@@ -144,19 +148,23 @@ const QuestionTable = () => {
         </div>
       </div>
       <div className="table-container">
-        <Table
-          bordered
-          columns={questionColumns}
-          dataSource={filteredQuestions}
-          rowKey="_id"
-          pagination={{
-            current: questionPagination.current,
-            pageSize: questionPagination.pageSize,
-            total: filteredQuestions.length,
-            onChange: (page, pageSize) => setQuestionPagination({ current: page, pageSize }),
-            showSizeChanger: true,
-          }}
-        />
+        {loading ? (
+          <Skeleton active paragraph={{ rows: 6 }} />
+        ) : (
+          <Table
+            bordered
+            columns={questionColumns}
+            dataSource={filteredQuestions}
+            rowKey="_id"
+            pagination={{
+              current: questionPagination.current,
+              pageSize: questionPagination.pageSize,
+              total: filteredQuestions.length,
+              onChange: (page, pageSize) => setQuestionPagination({ current: page, pageSize }),
+              showSizeChanger: true,
+            }}
+          />
+        )}
       </div>
     </div>
   );

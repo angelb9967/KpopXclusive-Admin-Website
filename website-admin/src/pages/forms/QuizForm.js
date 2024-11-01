@@ -110,6 +110,12 @@ const QuizForm = () => {
 
   const [currentStep, setCurrentStep] = useState(0);
 
+  useEffect(() => {
+    if (currentStep === 3) {
+        window.scrollTo(0, 0);
+    }
+}, [currentStep]);
+
   const nextStep = async () => {
     try {
       await form.validateFields();
@@ -266,25 +272,31 @@ const QuizForm = () => {
         : await axios.post('http://localhost:8000/quizzes', cleanedQuizData);
 
       message.success(response.data.message);
-      form.resetFields();
-      setQuizData({
-        title: '',
-        objective: '',
-        gameSetup: {
-          playerOptions: [],
-          rounds: [],
-        },
-        gamePlayRules: {
-          imageDisplay: [],
-          timer: [],
-          scoringSystem: [
-            'Correct Answer: 0 point/s',
-            'Incorrect Answer: 0 point/s',
-          ],
-        },
-        questions: [],
-      });
-      setSelectedQuestions([]);
+     
+        if (cleanedQuizData._id) {
+          setCurrentStep(0);
+      } else {
+          form.resetFields();
+          setQuizData({
+              title: '',
+              objective: '',
+              gameSetup: {
+                  playerOptions: [],
+                  rounds: [],
+              },
+              gamePlayRules: {
+                  imageDisplay: [],
+                  timer: [],
+                  scoringSystem: [
+                      'Correct Answer: 0 point/s',
+                      'Incorrect Answer: 0 point/s',
+                  ],
+              },
+              questions: [],
+          });
+          setSelectedQuestions([]);
+          setCurrentStep(0); 
+      }
     } catch (error) {
       message.error('Failed to save or update quiz');
       console.error('Error saving or updating quiz:', error.response ? error.response.data : error.message);

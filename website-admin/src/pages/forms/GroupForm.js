@@ -947,7 +947,7 @@ const GroupForm = () => {
               <label className='headline'>7.) Create Introduction here:</label>
               <Form.Item name="groupIntro" label="Introduction" rules={[{ required: true, message: 'Please provide an introduction' }]} >
                 <TextArea
-                  placeholder="Write a brief introduction about the idol, including their achievements, background, and personality."
+                  placeholder="Write a brief introduction about the group, including their achievements, background, and personality."
                   required
                   autoSize={{ minRows: 5, maxRows: 10 }}
                 />

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Space, Input, Modal, message } from 'antd';
+import { Table, Button, Space, Input, Modal, message, Skeleton } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/InformationHandler.css';
@@ -12,12 +12,14 @@ const GroupTable = () => {
   const [groupSearchInput, setGroupSearchInput] = useState('');
   const [filteredGroups, setFilteredGroups] = useState([]);
   const [groupPagination, setGroupPagination] = useState({ current: 1, pageSize: 10 });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     getData();
   }, []);
 
   const getData = async () => {
+    setLoading(true); 
     try {
       const response = await fetch('http://localhost:8000/groups');
       const groupData = await response.json();
@@ -26,6 +28,8 @@ const GroupTable = () => {
     } catch (error) {
       message.error('An unexpected error occurred.');
       console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false); 
     }
   };
 
@@ -180,6 +184,9 @@ const GroupTable = () => {
         </div>
       </div>
       <div className="table-container">
+      {loading ? (
+          <Skeleton active paragraph={{ rows: 6 }} />
+        ) : (
         <Table
           columns={groupColumns}
           dataSource={filteredGroups.slice((groupPagination.current - 1) * groupPagination.pageSize, groupPagination.current * groupPagination.pageSize)}
@@ -192,6 +199,7 @@ const GroupTable = () => {
             showSizeChanger: true,
           }}
         />
+      )}
       </div>
     </div>
   );

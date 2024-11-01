@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Space, Input, Modal, message } from 'antd';
+import { Table, Button, Space, Input, Modal, message, Skeleton } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/InformationHandler.css';
@@ -14,8 +14,10 @@ const QuizTable = () => {
   const [quizSearchInput, setQuizSearchInput] = useState('');
   const [filteredQuizzes, setFilteredQuizzes] = useState([]);
   const [quizPagination, setQuizPagination] = useState({ current: 1, pageSize: 10 });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     const fetchQuizzes = async () => {
       try {
         const response = await axios.get('http://localhost:8000/quizzes');
@@ -23,15 +25,16 @@ const QuizTable = () => {
         setFilteredQuizzes(response.data);
       } catch (error) {
         console.error('Failed to fetch quizzes:', error);
+      } finally {
+        setLoading(false); 
       }
     };
-
     fetchQuizzes();
   }, []);
 
   const handleQuizSearch = () => {
     const filtered = quizzes.filter(quiz =>
-      quiz.quizName.toLowerCase().includes(quizSearchInput.toLowerCase())
+      quiz.title.toLowerCase().includes(quizSearchInput.toLowerCase())
     );
     setFilteredQuizzes(filtered);
     setQuizPagination({ current: 1, pageSize: 10 });
@@ -122,19 +125,23 @@ const QuizTable = () => {
         </div>
       </div>
       <div className="table-container">
-        <Table
-        bordered
-          columns={quizColumns}
-          dataSource={filteredQuizzes}
-          rowKey="_id"
-          pagination={{
-            current: quizPagination.current,
-            pageSize: quizPagination.pageSize,
-            total: filteredQuizzes.length,
-            onChange: (page, pageSize) => setQuizPagination({ current: page, pageSize }),
-            showSizeChanger: true,
-          }}
-        />
+        {loading ? (
+          <Skeleton active paragraph={{ rows: 6 }} />
+        ) : (
+          <Table
+            bordered
+            columns={quizColumns}
+            dataSource={filteredQuizzes}
+            rowKey="_id"
+            pagination={{
+              current: quizPagination.current,
+              pageSize: quizPagination.pageSize,
+              total: filteredQuizzes.length,
+              onChange: (page, pageSize) => setQuizPagination({ current: page, pageSize }),
+              showSizeChanger: true,
+            }}
+          />
+        )}
       </div>
     </div>
   );

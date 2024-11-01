@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Input, Button, Table, Modal, message, Select, Space, Tag } from 'antd';
+import { Input, Button, Table, Modal, message, Select, Space, Tag, Skeleton } from 'antd';
 import { EyeInvisibleOutlined, EyeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import '../../styles/UserManagement.css';
@@ -15,6 +15,7 @@ const UserManagement = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [visiblePassword, setVisiblePassword] = useState({});
+  const [loading, setLoading] = useState(true);
 
   const [formData, setFormData] = useState({
     username: '',
@@ -38,6 +39,7 @@ const UserManagement = () => {
   }, []);
 
   const getData = async () => {
+    setLoading(true); 
     try {
       const response = await fetch('http://localhost:8000/users');
       const data = await response.json();
@@ -52,6 +54,8 @@ const UserManagement = () => {
       setFilteredUsers(formattedData);
     } catch (error) {
       console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false); 
     }
   };
 
@@ -94,6 +98,12 @@ const UserManagement = () => {
           hasError = true;
         }
         if (hasError) return;
+
+        const existingUser = users.find(user => user.username.toLowerCase() === formData.username.toLowerCase() && user._id !== formData.user_id);
+        if (existingUser) {
+          message.error('Account with this username already exists.');
+          return;
+        }
 
         const { username, password, user_id } = formData;
         const nowPht = moment().utcOffset(8).format('YYYY-MM-DD hh:mm:ss A');
@@ -168,7 +178,6 @@ const UserManagement = () => {
       },
     });
   };
-  
 
   const columns = [
     {
@@ -237,7 +246,6 @@ const UserManagement = () => {
         </Space>
       )
     }
-
   ];
 
   return (
@@ -265,19 +273,23 @@ const UserManagement = () => {
       </div>
 
       <div className="table-container">
-        <Table
-          dataSource={filteredUsers}
-          columns={columns}
-          rowKey="_id"
-          className="mt-3"
-          pagination={{
-            current: userPagination.current,
-            pageSize: userPagination.pageSize,
-            total: filteredUsers.length,
-            onChange: (page, pageSize) => setUserPagination({ current: page, pageSize }),
-            showSizeChanger: true,
-          }}
-        />
+        {loading ? ( 
+          <Skeleton active paragraph={{ rows: 6 }} />
+        ) : (
+          <Table
+            dataSource={filteredUsers}
+            columns={columns}
+            rowKey="_id"
+            className="mt-3"
+            pagination={{
+              current: userPagination.current,
+              pageSize: userPagination.pageSize,
+              total: filteredUsers.length,
+              onChange: (page, pageSize) => setUserPagination({ current: page, pageSize }),
+              showSizeChanger: true,
+            }}
+          />
+        )}
       </div>
 
       <Modal

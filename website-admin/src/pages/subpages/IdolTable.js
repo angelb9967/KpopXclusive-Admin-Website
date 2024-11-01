@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Space, Input, Modal, message, BackTop } from 'antd';
+import { Table, Button, Space, Input, Modal, message, Skeleton } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/InformationHandler.css';
@@ -16,6 +16,7 @@ const IdolTable = () => {
   const [idolSearchInput, setIdolSearchInput] = useState('');
   const [filteredIdols, setFilteredIdols] = useState([]);
   const [idolPagination, setIdolPagination] = useState({ current: 1, pageSize: 10 });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchGroups = async () => {
@@ -29,16 +30,19 @@ const IdolTable = () => {
         setGroupFilters(filters);
       } catch (error) {
         console.error('Failed to fetch group names:', error);
-      }
+      } 
     };
 
     const fetchIdols = async () => {
+      setLoading(true);
       try {
         const response = await axios.get('http://localhost:8000/idols');
         setIdols(response.data);
         setFilteredIdols(response.data);
       } catch (error) {
         console.error('Failed to fetch idols:', error);
+      } finally {
+        setLoading(false); 
       }
     };
 
@@ -194,18 +198,22 @@ const IdolTable = () => {
         </div>
       </div>
       <div className="table-container">
-        <Table
-          columns={idolColumns}
-          dataSource={filteredIdols}
-          rowKey="_id"
-          pagination={{
-            current: idolPagination.current,
-            pageSize: idolPagination.pageSize,
-            total: filteredIdols.length,
-            onChange: (page, pageSize) => setIdolPagination({ current: page, pageSize }),
-            showSizeChanger: true,
-          }}
-        />
+        {loading ? (
+          <Skeleton active paragraph={{ rows: 6 }} />
+        ) : (
+          <Table
+            columns={idolColumns}
+            dataSource={filteredIdols}
+            rowKey="_id"
+            pagination={{
+              current: idolPagination.current,
+              pageSize: idolPagination.pageSize,
+              total: filteredIdols.length,
+              onChange: (page, pageSize) => setIdolPagination({ current: page, pageSize }),
+              showSizeChanger: true,
+            }}
+          />
+        )}
       </div>
     </div>
   );

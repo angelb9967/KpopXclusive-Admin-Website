@@ -1,14 +1,14 @@
-import { Button, DatePicker, Form, Input, message } from 'antd';
-import TextArea from 'antd/es/input/TextArea';
-import axios from 'axios';
-import 'boxicons/css/boxicons.min.css';
-import dayjs from 'dayjs';
-import moment from 'moment';
 import React from 'react';
+import 'boxicons/css/boxicons.min.css';
+import '../../styles/NewsForm.css';
+import '../../styles/Main.css';
+import { Button, Input, message, DatePicker, Form, Modal, Divider } from 'antd';
+import TextArea from 'antd/es/input/TextArea';
 import { useLocation } from 'react-router-dom';
 import logo1 from '../../assets/Logo 1.png';
-import '../../styles/Main.css';
-import '../../styles/NewsForm.css';
+import moment from 'moment';
+import axios from 'axios';
+import dayjs from 'dayjs';
 
 const NewsForm = () => {
     const [form] = Form.useForm();
@@ -81,7 +81,7 @@ const NewsForm = () => {
                 labelAlign="left" // Ensures all labels align to the left
                 style={{ textAlign: 'left' }} // Ensures form items are aligned left
             >
-
+                                    
                 <div className='newsForm-subContainer'>
                     <div className='newsForm-box'>
                         <Form.Item

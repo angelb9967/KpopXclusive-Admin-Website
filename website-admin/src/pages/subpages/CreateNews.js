@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Input, Modal, Space, Table, message } from 'antd';
+import { Button, Input, Modal, Skeleton, Space, Table, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/InformationHandler.css';
@@ -12,12 +12,14 @@ const CreateNews = () => {
     const [newsSearchInput, setNewsSearchInput] = useState('');
     const [filteredNews, setFilteredNews] = useState([]);
     const [newsPagination, setNewsPagination] = useState({ current: 1, pageSize: 10 });
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         getData();
     }, []);
 
     const getData = async () => {
+        setLoading(true); 
         try {
             const response = await fetch('http://localhost:8000/news');
             const newsData = await response.json();
@@ -26,6 +28,8 @@ const CreateNews = () => {
         } catch (error) {
             message.error('An unexpected error occurred.');
             console.error("Error fetching data:", error);
+        } finally {
+            setLoading(false); 
         }
     };
 
@@ -192,18 +196,22 @@ const CreateNews = () => {
                 </div>
             </div>
             <div className="table-container">
-                <Table
-                    columns={newsColumns}
-                    dataSource={filteredNews.slice((newsPagination.current - 1) * newsPagination.pageSize, newsPagination.current * newsPagination.pageSize)}
-                    rowKey="_id"
-                    pagination={{
-                        current: newsPagination.current,
-                        pageSize: newsPagination.pageSize,
-                        total: filteredNews.length,
-                        onChange: (page, pageSize) => setNewsPagination({ current: page, pageSize }),
-                        showSizeChanger: true,
-                    }}
-                />
+                {loading ? (
+                    <Skeleton active paragraph={{ rows: 6 }} />
+                ) : (
+                    <Table
+                        columns={newsColumns}
+                        dataSource={filteredNews.slice((newsPagination.current - 1) * newsPagination.pageSize, newsPagination.current * newsPagination.pageSize)}
+                        rowKey="_id"
+                        pagination={{
+                            current: newsPagination.current,
+                            pageSize: newsPagination.pageSize,
+                            total: filteredNews.length,
+                            onChange: (page, pageSize) => setNewsPagination({ current: page, pageSize }),
+                            showSizeChanger: true,
+                        }}
+                    />
+                )}
             </div>
         </div>
     );
