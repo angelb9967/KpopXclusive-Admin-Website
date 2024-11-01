@@ -2,13 +2,12 @@ import React, { useState } from 'react';
 import '../styles/Login.css'; 
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
-import { Input, Button } from 'antd'; 
+import { Input, Button, message } from 'antd'; 
 import logo1 from '../assets/Logo 1.png'; 
 import logo2 from '../assets/Logo 2.png'; 
 
 const Login = () => {
     const history = useNavigate(); 
-
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
@@ -25,9 +24,9 @@ const Login = () => {
                     history("/Main/Dashboard")
                     localStorage.setItem("isAuthenticated", true);
                 } else if (res.data === "notexist") {
-                    alert("User does not exist")
+                    message.error('Username or Password is Incorrect!');
                 } else if (res.data === "wrong password") {
-                    alert("Username or password is incorrect!")
+                    message.error('Username or Password is Incorrect!');
                 }
             })
             .catch((e) => {
@@ -58,7 +57,6 @@ const Login = () => {
                     className="login-input" 
                     onChange={(e) => { setUsername(e.target.value) }} 
                     required 
-                    minLength={8} 
                 />
                 <label htmlFor="password" className="login-label">Password</label>
                 <Input.Password 
@@ -66,7 +64,6 @@ const Login = () => {
                     className="login-input" 
                     onChange={(e) => { setPassword(e.target.value) }} 
                     required 
-                    minLength={8} 
                 />
                 <Button type="primary" className="login-button" htmlType="submit">Login</Button>
             </form>

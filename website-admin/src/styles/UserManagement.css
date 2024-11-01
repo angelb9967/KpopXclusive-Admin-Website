@@ -2,7 +2,7 @@
     padding: 40px;
     background: rgb(255,95,95);
     background: linear-gradient(0deg, rgba(255,95,95,1) 39%, rgba(73,4,4,1) 100%);
-    min-height: 76vh;
+    min-height: 80vh;
 }
 
 .action-container {

@@ -9,7 +9,7 @@ const Main = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [title, setTitle] = useState('Dashboard');
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
   const [showSubmenu, setShowSubmenu] = useState(false);
   const [showQuizSubmenu, setShowQuizSubmenu] = useState(false);
 

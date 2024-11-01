@@ -32,7 +32,6 @@ const IdolForm = () => {
 
 };
 
-
   const [idolImage, setIdolImage] = useState(null);
   const [lightstickImage, setLightstickImage] = useState(null);
   const [countryData, setCountryData] = useState([]);

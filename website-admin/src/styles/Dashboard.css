@@ -1,37 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@100;200;300;400;500;600;700;800;900&family=Saira:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Saira+Condensed:wght@100;200;300;400;500;600;700;800;900&family=Saira:ital,wght@0,100..900;1,100..900&display=swap');
+
 .dashboard-container {
     display: flex;
-    gap: 6%; 
-    padding: 40px; 
-    flex-wrap: wrap; 
-    align-items: stretch; 
-    justify-content: center; 
+    gap: 6%;
+    padding: 40px;
+    flex-wrap: wrap;
+    align-items: stretch;
+    justify-content: center;
+    height: 80vh;
+    background: rgb(255,95,95);
+    background: linear-gradient(0deg, rgba(255,95,95,1) 39%, rgba(73,4,4,1) 100%);
 }
 
 .container-box {
-    background: rgb(73, 4, 4);
-    background: linear-gradient(0deg, rgba(73, 4, 4, 1) 0%, rgba(255, 95, 95, 1) 100%);
-    border: 2px solid #000000;
-    height: 175px; 
-    width: 25%; 
+    border: 2px solid white;
+    border-radius: 5px;
+    background: white;
+    height: 210px;
+    width: 25%;
     text-align: center;
-    color: white;
-    text-shadow: 1px 2px 2px rgba(0, 0, 0, 0.6);
-    padding: 20px; 
-    box-sizing: border-box; 
-    display: flex; 
-    flex-direction: column; 
-    justify-content: center; 
-    align-items: center; 
-    overflow: hidden; 
+    color: black;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    min-width: 300px
 }
 
-.container-box h5, .container-box h2 {
-    margin: 0; 
+.container-box h5,
+.container-box h2 {
+    margin: 0;
 }
 
 @media (max-width: 768px) {
     .container-box {
-        width: calc(100% - 6%); 
-        font-size: 14px; 
+        width: calc(100% - 6%);
+        font-size: 20px;
     }
+}
+
+.container-box .header {
+    width: 100%;
+    height: 100%;
+    background:rgba(185, 59, 61);
+    color: white ;
+    text-align: center;
+    font-weight: bold;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    text-shadow: 1px 2px 2px rgba(0, 0, 0, 0.6);
+    line-height: 1;
+    font-size: 1.5rem;
+}
+
+.container-box .content {
+    background-color: white;
+    color: #333;
+    padding: 20px;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 800;
+    font-family: "Saira Condensed", sans-serif;
 }

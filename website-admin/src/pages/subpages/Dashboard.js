@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import '../../styles/Dashboard.css';
+import 'boxicons/css/boxicons.min.css';
 
 const Dashboard = () => {
   const [numberOfAccounts, setNumberOfAccounts] = useState(0); 
@@ -33,16 +34,22 @@ const Dashboard = () => {
   return (
     <div className='dashboard-container'>
       <div className='container-box'>
-        <h5>Number of Visitors on Website</h5>
-        <h2>{totalLogins}</h2> 
+        <div className='header'>
+          <i class='bx bx-window-open' style={{color:"white", marginRight:"5px", fontSize:"50px"}}></i><br/>
+          Visitors<br/>on Website</div>
+        <div className='content'>{totalLogins}</div>
       </div>
       <div className='container-box'>
-        <h5>Number of Accounts Created on Website</h5>
-        <h2>{numberOfAccounts}</h2> 
+        <div className='header'>
+        <i class='bx bxs-user-account' style={{color:"white", marginRight:"5px", fontSize:"50px"}}></i><br/>
+          Accounts Created<br/>on Website</div>
+        <div className='content'>{numberOfAccounts}</div>
       </div>
       <div className='container-box'>
-        <h5>Number of Active Users on Website</h5>
-        <h2>{activeUsersCount}</h2> 
+        <div className='header'>
+        <i class='bx bxs-user-pin' style={{color:"white", marginRight:"5px", fontSize:"50px"}}></i><br/>
+          Active Users<br/>on Website</div>
+        <div className='content'>{activeUsersCount}</div>
       </div>
     </div>
   );
