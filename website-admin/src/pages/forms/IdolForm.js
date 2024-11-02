@@ -95,6 +95,60 @@ const getZodiacSign = (date) => {
 };
 
 const handleSubmit = async (values) => {
+  const isNotEmptyOrWhitespace = (text) => text && text.trim().length > 0;
+  if (!isNotEmptyOrWhitespace(values.nationality)) {
+    message.error('Nationality cannot be empty or whitespace only.');
+    return;
+  }
+  if (!isNotEmptyOrWhitespace(values.fullname)) {
+    message.error('Full name cannot be empty or whitespace only.');
+    return;
+  }
+  if (!isNotEmptyOrWhitespace(values.bloodtype)) {
+    message.error('Blood Type cannot be empty or whitespace only.');
+    return;
+  }
+  if (!isNotEmptyOrWhitespace(values.height)) {
+    message.error('Height cannot be empty or whitespace only.');
+    return;
+  }
+  if (!isNotEmptyOrWhitespace(values.koreanName)) {
+    message.error('Korean Name cannot be empty or whitespace only.');
+    return;
+  }
+  if (!isNotEmptyOrWhitespace(values.zodiacSign)) {
+    message.error('Zodiac Sign cannot be empty or whitespace only.');
+    return;
+  }
+  if (!isNotEmptyOrWhitespace(values.trainingPeriod)) {
+    message.error('Training Period cannot be empty or whitespace only.');
+    return;
+  }
+  if (!isNotEmptyOrWhitespace(values.stageName)) {
+    message.error('Stage Name cannot be empty or whitespace only.');
+    return;
+  }
+  if (!isNotEmptyOrWhitespace(values.education)) {
+    message.error('Education cannot be empty or whitespace only.');
+    return;
+  }
+  if (!isNotEmptyOrWhitespace(values.fandom)) {
+    message.error('Fandom cannot be empty or whitespace only.');
+    return;
+  }
+  if (!isNotEmptyOrWhitespace(values.mbti)) {
+    message.error('MBTI cannot be empty or whitespace only.');
+    return;
+  }
+  if (!isNotEmptyOrWhitespace(values.latestAlbum)) {
+    message.error('Latest Album cannot be empty or whitespace only.');
+    return;
+  }
+  if (!isNotEmptyOrWhitespace(values.introduction)) {
+    message.error('Introduction cannot be empty or whitespace only.');
+    return;
+  }
+
   // Check if there is atleast one fun fact
   if (funFactsList.length === 0) {
     message.error('Please provide at least one fun fact about the idol');
@@ -787,7 +841,7 @@ const handleSubmit = async (values) => {
                                 <Form.Item
                                   {...field}
                                   name={[field.name, 'since']}
-                                  rules={[{ required: true, message: 'Please input the year of the corresponding company.' }]}
+                                  rules={[{ required: true, message: 'Please input the date of the corresponding company.' }]}
                                   noStyle
                                 >
                                   <Input

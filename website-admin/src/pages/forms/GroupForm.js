@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Select, Input, message, Form, Radio, Table, Modal, AutoComplete, DatePicker } from 'antd';
+import { Button, Select, Input, message, Form, Radio, Table, Modal, AutoComplete, DatePicker, InputNumber} from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { faXTwitter, faSpotify, faYoutube } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -120,6 +120,47 @@ const GroupForm = () => {
   };
 
   const handleSubmit = async (values) => {
+    const isNotEmptyOrWhitespace = (text) => text && text.trim().length > 0;
+    if (!isNotEmptyOrWhitespace(values.groupName)) {
+      message.error('Group name cannot be empty or whitespace only.');
+      return;
+    }
+    if (!isNotEmptyOrWhitespace(values.koreanGroupName)) {
+      message.error('Korean Group Name cannot be empty or whitespace only.');
+      return;
+    }
+    if (!isNotEmptyOrWhitespace(values.fandom)) {
+      message.error('Fandom cannot be empty or whitespace only.');
+      return;
+    }
+    if (!isNotEmptyOrWhitespace(values.debutToFirstWin)) {
+      message.error('Debut to First Win cannot be empty or whitespace only.');
+      return;
+    }
+    if (!isNotEmptyOrWhitespace(values.latestAlbum)) {
+      message.error('Latest Album cannot be empty or whitespace only.');
+      return;
+    }
+    if (!isNotEmptyOrWhitespace(values.upcomingAlbum)) {
+      message.error('Upcoming Album cannot be empty or whitespace only.');
+      return;
+    }
+    if (!isNotEmptyOrWhitespace(values.groupIntro)) {
+      message.error('Group introduction cannot be empty or whitespace only.');
+      return;
+    }
+
+
+    // Check if the Korean name contains Hangul characters
+    const containsKoreanCharacters = (text) => {
+      const koreanRegex = /[가-힣]/; // Regular expression for Hangul characters
+      return koreanRegex.test(text);
+    };
+    if (!containsKoreanCharacters(values.koreanGroupName)) {
+      message.error('Korean Group Name must contain valid Hangul characters.');
+      return;
+    }
+
     const isValidUrl = (urlString) => {
       try {
         new URL(urlString);
@@ -193,7 +234,16 @@ const GroupForm = () => {
     };
 
     try {
-      console.log('Data to submit:', dataToSubmit);
+      // Fetch all groups and check for duplicate groupName
+      const existingGroups = await axios.get('http://localhost:8000/groups');
+      const isDuplicate = existingGroups.data.some(group =>
+        group.groupName === values.groupName && group._id !== groupData?._id
+      );
+
+      if (isDuplicate) {
+        message.error('A group with this name already exists. Please use a different name.');
+        return;
+      }
 
       if (location.pathname === '/EditGroup' && groupData._id) {
         const response = await axios.put(`http://localhost:8000/groups/${groupData._id}`, dataToSubmit);
@@ -629,25 +679,56 @@ const GroupForm = () => {
 
               <label className='headline'>5.) Input the awards and albums here</label>
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
-                <Form.Item label="Music Show Wins" name="musicShowWins" rules={[{ required: true, message: 'Please input Music Show Wins!' }]} style={{ flexGrow: 1, marginBottom: '0' }}>
-                  <Input type='number' placeholder="Music Show Wins" required rules={[{ required: true, message: 'Please input Music Show Wins!' }]} style={{ flexGrow: 1 }} />
+                <Form.Item
+                  label="Music Show Wins"
+                  name="musicShowWins"
+                  rules={[
+                    { required: true, message: 'Please input Music Show Wins!' },
+                    { pattern: /^[0-9]+$/, message: 'Only numbers are allowed!' } // Only digits
+                  ]}
+                  style={{ flexGrow: 1, marginBottom: '0' }}
+                >
+                  <InputNumber
+                    placeholder="Input total music show wins (e.g., 164)"
+                    min={0} // Minimum value of 0
+                    type='number'
+                    style={{ flexGrow: 1, width: '100%' }}
+                    formatter={(value) => (value ? String(value).replace(/[^0-9]/g, '') : '')}
+                    parser={(value) => (value ? value.replace(/[^0-9]/g, '') : '')}
+                  />
                 </Form.Item>
               </div>
+
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
-                <Form.Item label="Total Albums" name="totalAlbums" rules={[{ required: true, message: 'Please input Total Albums!' }]} style={{ flexGrow: 1, marginBottom: '0' }}>
-                  <Input type='number' placeholder="Total Albums" required rules={[{ required: true, message: 'Please input Total Albums!' }]} style={{ flexGrow: 1 }} />
+                <Form.Item
+                  label="Total Albums"
+                  name="totalAlbums"
+                  rules={[
+                    { required: true, message: 'Please input Total Albums!' },
+                    { pattern: /^[0-9]+$/, message: 'Only numbers are allowed!' } // Only digits
+                  ]}
+                  style={{ flexGrow: 1, marginBottom: '0' }}
+                >
+                  <InputNumber
+                    placeholder="Indicate total number of albums released"
+                    min={0} // Minimum value of 0
+                    type='number'
+                    style={{ flexGrow: 1, width: '100%' }}
+                    formatter={(value) => (value ? String(value).replace(/[^0-9]/g, '') : '')}
+                    parser={(value) => (value ? value.replace(/[^0-9]/g, '') : '')}
+                  />
                 </Form.Item>
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
                 <Form.Item label="Latest Album" name="latestAlbum" rules={[{ required: true, message: 'Please input Latest Album!' }]} style={{ flexGrow: 1, marginBottom: '0' }}>
-                  <Input placeholder="Latest Album" required rules={[{ required: true, message: 'Please input Latest Album!' }]} style={{ flexGrow: 1 }} />
+                  <Input placeholder="Enter their most recent album title" required rules={[{ required: true, message: 'Please input Latest Album!' }]} style={{ flexGrow: 1 }} />
                 </Form.Item>
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
                 <Form.Item label="Upcoming Album" name="upcomingAlbum" rules={[{ required: true, message: 'Please input Upcoming Album!' }]} style={{ flexGrow: 1, marginBottom: '0' }}>
-                  <Input placeholder="Upcoming Album" required rules={[{ required: true, message: 'Please input Upcoming Album!' }]} style={{ flexGrow: 1 }} />
+                  <Input placeholder="Enter their upcoming album title" required rules={[{ required: true, message: 'Please input Upcoming Album!' }]} style={{ flexGrow: 1 }} />
                 </Form.Item>
               </div>
             </div>
@@ -661,14 +742,14 @@ const GroupForm = () => {
                     {/* Group Name Text Field  */}
                     <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
                       <Form.Item label="Group Name" name="groupName" rules={[{ required: true, message: 'Please input Group Name!' }]} style={{ flexGrow: 1, marginBottom: '0' }}>
-                        <Input placeholder="Group Name" style={{ width: '100%' }} required rules={[{ required: true, message: 'Please input Group Name!' }]} />
+                        <Input placeholder="Enter the name of the group" style={{ width: '100%' }} required rules={[{ required: true, message: 'Please input Group Name!' }]} />
                       </Form.Item>
                     </div>
 
                     {/* Korean Group Name Text Field  */}
                     <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
                       <Form.Item label="Korean Group Name" name="koreanGroupName" rules={[{ required: true, message: 'Please input Korean Group Name!' }]} style={{ flexGrow: 1, marginBottom: '0' }}>
-                        <Input placeholder="Korean Group Name" style={{ width: '100%' }} required rules={[{ required: true, message: 'Please input Korean Group Name!' }]} />
+                        <Input placeholder="Provide the group's name in Hangul (e.g., 방탄소년단)" style={{ width: '100%' }} required rules={[{ required: true, message: 'Please input Korean Group Name!' }]} />
                       </Form.Item>
                     </div>
 
@@ -676,7 +757,7 @@ const GroupForm = () => {
                     <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
                       <Form.Item label="Debut" name="debut" rules={[{ required: true, message: 'Please input Debut!' }]} style={{ flexGrow: 1, marginBottom: "0" }}>
                       <DatePicker
-                        placeholder='Debut'
+                        placeholder='Select the debut date'
                         format="YYYY-MM-DD"
                         required
                         rules={[{ required: true, message: 'Please input Debut!' }]}
@@ -691,21 +772,21 @@ const GroupForm = () => {
                     { }
                     <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
                       <Form.Item label="Debut to 1st win" name="debutToFirstWin" rules={[{ required: true, message: 'Please input Debut to 1st win!' }]} style={{ flexGrow: 1, marginBottom: '0' }}>
-                        <Input placeholder="Debut to 1st win" style={{ width: '100%' }} required rules={[{ required: true, message: 'Please input Debut to 1st win!' }]} />
+                        <Input placeholder="Enter the days from debut to first win (e.g., 691 days)" style={{ width: '100%' }} required rules={[{ required: true, message: 'Please input Debut to 1st win!' }]} />
                       </Form.Item>
                     </div>
 
                     {/* Fandom Text Field  */}
                     <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
                       <Form.Item label="Fandom" name="fandom" rules={[{ required: true, message: 'Please input Fandom!' }]} style={{ flexGrow: 1, marginBottom: '0' }}>
-                        <Input placeholder="Fandom" style={{ width: '100%' }} required rules={[{ required: true, message: 'Please input Fandom!' }]} />
+                        <Input placeholder="Specify the fandom name" style={{ width: '100%' }} required rules={[{ required: true, message: 'Please input Fandom!' }]} />
                       </Form.Item>
                     </div>
 
                     <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0' }}>
                       <Form.Item name="country" label="Country" rules={[{ required: true, message: 'Please select a country!' }]} style={{ width: '100%', marginBottom: '14px' }}  >
                         <Select
-                          placeholder="Select a country"
+                          placeholder="Select the country of origin"
                           style={{ width: '100%' }}
                           onChange={handleCountrySelect}
                           value={selectedCountry}
@@ -738,7 +819,7 @@ const GroupForm = () => {
                                   rules={[{ required: true, whitespace: true, message: "Please input company's name." }]}
                                   noStyle
                                 >
-                                  <Input placeholder="Company Name" style={{ width: '85%' }} />
+                                  <Input placeholder="Specify the entertainment company" style={{ width: '85%' }} />
                                 </Form.Item>
                                 {fields.length > 1 ? (
                                   <MinusCircleOutlined className="dynamic-delete-button" onClick={() => remove(field.name)} />
@@ -752,11 +833,11 @@ const GroupForm = () => {
                                 <Form.Item
                                   {...field}
                                   name={[field.name, 'since']}
-                                  rules={[{ required: true, message: 'Please input the year of the corresponding company.' }]}
+                                  rules={[{ required: true, message: 'Please input the date of the corresponding company.' }]}
                                   noStyle
                                 >
                                   <Input
-                                    placeholder="YYYY-MM-DD"
+                                    placeholder="Enter the date when the group started in the company"
                                     style={{ width: '80%' }}
                                   />
                                 </Form.Item>
@@ -775,11 +856,23 @@ const GroupForm = () => {
                 </div>
 
                 <div className="groupform-box1" id="groupform-box4">
-                  <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
-                    <Form.Item label="Active Years" name="activeYears" rules={[{ required: true, message: 'Please input Active Years!' }]} style={{ flexGrow: 1, marginBottom: '0' }}>
-                      <Input type='number' placeholder="Active Years" required style={{ width: '100%' }} />
+                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
+                    <Form.Item
+                      label="Active Years"
+                      name="activeYears"
+                      rules={[{ required: true, message: 'Please input Active Years!' }]}
+                      style={{ flexGrow: 1, marginBottom: '0' }}
+                    >
+                      <InputNumber
+                        min={0} // Prevent negative numbers
+                        placeholder="State how many years the group has been active"
+                        required
+                        type='number'
+                        style={{ width: '100%' }}
+                      />
                     </Form.Item>
                   </div>
+
                   <div style={{ marginTop: '16px' }}>
                     <Form.Item
                       name="status"
@@ -835,7 +928,7 @@ const GroupForm = () => {
                       options={options} 
                       onSearch={handleSearch} 
                       onSelect={handleSelect} 
-                      placeholder="Search and select an Idol"
+                      placeholder="Enter or select an idol"
                       style={{ width: '100%' }}
                     >
                       <Input />
@@ -947,7 +1040,7 @@ const GroupForm = () => {
               <label className='headline'>7.) Create Introduction here:</label>
               <Form.Item name="groupIntro" label="Introduction" rules={[{ required: true, message: 'Please provide an introduction' }]} >
                 <TextArea
-                  placeholder="Write a brief introduction about the group, including their achievements, background, and personality."
+                  placeholder="Write a brief introduction about the group, including their achievements, background, and music."
                   required
                   autoSize={{ minRows: 5, maxRows: 10 }}
                 />
