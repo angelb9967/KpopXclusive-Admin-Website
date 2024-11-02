@@ -204,6 +204,16 @@ const GroupForm = () => {
       return;
     }
 
+    // Extract social media URLs from form values
+    const socialMediaUrls = values.socialMediaPlatforms;
+    // Validate each social media URL
+    for (const [platform, url] of Object.entries(socialMediaUrls)) {
+      if (url && !isValidUrl(url)) {
+        message.error(`The ${platform.charAt(0).toUpperCase() + platform.slice(1)} URL is not valid.`);
+        return;
+      }
+    }
+
     console.log("Group Members Before Submit:", groupMembers);
 
     const dataToSubmit = {
