@@ -119,6 +119,39 @@ const QuizForm = () => {
   const nextStep = async () => {
     try {
       await form.validateFields();
+      const title = form.getFieldValue('title');
+      const objective = form.getFieldValue('objective'); 
+
+      // Check if the required fields are filled and not just whitespace
+      if (!title || !objective || title.trim() === '' || objective.trim() === '') {
+        message.error('Please fill in all required fields before proceeding.');
+        return;
+      }
+
+      // Fetch existing quizzes from the database to check for duplicate titles
+      let existingQuizzes = [];
+      try {
+        const response = await axios.get('http://localhost:8000/quizzes'); // Adjust endpoint to fetch all quizzes
+        existingQuizzes = response.data; // Assuming this returns an array of quiz objects
+      } catch (error) {
+        console.error('Error fetching existing quizzes:', error);
+        message.error('Could not check for existing titles.');
+        return; // Exit early if there's an error fetching existing quizzes
+      }
+
+      // Extract and trim titles from existing quizzes and convert to lower case
+      const existingTitles = existingQuizzes.map(quiz => quiz.title.trim().toLowerCase());
+      // Trim the title of the quiz being submitted and convert to lower case
+      const trimmedTitle = quizData.title.trim().toLowerCase();
+      // Check for title duplicates in a case-insensitive manner
+      const titleExists = existingTitles.some(existingTitle =>
+        existingTitle === trimmedTitle && // Compare trimmed and lower-cased titles
+        (!quizData._id || existingQuizzes.some(q => q.title.trim().toLowerCase() === existingTitle && q._id !== quizData._id)) // Exclude the current quiz if it matches the ID
+      );
+      if (titleExists) {
+        message.error('A quiz with this title already exists. Please choose a different title.');
+        return; // Prevent submission if a duplicate title is found
+      }
 
       setCurrentStep((prevStep) => Math.min(prevStep + 1, 3));
     } catch (error) {
