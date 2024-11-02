@@ -158,10 +158,10 @@ const IdolTable = () => {
       title: 'ID',
       dataIndex: '_id',
       key: '_id',
-      render: (text) => (
-        <a href={text} target="_blank" rel="noopener noreferrer">
+      render: (text, record) => (
+        <Button type="link" onClick={() => handleEdit(record)}>
           {text}
-        </a>
+        </Button>
       ),
     },
     {
