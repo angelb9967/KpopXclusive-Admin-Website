@@ -133,6 +133,12 @@ const QuestionForm = () => {
     };
 
     const handleSubmit = async (values) => {
+        const isNotEmptyOrWhitespace = (text) => text && text.trim().length > 0;
+        if (!isNotEmptyOrWhitespace(values.question)) {
+          message.error('Question cannot be empty or whitespace only.');
+          return;
+        }
+        
         const isValidUrl = (urlString) => {
             try {
                 new URL(urlString);
