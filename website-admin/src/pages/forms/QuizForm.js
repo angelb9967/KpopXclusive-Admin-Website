@@ -406,6 +406,8 @@ const QuizForm = () => {
                 </ul>
                 <Divider />
               </div>
+
+
               <Form.Item label="Player Option(s):" required>
                 <Form.List
                   name="playerOptions"
@@ -416,10 +418,11 @@ const QuizForm = () => {
                         return Promise.reject(new Error('Please provide at least one player option.'));
                       }
                     },
-                  }]}>
+                  }]}
+                >
                   {(fields, { add, remove }, { errors }) => (
                     <>
-                      {fields.map(({ key, name, fieldKey, ...restField }) => (
+                      {fields.map(({ key, name, fieldKey, ...restField }, index) => (
                         <Form.Item key={key} required={false}>
                           <Form.Item
                             {...restField}
@@ -436,7 +439,23 @@ const QuizForm = () => {
                             />
                           </Form.Item>
                           {fields.length > 1 ? (
-                            <MinusCircleOutlined className="dynamic-delete-button" onClick={() => remove(name)} />
+                            <MinusCircleOutlined
+                              className="dynamic-delete-button"
+                              onClick={() => {
+                                remove(name);
+                                setQuizData((prevData) => {
+                                  const updatedOptions = [...prevData.gameSetup.playerOptions];
+                                  updatedOptions.splice(index, 1);
+                                  return {
+                                    ...prevData,
+                                    gameSetup: {
+                                      ...prevData.gameSetup,
+                                      playerOptions: updatedOptions,
+                                    },
+                                  };
+                                });
+                              }}
+                            />
                           ) : null}
                         </Form.Item>
                       ))}
@@ -458,6 +477,7 @@ const QuizForm = () => {
                 </Form.List>
               </Form.Item>
 
+
               <Form.Item label="Rounds:" required>
                 <Form.List
                   name="rounds"
@@ -468,10 +488,11 @@ const QuizForm = () => {
                         return Promise.reject(new Error('Please provide at least one round.'));
                       }
                     },
-                  }]}>
+                  }]}
+                >
                   {(fields, { add, remove }, { errors }) => (
                     <>
-                      {fields.map(({ key, name, fieldKey, ...restField }) => (
+                      {fields.map(({ key, name, fieldKey, ...restField }, index) => (
                         <Form.Item key={key} required={false}>
                           <Form.Item
                             {...restField}
@@ -488,7 +509,23 @@ const QuizForm = () => {
                             />
                           </Form.Item>
                           {fields.length > 1 ? (
-                            <MinusCircleOutlined className="dynamic-delete-button" onClick={() => remove(name)} />
+                            <MinusCircleOutlined
+                              className="dynamic-delete-button"
+                              onClick={() => {
+                                remove(name);
+                                setQuizData((prevData) => {
+                                  const updatedRounds = [...prevData.gameSetup.rounds];                          
+                                  updatedRounds.splice(index, 1);
+                                  return {
+                                    ...prevData,
+                                    gameSetup: {
+                                      ...prevData.gameSetup,
+                                      rounds: updatedRounds,
+                                    },
+                                  };
+                                });
+                              }}
+                            />
                           ) : null}
                         </Form.Item>
                       ))}
@@ -509,7 +546,6 @@ const QuizForm = () => {
                   )}
                 </Form.List>
               </Form.Item>
-
             </>
           )}
 
@@ -529,6 +565,8 @@ const QuizForm = () => {
                 </ul>
                 <Divider />
               </div>
+
+
               <Form.Item label="Image Display:" required>
                 <Form.List
                   name="imageDisplay"
@@ -539,10 +577,11 @@ const QuizForm = () => {
                         return Promise.reject(new Error('Please provide at least one image display option.'));
                       }
                     },
-                  }]}>
+                  }]}
+                >
                   {(fields, { add, remove }, { errors }) => (
                     <>
-                      {fields.map(({ key, name, fieldKey, ...restField }) => (
+                      {fields.map(({ key, name, fieldKey, ...restField }, index) => (
                         <Form.Item key={key} required={false}>
                           <Form.Item
                             {...restField}
@@ -559,7 +598,23 @@ const QuizForm = () => {
                             />
                           </Form.Item>
                           {fields.length > 1 ? (
-                            <MinusCircleOutlined className="dynamic-delete-button" onClick={() => remove(name)} />
+                            <MinusCircleOutlined
+                              className="dynamic-delete-button"
+                              onClick={() => {
+                                remove(name);
+                                setQuizData((prevData) => {
+                                  const updatedImageDisplay = [...prevData.gamePlayRules.imageDisplay];
+                                  updatedImageDisplay.splice(index, 1);
+                                  return {
+                                    ...prevData,
+                                    gamePlayRules: {
+                                      ...prevData.gamePlayRules,
+                                      imageDisplay: updatedImageDisplay,
+                                    },
+                                  };
+                                });
+                              }}
+                            />
                           ) : null}
                         </Form.Item>
                       ))}
@@ -581,6 +636,7 @@ const QuizForm = () => {
                 </Form.List>
               </Form.Item>
 
+
               <Form.Item label="Timer:" required>
                 <Form.List
                   name="timer"
@@ -591,10 +647,11 @@ const QuizForm = () => {
                         return Promise.reject(new Error('Please provide at least one timer option.'));
                       }
                     },
-                  }]}>
+                  }]}
+                >
                   {(fields, { add, remove }, { errors }) => (
                     <>
-                      {fields.map(({ key, name, fieldKey, ...restField }) => (
+                      {fields.map(({ key, name, fieldKey, ...restField }, index) => (
                         <Form.Item key={key} required={false}>
                           <Form.Item
                             {...restField}
@@ -611,7 +668,23 @@ const QuizForm = () => {
                             />
                           </Form.Item>
                           {fields.length > 1 ? (
-                            <MinusCircleOutlined className="dynamic-delete-button" onClick={() => remove(name)} />
+                            <MinusCircleOutlined
+                              className="dynamic-delete-button"
+                              onClick={() => {
+                                remove(name);
+                                setQuizData((prevData) => {
+                                  const updatedTimer = [...prevData.gamePlayRules.timer];
+                                  updatedTimer.splice(index, 1);
+                                  return {
+                                    ...prevData,
+                                    gamePlayRules: {
+                                      ...prevData.gamePlayRules,
+                                      timer: updatedTimer,
+                                    },
+                                  };
+                                });
+                              }}
+                            />
                           ) : null}
                         </Form.Item>
                       ))}
@@ -632,6 +705,7 @@ const QuizForm = () => {
                   )}
                 </Form.List>
               </Form.Item>
+
 
               <Divider>Scoring System</Divider>
 
