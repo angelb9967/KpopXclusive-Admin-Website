@@ -5,7 +5,7 @@ import logo1 from '../../assets/Logo 1.png';
 import '../../styles/Main.css';
 import '../../styles/QuestionForm.css';
 import '../../styles/IdolForm.css';
-import axios from 'axios'; 
+import axios from 'axios';
 
 const QuestionForm = () => {
     const [form] = Form.useForm();
@@ -20,6 +20,7 @@ const QuestionForm = () => {
     const [urlInput, setUrlInput] = useState('');
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [correctAnswer, setCorrectAnswer] = useState(null); // State for correct answer
+    const [options, setOptions] = useState(Array(4).fill('')); // Store option values
 
     useEffect(() => {
         // Set initial values if editing a question
@@ -34,6 +35,7 @@ const QuestionForm = () => {
             });
             setImageUrl(questionData.imageUrl);
             setCorrectAnswer(questionData.correctAnswer); // Set correct answer
+            setOptions(questionData.options); // Set options
         }
     }, [form, questionData]);
 
@@ -139,45 +141,33 @@ const QuestionForm = () => {
                 return false;
             }
         };
-    
-        // Check if no radio button is selected
-        if (!correctAnswer) {
-            message.error('Please select a correct answer before submitting!');
-            return;
-        }
-    
+
         // Validate the image URL
         if (!isValidUrl(values.imageUrl)) {
             message.error('Image URL is not valid');
             return;
         }
-    
-        const options = [values.option1, values.option2, values.option3, values.option4];
-    
-        // Create a copy of the previous options
-        const previousOptions = [questionData?.options[0], questionData?.options[1], questionData?.options[2], questionData?.options[3]];
-    
-        // Check if the correct answer is included in the options
-        let updatedCorrectAnswer = correctAnswer;
-    
-        // Validate the current correct answer
-        if (!options.includes(correctAnswer)) {
-            const previousCorrectIndex = previousOptions.findIndex(option => option === correctAnswer);
-    
-            if (previousCorrectIndex !== -1) {
-                updatedCorrectAnswer = options[previousCorrectIndex];
-            } else {
-                updatedCorrectAnswer = options[0]; // Fallback to the first option
-            }
+
+        // Check for duplicate options
+        const uniqueOptions = [...new Set(options)];
+        if (uniqueOptions.length !== options.length) {
+            message.error('Options must be unique!');
+            return;
         }
-    
+
+        // Check if no radio button is selected
+        if (!correctAnswer) {
+            message.error('Please select a correct answer before submitting!');
+            return;
+        }
+
         const dataToSubmit = {
             question: values.question,
-            options: options,
-            correctAnswer: updatedCorrectAnswer,
+            options: uniqueOptions,
+            correctAnswer: correctAnswer,
             imageUrl: values.imageUrl,
         };
-    
+
         try {
             if (location.pathname === '/EditQuestion' && questionData?._id) {
                 const response = await axios.put(`http://localhost:8000/questions/${questionData._id}`, dataToSubmit);
@@ -188,28 +178,29 @@ const QuestionForm = () => {
                 form.resetFields();
                 setImageUrl(null);
                 setUrlInput('');
-                setCorrectAnswer(null); // Reset the correct answer for new entries
+                setCorrectAnswer(null);
+                form.setFieldsValue({ imageUrl: '' });
             }
         } catch (error) {
             message.error('Failed to save or update the question');
             console.error('Error saving or updating question:', error);
         }
     };
-    
+
     const handleModalOk = () => {
         console.log('Modal OK clicked with URL input:', urlInput);
-    
+
         if (urlInput.trim() !== '') {
             const img = new Image();
             img.src = urlInput;
-    
+
             img.onload = () => {
                 form.setFieldsValue({ imageUrl: urlInput });
                 setImageUrl(urlInput);
                 console.log('Modal URL set successfully, form imageUrl set to:', urlInput);
                 setIsModalVisible(false);
             };
-    
+
             img.onerror = () => {
                 message.error('Image not found or invalid. Please enter a valid URL.');
                 console.log('Modal URL load failed');
@@ -226,13 +217,19 @@ const QuestionForm = () => {
 
     // New function to handle option changes
     const handleOptionChange = (index, value) => {
+        const updatedOptions = [...options];
+        updatedOptions[index] = value; // Update the specific option
+        setOptions(updatedOptions);
         form.setFieldsValue({ [`option${index + 1}`]: value });
-    
+
         // Update the correct answer if this option was the correct answer
-        if (correctAnswer === value[`option${index + 1}`]) {
+        if (correctAnswer === options[index]) {
             setCorrectAnswer(value); // Update correct answer if it has changed
         }
     };
+
+    const allOptionsFilled = options.every(opt => opt.trim() !== ''); // Check if all options are filled
+    const hasDuplicates = new Set(options).size !== options.length; // Check for duplicates
 
     return (
         <div className='questionContainer'>
@@ -287,14 +284,14 @@ const QuestionForm = () => {
 
                     <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
                         <Form.Item label="Question" name="question" rules={[{ required: true, message: 'Please input Question!' }]} style={{ flexGrow: 1, marginBottom: '0' }}>
-                            <Input placeholder="Question" required style={{ flexGrow: 1 }} />
+                            <Input placeholder="Enter the question" required style={{ flexGrow: 1 }} />
                         </Form.Item>
                     </div>
                     <Divider>Options</Divider>
                     <Form.Item label="Select Correct Answer" style={{ marginBottom: '16px' }}>
-                        <Radio.Group onChange={(e) => setCorrectAnswer(e.target.value)} value={correctAnswer}>
+                        <Radio.Group onChange={(e) => setCorrectAnswer(e.target.value)} value={correctAnswer} disabled={!allOptionsFilled || hasDuplicates}>
                             {[...Array(4)].map((_, index) => (
-                                <Radio key={index} value={form.getFieldValue(`option${index + 1}`)}>
+                                <Radio key={index} value={options[index]}>
                                     Option {index + 1}
                                 </Radio>
                             ))}
@@ -303,12 +300,12 @@ const QuestionForm = () => {
                     {[...Array(4)].map((_, index) => (
                         <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
                             <Form.Item label={`Option ${index + 1}`} name={`option${index + 1}`} rules={[{ required: true, message: `Please input Option ${index + 1}!` }]} style={{ flexGrow: 1, marginBottom: '0' }}>
-                                <Input 
-                                    placeholder={`Option ${index + 1}`} 
-                                    required 
-                                    style={{ flexGrow: 1 }} 
+                                <Input
+                                    placeholder={`Enter Option ${index + 1}`}
+                                    required
+                                    style={{ flexGrow: 1 }}
                                     onChange={(e) => handleOptionChange(index, e.target.value)}
-                                    />
+                                />
                             </Form.Item>
                         </div>
                     ))}
