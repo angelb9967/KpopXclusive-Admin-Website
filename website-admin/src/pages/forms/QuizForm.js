@@ -738,43 +738,50 @@ const QuizForm = () => {
                 </Form.List>
               </Form.Item>
 
-
               <Divider>Scoring System</Divider>
               <Form.Item
-  label="Correct Answer"
-  name={["gamePlayRules", "scoringSystem", 0]}
-  required
-  rules={[{ required: true, message: "Please enter the points awarded for a correct answer." }]}
->
-  <Input
-    placeholder="Specify the number of points awarded for a correct answer (e.g., 10)."
-    type="number"
-    value={
-      quizData?.gamePlayRules?.scoringSystem[0] 
-        ? parseInt(quizData.gamePlayRules.scoringSystem[0].match(/(\d+)/)[0], 10) 
-        : 0 // Default to 0 if quizData is null or not set up
-    }
-    onChange={handleCorrectAnswerChange}
-  />
-</Form.Item>
+                label="Correct Answer"
+                name={["gamePlayRules", "scoringSystem", 0]}
+                required
+                rules={[{ required: true, message: "Please enter the points awarded for a correct answer." }]}
+              >
+                <Input
+                  placeholder="Specify the number of points awarded for a correct answer (e.g., 10)."
+                  type="number"
+                  min="0"
+                  value={
+                    quizData?.gamePlayRules?.scoringSystem[0]
+                      ? parseInt(quizData.gamePlayRules.scoringSystem[0].match(/(\d+)/)[0], 10)
+                      : 0 // Default to 0 if quizData is null or not set up
+                  }
+                  onKeyDown={(e) => {
+                    if (e.key === "-") e.preventDefault();
+                  }}
+                  onChange={handleCorrectAnswerChange}
+                />
+              </Form.Item>
 
-<Form.Item
-  label="Incorrect Answer"
-  name={["gamePlayRules", "scoringSystem", 1]}
-  required
-  rules={[{ required: true, message: "Please enter the points awarded for an incorrect answer." }]}
->
-  <Input
-    placeholder="Specify the number of points deducted or awarded for an incorrect answer (e.g., -5 or 0)."
-    type="number"
-    value={
-      quizData?.gamePlayRules?.scoringSystem[1] 
-        ? parseInt(quizData.gamePlayRules.scoringSystem[1].match(/(\d+)/)[0], 10) 
-        : 0 // Default to 0 if quizData is null or not set up
-    }
-    onChange={handleIncorrectAnswerChange}
-  />
-</Form.Item>
+              <Form.Item
+                label="Incorrect Answer"
+                name={["gamePlayRules", "scoringSystem", 1]}
+                required
+                rules={[{ required: true, message: "Please enter the points awarded for an incorrect answer." }]}
+              >
+                <Input
+                  placeholder="Specify the number of points deducted or awarded for an incorrect answer (e.g., -5 or 0)."
+                  type="number"
+                  min="0"
+                  value={
+                    quizData?.gamePlayRules?.scoringSystem[1]
+                      ? parseInt(quizData.gamePlayRules.scoringSystem[1].match(/(\d+)/)[0], 10)
+                      : 0 // Default to 0 if quizData is null or not set up
+                  }
+                  onKeyDown={(e) => {
+                    if (e.key === "-") e.preventDefault();
+                  }}
+                  onChange={handleIncorrectAnswerChange}
+                />
+              </Form.Item>
 
             </>
           )}
