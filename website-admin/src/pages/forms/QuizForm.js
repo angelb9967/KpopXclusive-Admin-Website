@@ -50,7 +50,10 @@ const QuizForm = () => {
         ...state.record,
         gamePlayRules: {
           ...state.record.gamePlayRules,
-          scoringSystem: [correctPoints, incorrectPoints],
+          scoringSystem: [
+            `${correctPoints}`,
+            `${incorrectPoints}`
+          ],
         },
       };
 
@@ -78,6 +81,36 @@ const QuizForm = () => {
       });
     }
   }, [state, form]);
+
+
+  const handleCorrectAnswerChange = (e) => {
+    const value = e.target.value;
+    setQuizData((prevData) => ({
+      ...prevData,
+      gamePlayRules: {
+        ...prevData.gamePlayRules,
+        scoringSystem: [
+          `Correct Answer: ${parseInt(value, 10) || 0} point/s`, // Set new value cleanly
+          prevData.gamePlayRules.scoringSystem[1], // Keep the incorrect answer as is
+        ],
+      },
+    }));
+  };
+  
+  const handleIncorrectAnswerChange = (e) => {
+    const value = e.target.value;
+    setQuizData((prevData) => ({
+      ...prevData,
+      gamePlayRules: {
+        ...prevData.gamePlayRules,
+        scoringSystem: [
+          prevData.gamePlayRules.scoringSystem[0], // Keep the correct answer as is
+          `Incorrect Answer: ${parseInt(value, 10) || 0} point/s`, // Set new value cleanly
+        ],
+      },
+    }));
+  };
+  
 
   useEffect(() => {
     if (state?.record) {
@@ -288,8 +321,8 @@ const QuizForm = () => {
       gamePlayRules: {
         ...quizData.gamePlayRules,
         scoringSystem: [
-          `Correct Answer: ${correctPoints} point/s`,
-          `Incorrect Answer: ${incorrectPoints} point/s`,
+          `${correctPoints}`,
+          `${incorrectPoints}`,
         ],
         imageDisplay: quizData.gamePlayRules.imageDisplay.filter(image => image && image.trim() !== ''),
       },
@@ -566,7 +599,6 @@ const QuizForm = () => {
                 <Divider />
               </div>
 
-
               <Form.Item label="Image Display:" required>
                 <Form.List
                   name="imageDisplay"
@@ -708,71 +740,42 @@ const QuizForm = () => {
 
 
               <Divider>Scoring System</Divider>
-
               <Form.Item
-                label="Correct Answer"
-                name={["gamePlayRules", "scoringSystem", 0]}
-                required
-                rules={[{ required: true, message: "Please enter the points awarded for a correct answer." }]}
-              >
-                <Input
-                  placeholder="Specify the number of points awarded for a correct answer (e.g., 10)."
+  label="Correct Answer"
+  name={["gamePlayRules", "scoringSystem", 0]}
+  required
+  rules={[{ required: true, message: "Please enter the points awarded for a correct answer." }]}
+>
+  <Input
+    placeholder="Specify the number of points awarded for a correct answer (e.g., 10)."
+    type="number"
+    value={
+      quizData?.gamePlayRules?.scoringSystem[0] 
+        ? parseInt(quizData.gamePlayRules.scoringSystem[0].match(/(\d+)/)[0], 10) 
+        : 0 // Default to 0 if quizData is null or not set up
+    }
+    onChange={handleCorrectAnswerChange}
+  />
+</Form.Item>
 
-                  type="number"
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    const currentScoring = quizData.gamePlayRules.scoringSystem;
+<Form.Item
+  label="Incorrect Answer"
+  name={["gamePlayRules", "scoringSystem", 1]}
+  required
+  rules={[{ required: true, message: "Please enter the points awarded for an incorrect answer." }]}
+>
+  <Input
+    placeholder="Specify the number of points deducted or awarded for an incorrect answer (e.g., -5 or 0)."
+    type="number"
+    value={
+      quizData?.gamePlayRules?.scoringSystem[1] 
+        ? parseInt(quizData.gamePlayRules.scoringSystem[1].match(/(\d+)/)[0], 10) 
+        : 0 // Default to 0 if quizData is null or not set up
+    }
+    onChange={handleIncorrectAnswerChange}
+  />
+</Form.Item>
 
-                    // Update only the correct answer in the scoring system
-                    setQuizData((prevData) => ({
-                      ...prevData,
-                      gamePlayRules: {
-                        ...prevData.gamePlayRules,
-                        scoringSystem: [
-                          value ? parseInt(value, 10) : 0, // Update correct answer, default to 0 if empty
-                          currentScoring[1], // Keep incorrect answer unchanged
-                        ],
-                      },
-                    }));
-
-                    // Log current values
-                    console.log('Current Correct Answer:', value ? parseInt(value, 10) : 0);
-                    console.log('Current Incorrect Answer:', currentScoring[1]);
-                  }}
-                />
-              </Form.Item>
-
-              <Form.Item
-                label="Incorrect Answer"
-                name={["gamePlayRules", "scoringSystem", 1]}
-                required
-                rules={[{ required: true, message: "Please enter the points awarded for an incorrect answer." }]}
-              >
-                <Input
-                  placeholder="Specify the number of points deducted or awarded for an incorrect answer (e.g., -5 or 0)."
-                  type="number"
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    const currentScoring = quizData.gamePlayRules.scoringSystem;
-
-                    // Update only the incorrect answer in the scoring system
-                    setQuizData((prevData) => ({
-                      ...prevData,
-                      gamePlayRules: {
-                        ...prevData.gamePlayRules,
-                        scoringSystem: [
-                          currentScoring[0], // Keep correct answer unchanged
-                          value ? parseInt(value, 10) : 0, // Update incorrect answer, default to 0 if empty
-                        ],
-                      },
-                    }));
-
-                    // Log current values
-                    console.log('Current Correct Answer:', currentScoring[0]);
-                    console.log('Current Incorrect Answer:', value ? parseInt(value, 10) : 0);
-                  }}
-                />
-              </Form.Item>
             </>
           )}
 
