@@ -293,29 +293,35 @@ const handleSubmit = async (values) => {
   try {
     const existingIdolsResponse = await axios.get('http://localhost:8000/idols'); // Fetch existing idols
     const existingIdols = existingIdolsResponse.data;
-
+    
     // Check for duplicates (case insensitive)
     const stageNameLower = dataToSubmit.stageName?.toLowerCase();
-    const duplicateStageName = existingIdols.some(idol => 
-      idol.stageName.toLowerCase() === stageNameLower
-    );
-
     let contentMessage = '';
-    const isEditing = location.pathname === '/EditIdol' && idolData._id;
-
-    if (duplicateStageName) {
-      // If editing, check if the existing idol has the same ID
-      const sameIdExists = existingIdols.some(idol => 
-        idol.stageName.toLowerCase() === stageNameLower && idol._id === idolData._id
+    
+    // Determine if editing mode by checking if pathname is "/EditIdol" and idolData has an _id
+    const isEditing = location.pathname === '/EditIdol' && idolData?._id;
+    
+    if (isEditing) {
+      // If editing, only show a warning if another idol with the same stage name exists and has a different ID
+      const duplicateStageName = existingIdols.some(idol => 
+        idol.stageName.toLowerCase() === stageNameLower && idol._id !== idolData._id
       );
-
-      // If the same ID doesn't exist, show the warning
-      if (!sameIdExists) {
+    
+      if (duplicateStageName) {
         contentMessage = 'You are about to save or update an idol record with the same stage name as an existing record. Do you wish to continue?';
       }
+    } else {
+      // If not editing (creating), check if any idol has the same stage name
+      const duplicateStageName = existingIdols.some(idol => 
+        idol.stageName.toLowerCase() === stageNameLower
+      );
+    
+      if (duplicateStageName) {
+        contentMessage = 'An idol with the same stage name already exists. Do you wish to continue?';
+      }
     }
-
-    // Show confirmation if there is a conflict 
+    
+    // Show confirmation if there is a conflict
     if (contentMessage) { 
       const confirmProceed = await new Promise((resolve) => {
         Modal.confirm({
@@ -329,7 +335,7 @@ const handleSubmit = async (values) => {
         });
       });
       if (!confirmProceed) return; // Exit if user chooses not to proceed
-    }
+    }    
 
     if (isEditing) {
       const response = await axios.put(`http://localhost:8000/idols/${idolData._id}`, dataToSubmit);
