@@ -305,7 +305,14 @@ const QuestionForm = () => {
                     </Form.Item>
                     {[...Array(4)].map((_, index) => (
                         <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
-                            <Form.Item label={`Option ${index + 1}`} name={`option${index + 1}`} rules={[{ required: true, message: `Please input Option ${index + 1}!` }]} style={{ flexGrow: 1, marginBottom: '0' }}>
+                            <Form.Item label={`Option ${index + 1}`} name={`option${index + 1}`} rules={[{ required: true, message: `Please input Option ${index + 1}!` },
+                                 {
+                                    validator: (_, value) =>
+                                        value && value.trim() !== ''
+                                            ? Promise.resolve()
+                                            : Promise.reject(new Error(`Option ${index + 1} cannot be empty or whitespace only.`)),
+                                },
+                            ]} style={{ flexGrow: 1, marginBottom: '0' }}>
                                 <Input
                                     placeholder={`Enter Option ${index + 1}`}
                                     required
