@@ -149,16 +149,42 @@ const handleSubmit = async (values) => {
     return;
   }
 
+  const isValidTrainingPeriod = (trainingPeriod) => {
+    const trainingPeriodRegex = /^\d+(\.\d+)?\s+(Years|years|Months|months|Days|days)$/;
+    return trainingPeriodRegex.test(trainingPeriod);
+  };
+  
+  if (!isValidTrainingPeriod(values.trainingPeriod)) {
+    message.error('Training Period must be a positive number followed by "Years," "Months," or "Days" (e.g., "2.5 Years", "6 Months", or "30 Days").');
+    return;
+  }
+
+  // Calculate age based on birthdate
+  const today1 = new Date();
+  let calculatedAge1 = today1.getUTCFullYear() - new Date(values.birthday).getUTCFullYear();
+  const monthDiff1 = today1.getUTCMonth() - new Date(values.birthday).getUTCMonth();
+  if (monthDiff1 < 0 || (monthDiff1 === 0 && today.getUTCDate() < new Date(values.birthday).getUTCDate())) {
+    calculatedAge1--;
+  }
+
+  // Age validation check
+  if (calculatedAge1 < 13 || calculatedAge1 > 65) {
+    message.error('Age must be between 13 and 65 years to be valid.');
+    return;
+  }
+
   // Check if there is atleast one fun fact
   if (funFactsList.length === 0) {
     message.error('Please provide at least one fun fact about the idol');
     return;
   }
+
    // Check if the Korean name contains Hangul characters
    const containsKoreanCharacters = (text) => {
     const koreanRegex = /[가-힣]/; // Regular expression for Hangul characters
     return koreanRegex.test(text);
   };
+
   if (!containsKoreanCharacters(values.koreanName)) {
     message.error('Korean Name must contain valid Hangul characters.');
     return;
@@ -255,7 +281,15 @@ const handleSubmit = async (values) => {
   if (!allCompaniesValid) {
     return; 
   }
-
+  
+   // Training period validation check (e.g., max 60% of the calculated age)
+   const maxTrainingYears = calculatedAge1 * 0.6;
+   const trainingPeriodYears = parseFloat(values.trainingPeriod); // assumes "Years" format for simplicity
+   if (trainingPeriodYears > maxTrainingYears) {
+     message.error(`Training Period cannot exceed ${maxTrainingYears.toFixed(1)} years for the idol's age.`);
+     return;
+   }
+ 
   const dataToSubmit = {
     idolName: values.stageName,
     nationality: values.nationality,
