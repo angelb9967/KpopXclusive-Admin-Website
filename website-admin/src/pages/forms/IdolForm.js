@@ -148,17 +148,19 @@ const handleSubmit = async (values) => {
     message.error('Introduction cannot be empty or whitespace only.');
     return;
   }
-
+  
   const isValidTrainingPeriod = (trainingPeriod) => {
-    const trainingPeriodRegex = /^\d+(\.\d+)?\s+(Years|years|Months|months|Days|days)$/;
+    const trainingPeriodRegex = /^(\d+(\.\d+)?\s+(Years|years|Months|months|Days|days))( and \d+(\.\d+)?\s+(Years|years|Months|months|Days|days))*$/;
     return trainingPeriodRegex.test(trainingPeriod);
   };
   
   if (!isValidTrainingPeriod(values.trainingPeriod)) {
-    message.error('Training Period must be a positive number followed by "Years," "Months," or "Days" (e.g., "2.5 Years", "6 Months", or "30 Days").');
+    message.error(
+      'Training Period must be a positive number followed by "Years," "Months," or "Days," optionally joined by "and" (e.g., "2.5 Years", "2 Years and 6 Months").'
+    );
     return;
   }
-
+  
   // Calculate age based on birthdate
   const today1 = new Date();
   let calculatedAge1 = today1.getUTCFullYear() - new Date(values.birthday).getUTCFullYear();

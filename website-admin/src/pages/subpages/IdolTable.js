@@ -128,18 +128,21 @@ const IdolTable = () => {
       key: 'idolImage',
       render: (imageUrl) => (
         <img
-          src={imageUrl}
+          src={imageUrl || 'https://static.vecteezy.com/system/resources/previews/004/141/669/non_2x/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg'}
           alt="Idol"
           style={{
             width: 80,
             height: 80,
             borderRadius: '50%',
             objectFit: 'cover',
-            objectPosition: 'center'
+            objectPosition: 'center',
+          }}
+          onError={(e) => {
+            e.target.src = 'https://static.vecteezy.com/system/resources/previews/004/141/669/non_2x/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg';
           }}
         />
       ),
-    },
+    },    
     {
       title: 'Idol Name',
       dataIndex: 'idolName',
