@@ -150,7 +150,7 @@ const handleSubmit = async (values) => {
   }
   
   const isValidTrainingPeriod = (trainingPeriod) => {
-    const trainingPeriodRegex = /^(\d+(\.\d+)?\s+(Years|years|Months|months|Days|days))( and \d+(\.\d+)?\s+(Years|years|Months|months|Days|days))*$/;
+    const trainingPeriodRegex = /^(\d+(\.\d+)?\s+(Year|year|Years|years|Month|month|Months|months|Day|day|Days|days))( and \d+(\.\d+)?\s+(Year|year|Years|years|Month|month|Months|months|Day|day|Days|days))*$/;
     return trainingPeriodRegex.test(trainingPeriod);
   };
   
@@ -165,7 +165,7 @@ const handleSubmit = async (values) => {
   const today1 = new Date();
   let calculatedAge1 = today1.getUTCFullYear() - new Date(values.birthday).getUTCFullYear();
   const monthDiff1 = today1.getUTCMonth() - new Date(values.birthday).getUTCMonth();
-  if (monthDiff1 < 0 || (monthDiff1 === 0 && today.getUTCDate() < new Date(values.birthday).getUTCDate())) {
+  if (monthDiff1 < 0 || (monthDiff1 === 0 && today1.getUTCDate() < new Date(values.birthday).getUTCDate())) {
     calculatedAge1--;
   }
 
