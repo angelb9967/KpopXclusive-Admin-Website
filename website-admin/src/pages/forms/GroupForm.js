@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Select, Input, message, Form, Radio, Table, Modal, AutoComplete, DatePicker, InputNumber} from 'antd';
+import { Button, Select, Input, message, Form, Radio, Table, Modal, AutoComplete, DatePicker, InputNumber } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { faXTwitter, faSpotify, faYoutube } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -31,7 +31,7 @@ const GroupForm = () => {
     ...groupData,
     debut: groupData?.debut ? dayjs(groupData.debut) : null,
 
-};
+  };
 
   const [memberImage, setMemberImage] = useState(null);
   const [groupImage, setGroupImage] = useState(null);
@@ -187,7 +187,7 @@ const GroupForm = () => {
     }
 
     const lastEdited = moment().tz('Asia/Manila').format('YYYY-MM-DD HH:mm:ss');
-    
+
     const companySince = {};
     let allCompaniesValid = true;
 
@@ -577,7 +577,7 @@ const GroupForm = () => {
               flex: '1 1 auto',
               backgroundColor: '#B93B3D',
               boxShadow: 'inset 0px 1px 5px 0px rgba(0, 0, 0, 0.75)',
-              color: 'white'              
+              color: 'white'
             }}
           >
             Edit
@@ -592,7 +592,7 @@ const GroupForm = () => {
           </Button>
         </div>
       ),
-    }    
+    }
   ];
 
   return (
@@ -766,16 +766,16 @@ const GroupForm = () => {
                     {/* Debut Text Field  */}
                     <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
                       <Form.Item label="Debut" name="debut" rules={[{ required: true, message: 'Please input Debut!' }]} style={{ flexGrow: 1, marginBottom: "0" }}>
-                      <DatePicker
-                        placeholder='Select the debut date'
-                        format="YYYY-MM-DD"
-                        required
-                        rules={[{ required: true, message: 'Please input Debut!' }]}
-                        style={{ flexGrow: 1, width: '100%' }}
-                        value={form.getFieldValue('debut')}
-                        onChange={(debut) => form.setFieldsValue({ debut })}
-                        disabledDate={(current) => current && current > moment().endOf('day')}
-                      />
+                        <DatePicker
+                          placeholder='Select the debut date'
+                          format="YYYY-MM-DD"
+                          required
+                          rules={[{ required: true, message: 'Please input Debut!' }]}
+                          style={{ flexGrow: 1, width: '100%' }}
+                          value={form.getFieldValue('debut')}
+                          onChange={(debut) => form.setFieldsValue({ debut })}
+                          disabledDate={(current) => current && current > moment().endOf('day')}
+                        />
                       </Form.Item>
                     </div>
 
@@ -866,7 +866,7 @@ const GroupForm = () => {
                 </div>
 
                 <div className="groupform-box1" id="groupform-box4">
-                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
                     <Form.Item
                       label="Active Years"
                       name="activeYears"
@@ -935,9 +935,9 @@ const GroupForm = () => {
 
                   <Form.Item label="Member Name" name="idolName" style={{ flexGrow: 1, marginBottom: '12px' }}>
                     <AutoComplete
-                      options={options} 
-                      onSearch={handleSearch} 
-                      onSelect={handleSelect} 
+                      options={options}
+                      onSearch={handleSearch}
+                      onSelect={handleSelect}
                       placeholder="Enter or select an idol"
                       style={{ width: '100%' }}
                     >
@@ -1063,7 +1063,7 @@ const GroupForm = () => {
                     backgroundColor: buttonColor,
                     fontSize: "22px",
                     boxShadow: "inset 0px 1px 5px 0px rgba(0, 0, 0, 0.75)"
-                }}
+                  }}
                 >
                   {buttonText}
                 </Button>
