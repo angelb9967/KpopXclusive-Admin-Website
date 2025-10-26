@@ -1,3 +1,7 @@
+<div align="center">
+  <img width="265" height="146" alt="Logo 1" src="https://github.com/user-attachments/assets/aea475e1-32a8-4d35-91fb-30ec0b559400" />
+</div>
+
 # 🎶 Kpop Xclusive Admin: Content Management System
 
 ## ✨ Project Overview
@@ -83,3 +87,16 @@ For any inquiries or feedback regarding this project, please reach out to the te
 | Jersey Usman    | [***REMOVED***](mailto:***REMOVED***) |
 
 Project Repository: [https://github.com/angelb9967/KpopXclusive-Admin-Website.git](https://github.com/angelb9967/KpopXclusive-Admin-Website.git) 
+
+## 🖼️ App Preview
+
+Get a quick look at KpopXclusive Admin in action!
+
+![Login  Whole Page](https://github.com/user-attachments/assets/f2df4354-fa91-4ded-b927-94c40d9317d0)
+![Dashboard - Whole Page 1(1)](https://github.com/user-attachments/assets/eb00e217-3b07-48f8-ba9e-24abf1e46807)
+![Information Handler - Idols -  Whole Page 1](https://github.com/user-attachments/assets/518cc22e-c1a1-4c17-9bd8-845fa76beddb)
+![Information Handler - Groups -  Whole Page](https://github.com/user-attachments/assets/550f6c1a-5a5d-46ce-9acc-38dc44cbf4dc)
+![User Management  Whole Page](https://github.com/user-attachments/assets/cdd66e54-bf49-41d0-b97a-55e82ae055fe)
+![Create News - Whole Page 1](https://github.com/user-attachments/assets/9fe5f926-1fda-43d4-abc8-6825ab701427)
+![Quiz Handler - Quizzes -  Whole Page](https://github.com/user-attachments/assets/3a61ed6a-7309-4aa1-b159-d422175c0855)
+![Quiz Handler - Questions -  Whole Page](https://github.com/user-attachments/assets/bad2689e-ded8-43da-a4ab-601e3a4a29b8)
