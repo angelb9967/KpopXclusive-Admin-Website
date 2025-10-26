@@ -10,12 +10,12 @@ Developed using the **MERN stack (MongoDB, Express.js, React, Node.js)**, this s
 
 Key functionalities of Kpop Xclusive Admin include:
 
-*   **📊 Admin Dashboard:** Displays key website metrics such as **visitor statistics**, **number of accounts created**, and **active user count**.
-*   **📰 News Management:** Functionality for creating, reading, updating, and deleting K-pop news articles, including content, images, and publication status.
-*   **❓ Quiz Administration:** Management of interactive quizzes, including adding questions, editing content, configuring answers, and setting difficulty levels.
-*   **👤 Idol Profile Management:** Tools for maintaining K-pop idol profiles, covering personal information, discographies, career highlights, and associated group affiliations.
-*   **👥 Group Information Management:** Management of K-pop group data, including member rosters, debut specifics, achievements, and official links.
-*   **📝 User Account Management:** Administration of user accounts, including viewing user data, managing access levels, and moderation.
+*   **Admin Dashboard:** Displays key website metrics such as **visitor statistics**, **number of accounts created**, and **active user count**.
+*   **News Management:** Functionality for creating, reading, updating, and deleting K-pop news articles, including content, and images.
+*   **Quiz Administration:** Management of interactive quizzes, including adding questions, editing content and configuring answers.
+*   **Idol Profile Management:** Tools for maintaining K-pop idol profiles, covering personal information, discographies, and associated group affiliations.
+*   **Group Information Management:** Management of K-pop group data, including member rosters, debut details, achievements, and official links.
+*   **User Account Management:** Administration of user accounts, including viewing and editing user data.
 
 ## 🛠️ Technologies Utilized
 
