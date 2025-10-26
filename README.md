@@ -41,7 +41,7 @@ These instructions detail the process of setting up and running the Kpop Xclusiv
 1.  **Clone the Repository:**
     ```bash
     git clone https://github.com/angelb9967/KpopXclusive-Admin-Website.git
-    cd KpopSite-Admin
+    cd KpopXclusive-Admin-Website
     ```
 2.  **Install Dependencies:**
     *   Navigate to the project's root directory.
