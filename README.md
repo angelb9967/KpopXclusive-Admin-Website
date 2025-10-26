@@ -40,7 +40,7 @@ These instructions detail the process of setting up and running the Kpop Xclusiv
 
 1.  **Clone the Repository:**
     ```bash
-    git clone https://github.com/angelb9967/KpopSite-Admin.git
+    git clone https://github.com/angelb9967/KpopXclusive-Admin-Website.git
     cd KpopSite-Admin
     ```
 2.  **Install Dependencies:**
@@ -82,4 +82,4 @@ For any inquiries or feedback regarding this project, please reach out to the te
 | Mark Esteves    | [***REMOVED***](mailto:***REMOVED***) |
 | Jersey Usman    | [***REMOVED***](mailto:***REMOVED***) |
 
-Project Repository: [https://github.com/angelb9967/KpopSite-Admin.git](https://github.com/angelb9967/KpopSite-Admin.git) 
+Project Repository: [https://github.com/angelb9967/KpopXclusive-Admin-Website.git](https://github.com/angelb9967/KpopXclusive-Admin-Website.git) 
