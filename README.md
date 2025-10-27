@@ -79,7 +79,7 @@ Once successfully set up, the Kpop Xclusive Admin application can be operated as
 
 For any inquiries or feedback regarding this project, please reach out to the team:
 
-| Contributor            | Email                                    |
+| Contributor            | Github Account                                    |
 | :-------------- | :--------------------------------------- |
 | Angeline     | 👩‍💻 [angelb9967](https://github.com/angelb9967) |
 | Jersey       | 👩‍💻 [jerseyloveu](https://github.com/jerseyloveu) |
