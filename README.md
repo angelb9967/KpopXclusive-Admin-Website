@@ -79,12 +79,12 @@ Once successfully set up, the Kpop Xclusive Admin application can be operated as
 
 For any inquiries or feedback regarding this project, please reach out to the team:
 
-| Name            | Email                                    |
+| Contributor            | Email                                    |
 | :-------------- | :--------------------------------------- |
-| Angeline Bedis  | [***REMOVED***](mailto:***REMOVED***)  |
-| Achilles Baranda| [***REMOVED***](mailto:***REMOVED***) |
-| Mark Esteves    | [***REMOVED***](mailto:***REMOVED***) |
-| Jersey Usman    | [***REMOVED***](mailto:***REMOVED***) |
+| Angeline     | 👩‍💻 [angelb9967](https://github.com/angelb9967) |
+| Jersey       | 👩‍💻 [jerseyloveu](https://github.com/jerseyloveu) |
+| Achilles | 👨‍🎨 [achillesbaranda](https://github.com/achillesbaranda) |
+| Mark        | 👩‍🎨 [jraldskie ](https://github.com/jraldskie) |
 
 Project Repository: [https://github.com/angelb9967/KpopXclusive-Admin-Website.git](https://github.com/angelb9967/KpopXclusive-Admin-Website.git) 
 
