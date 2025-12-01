@@ -84,7 +84,7 @@ For any inquiries or feedback regarding this project, please reach out to the te
 | Angeline     | 👩‍💻 [angelb9967](https://github.com/angelb9967) |
 | Jersey       | 👩‍💻 [jerseyloveu](https://github.com/jerseyloveu) |
 | Achilles | 👨‍🎨 [achillesbaranda](https://github.com/achillesbaranda) |
-| Mark        | 👩‍🎨 [jraldskie ](https://github.com/jraldskie) |
+| Mark        | 👨‍🎨 [jraldskie ](https://github.com/jraldskie) |
 
 Project Repository: [https://github.com/angelb9967/KpopXclusive-Admin-Website.git](https://github.com/angelb9967/KpopXclusive-Admin-Website.git) 
 
