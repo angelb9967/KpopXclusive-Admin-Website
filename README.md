@@ -2,7 +2,16 @@
   <img width="265" height="146" alt="Logo 1" src="https://github.com/user-attachments/assets/aea475e1-32a8-4d35-91fb-30ec0b559400" />
 </div>
 
-# 🎶 Kpop Xclusive Admin: Content Management System
+<p align="center">
+  <a href="https://github.com/angelb9967/KpopXclusive-Admin-Website/issues/new">
+    <img src="https://img.shields.io/badge/Report%20a%20Bug-red?style=for-the-badge&logo=github" />
+  </a>
+  <a href="https://github.com/angelb9967/KpopXclusive-Admin-Website/issues/new">
+    <img src="https://img.shields.io/badge/Request%20Feature-blue?style=for-the-badge&logo=github" />
+  </a>
+</p>
+
+# Kpop Xclusive Admin: Content Management System
 
 ## ✨ Project Overview
 
@@ -100,3 +109,5 @@ Get a quick look at KpopXclusive Admin in action!
 ![Create News - Whole Page 1](https://github.com/user-attachments/assets/9fe5f926-1fda-43d4-abc8-6825ab701427)
 ![Quiz Handler - Quizzes -  Whole Page](https://github.com/user-attachments/assets/3a61ed6a-7309-4aa1-b159-d422175c0855)
 ![Quiz Handler - Questions -  Whole Page](https://github.com/user-attachments/assets/bad2689e-ded8-43da-a4ab-601e3a4a29b8)
+
+<img src="https://img.shields.io/badge/Developed%20with%20%E2%9D%A4-angelb9967-red?style=for-the-badge" />
